@@ -7,7 +7,26 @@
         mc:Ignorable="d"
         Title="SneknetRacing" Height="450" Width="800">
     <Grid>
-		<Button x:Name="button" Content="Open UDP Listener" HorizontalAlignment="Left" Margin="131,106,0,0" VerticalAlignment="Top" Click="button_Click"/>
+        <Button x:Name="button" Content="Start UDP Listener" HorizontalAlignment="Left" Margin="29,48,0,0" VerticalAlignment="Top" Click="button_Click"/>
+        <Label x:Name="label" Content="Header Data" HorizontalAlignment="Left" Margin="141,89,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label1" Content="Packet Format" HorizontalAlignment="Left" Margin="73,120,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <Label x:Name="label1_Copy" Content="Game Major Version" HorizontalAlignment="Left" Margin="41,151,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <Label x:Name="label1_Copy1" Content="Game Minor Version" HorizontalAlignment="Left" Margin="40,182,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <Label x:Name="label1_Copy2" Content="Packet ID" HorizontalAlignment="Left" Margin="99,213,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <Label x:Name="label1_Copy3" Content="Session UID" HorizontalAlignment="Left" Margin="86,244,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <Label x:Name="label1_Copy4" Content="Session Time" HorizontalAlignment="Left" Margin="80,275,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <Label x:Name="label1_Copy5" Content="Frame Identifier" HorizontalAlignment="Left" Margin="65,306,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <Label x:Name="label1_Copy6" Content="Player Car Index" HorizontalAlignment="Left" Margin="63,337,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <Label x:Name="label1_Copy7" Content="Secondary Player Car Index" HorizontalAlignment="Left" Margin="5,368,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.48,-0.74"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="179,124,0,0" Text="{Binding Path=Header.PacketFormat}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy" HorizontalAlignment="Left" Margin="179,155,0,0" Text="{Binding Path=Header.GameMajorVersion}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Left" Margin="179,186,0,0" Text="{Binding Path=Header.GameMinorVersion}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy2" HorizontalAlignment="Left" Margin="179,217,0,0" Text="{Binding Path=Header.PacketID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy3" HorizontalAlignment="Left" Margin="179,248,0,0" Text="{Binding Path=Header.SessionUID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy4" HorizontalAlignment="Left" Margin="179,279,0,0" Text="{Binding Path=Header.SessionTime}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy5" HorizontalAlignment="Left" Margin="179,310,0,0" Text="{Binding Path=Header.FrameIdentifier}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy6" HorizontalAlignment="Left" Margin="179,341,0,0" Text="{Binding Path=Header.PlayerCarIndex}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy7" HorizontalAlignment="Left" Margin="179,372,0,0" Text="{Binding Path=Header.SecondaryPlayerCarIndex}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
-	</Grid>
+    </Grid>
 </Window>

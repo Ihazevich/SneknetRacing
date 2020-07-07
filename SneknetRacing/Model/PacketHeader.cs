@@ -12,7 +12,7 @@ namespace SneknetRacing.Model
         byte gameMajorVersion;              // Game major version - "X.00"
         byte gameMinorVersion;              // Game minor version - "1.XX"
         byte packetVersion;                 // Version of this packet type, all start from 1
-        byte packetId;                      // Identifier for the packet type, see below
+        byte packetID;                      // Identifier for the packet type, see below
         UInt64 sessionUID;                  // Unique identifier for the session
         float sessionTime;                  // Session timestamp
         UInt32 frameIdentifier;             // Identifier for the frame the data was retrieved on
@@ -30,8 +30,8 @@ namespace SneknetRacing.Model
         private byte _gameMajorVersion;     // Game major version - "X.00"
         private byte _gameMinorVersion;     // Game minor version - "1.XX"
         private byte _packetVersion;        // Version of this packet type, all start from 1
-        private byte _packetId;             // Identifier for the packet type, see below
-        private UInt64 _sessionUID;         // Unique identifier for the session
+        private byte _packetID;             // Identifier for the packet type, see below
+        private UInt64 _sessionUID;         // Unique identifier for the session    
         private float _sessionTime;         // Session timestamp
         private uint _frameIdentifier;      // Identifier for the frame the data was retrieved on
         private byte _playerCarIndex;       // Index of player's car in the array
@@ -87,15 +87,15 @@ namespace SneknetRacing.Model
                 OnPropertyChanged("PacketVersion");
             }
         }
-        public byte PacketId
+        public byte PacketID
         {
             get
             {
-                return _packetId;
+                return _packetID;
             }
             set
             {
-                _packetId = value;
+                _packetID = value;
                 OnPropertyChanged("PacketID");
             }
         }

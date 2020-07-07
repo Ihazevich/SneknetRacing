@@ -52,6 +52,31 @@ namespace SneknetRacing.Model
         private float _angularAccelerationZ;           // Angular velocity z-component
         private float _frontWheelsAngle;               // Current front wheels angle in radians
 
+        public PacketHeader Header
+        {
+            get 
+            {
+                return _header;
+            }
+            set
+            {
+                _header = value;
+                OnPropertyChanged("Header");
+            }
+        }
+
+        public CarMotionData[] CarMotionData
+        {
+            get
+            {
+                return _carMotionData;
+            }
+            set
+            {
+                _carMotionData = value;
+                OnPropertyChanged("CarMotionData");
+            }
+        }
         public float[] SuspensionPosition
         {
             get
@@ -245,6 +270,11 @@ namespace SneknetRacing.Model
                 _frontWheelsAngle = value;
                 OnPropertyChanged("FrontWheelsAngle");
             }
+        }
+
+        public PacketMotionData()
+        {
+            Header = new PacketHeader();
         }
 
         #region INotifyPropertyChanged Members

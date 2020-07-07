@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using SneknetRacing.Model;
+
 namespace SneknetRacing
 {
     /// <summary>
@@ -22,12 +25,16 @@ namespace SneknetRacing
     {
         public MainWindow()
         {
+            var viewModel = new PacketMotionData();
+            viewModel.Header.PacketFormat = 1;
+
+            DataContext = viewModel;
+
             InitializeComponent();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }
