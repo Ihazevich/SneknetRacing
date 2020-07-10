@@ -6,23 +6,6 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public struct PacketHeaderStruct
-    {
-        UInt16 packetFormat;                // 2020
-        byte gameMajorVersion;              // Game major version - "X.00"
-        byte gameMinorVersion;              // Game minor version - "1.XX"
-        byte packetVersion;                 // Version of this packet type, all start from 1
-        byte packetID;                      // Identifier for the packet type, see below
-        UInt64 sessionUID;                  // Unique identifier for the session
-        float sessionTime;                  // Session timestamp
-        UInt32 frameIdentifier;             // Identifier for the frame the data was retrieved on
-        byte playerCarIndex;                // Index of player's car in the array
-
-        // ADDED IN BETA 2: 
-        byte secondaryPlayerCarIndex;       // Index of secondary player's car in the array (splitscreen)
-                                            // 255 if no second player
-    }
-
     public class PacketHeader : INotifyPropertyChanged
     {
         // Header

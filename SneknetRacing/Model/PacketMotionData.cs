@@ -1,34 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public struct PacketMotionDataStruct
-    {
-        PacketHeader header;                  // Header
-
-        CarMotionData[] carMotionData;        // Data for all cars on track
-
-        // Extra player car ONLY data
-        float[] suspensionPosition;           // Note: All wheel arrays have the following order:
-        float[] suspensionVelocity;           // RL, RR, FL, FR
-        float[] suspensionAcceleration;       // RL, RR, FL, FR
-        float[] wheelSpeed;                   // Speed of each wheel
-        float[] wheelSlip;                    // Slip ratio for each wheel
-        float localVelocityX;                 // Velocity in local space
-        float localVelocityY;                 // Velocity in local space
-        float localVelocityZ;                 // Velocity in local space
-        float angularVelocityX;               // Angular velocity x-component
-        float angularVelocityY;               // Angular velocity y-component
-        float angularVelocityZ;               // Angular velocity z-component
-        float angularAccelerationX;           // Angular velocity x-component
-        float angularAccelerationY;           // Angular velocity y-component
-        float angularAccelerationZ;           // Angular velocity z-component
-        float frontWheelsAngle;               // Current front wheels angle in radians
-    }
-
     public class PacketMotionData : INotifyPropertyChanged
     {
         private string _info;
@@ -292,6 +269,27 @@ namespace SneknetRacing.Model
             Header = new PacketHeader();
         }
 
+        public void Desserialize(byte[] data)
+        {
+            PacketMotionData result = new PacketMotionData();
+            using (MemoryStream m = new MemoryStream(data))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    Header.PacketFormat = reader.ReadUInt16();
+                    Header.GameMajorVersion = reader.ReadByte();
+                    Header.GameMinorVersion = reader.ReadByte();
+                    Header.PacketVersion = reader.ReadByte();
+                    Header.PacketID = reader.ReadByte();
+                    Header.SessionUID = reader.ReadUInt32();
+                    Header.SessionTime = (float)reader.ReadDouble();
+                    Header.FrameIdentifier = reader.ReadUInt32();
+                    Header.PlayerCarIndex = reader.ReadByte();
+                    Header.SecondaryPlayerCarIndex = reader.ReadByte();
+                }
+            }
+        }
+        
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)

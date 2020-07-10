@@ -27,7 +27,7 @@
         <TextBox x:Name="textBox_Copy5" HorizontalAlignment="Left" Margin="179,310,0,0" Text="{Binding Path=Header.FrameIdentifier}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="textBox_Copy6" HorizontalAlignment="Left" Margin="179,341,0,0" Text="{Binding Path=Header.PlayerCarIndex}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="textBox_Copy7" HorizontalAlignment="Left" Margin="179,372,0,0" Text="{Binding Path=Header.SecondaryPlayerCarIndex}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="InfoLabel" Content="{Binding Path=Info}" HorizontalAlignment="Left" Margin="169,45,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.285,-0.177" Width="277" Background="#FFD4FFB1"/>
+        <Label x:Name="InfoLabel" Content="{Binding Path=Info}" HorizontalAlignment="Left" Margin="336,123,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.285,-0.177" Width="278" Background="#FFD4FFB1"/>
 
     </Grid>
 </Window>

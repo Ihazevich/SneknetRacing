@@ -5,28 +5,6 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public struct CarMotionDataStruct
-    {
-        float worldPositionX;           // World space X position
-        float worldPositionY;           // World space Y position
-        float worldPositionZ;           // World space Z position
-        float worldVelocityX;           // Velocity in world space X
-        float worldVelocityY;           // Velocity in world space Y
-        float worldVelocityZ;           // Velocity in world space Z
-        Int16 worldForwardDirX;         // World space forward X direction (normalised)
-        Int16 worldForwardDirY;         // World space forward Y direction (normalised)
-        Int16 worldForwardDirZ;         // World space forward Z direction (normalised)
-        Int16 worldRightDirX;           // World space right X direction (normalised)
-        Int16 worldRightDirY;           // World space right Y direction (normalised)
-        Int16 worldRightDirZ;           // World space right Z direction (normalised)
-        float gForceLateral;            // Lateral G-Force component
-        float gForceLongitudinal;       // Longitudinal G-Force component
-        float gForceVertical;           // Vertical G-Force component
-        float yaw;                      // Yaw angle in radians
-        float pitch;                    // Pitch angle in radians
-        float roll;                     // Roll angle in radians
-    }
-
     public class CarMotionData : INotifyPropertyChanged
     {
         #region Members

@@ -24,7 +24,6 @@ namespace SneknetRacing
     public partial class MainWindow : Window
     {
         Server server = new Server();
-        HandleDataClass hdc = new HandleDataClass();
         Thread serverThread;
         Thread dataHandleThread;
 
@@ -33,7 +32,7 @@ namespace SneknetRacing
         public MainWindow()
         {
             serverThread = new Thread(() => server.Listen());
-            dataHandleThread = new Thread(() => hdc.SubscribeToEvent(server));
+            dataHandleThread = new Thread(() => this.SubscribeToEvent(server));
 
 
             DataContext = packet;
@@ -49,6 +48,17 @@ namespace SneknetRacing
             serverThread.Start();
             // Start Handler thread
             dataHandleThread.Start();
+        }
+
+        public void SubscribeToEvent(Server server)
+        {
+            server.DataReceivedEvent += server_DataReceivedEvent;
+        }
+
+        private void server_DataReceivedEvent(object sender, ReceivedDataArgs args)
+        {
+            packet.Info = Encoding.ASCII.GetString(args.receivedBytes);
+            packet.Desserialize(args.receivedBytes);
         }
 
     }
