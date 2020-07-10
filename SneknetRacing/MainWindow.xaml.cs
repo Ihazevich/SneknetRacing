@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using SneknetRacing.Network;
+
 namespace SneknetRacing
 {
     /// <summary>
@@ -20,14 +23,25 @@ namespace SneknetRacing
     /// </summary>
     public partial class MainWindow : Window
     {
+        Server server = new Server();
+        HandleDataClass hdc = new HandleDataClass();
+        Thread serverThread;
+        Thread dataHandleThread;
+
         public MainWindow()
         {
+            serverThread = new Thread(() => server.Listen());
+            dataHandleThread = new Thread(() => hdc.SubscribeToEvent(server));
             InitializeComponent();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-
+            Console.WriteLine("poggers");
+            // Start Server thread
+            serverThread.Start();
+            // Start Handler thread
+            dataHandleThread.Start();
         }
     }
 }

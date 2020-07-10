@@ -33,11 +33,11 @@ namespace SneknetRacing.Model
         {
             PacketHeader m_header;                  // Header
 
-            CarMotionData m_carMotionData[20];      // Data for all cars on track
+            CarMotionData m_carMotionData[];      // Data for all cars on track
 
             // Extra player car ONLY data
-            float m_suspensionPosition[4];       // Note: All wheel arrays have the following order:
-            float m_suspensionVelocity[4];       // RL, RR, FL, FR
+            float m_suspensionPosition[];       // Note: All wheel arrays have the following order:
+            float m_suspensionVelocity[];       // RL, RR, FL, FR
             float m_suspensionAcceleration[4];  // RL, RR, FL, FR
             float m_wheelSpeed[4];              // Speed of each wheel
             float m_wheelSlip[4];                // Slip ratio for each wheel
