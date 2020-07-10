@@ -10,7 +10,7 @@ namespace SneknetRacing.Network
     {
         public void Listen()
         {
-            UdpClient listener = new UdpClient();
+            UdpClient listener = new UdpClient(20777);
             IPEndPoint serverEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 20777);
 
             while(true)

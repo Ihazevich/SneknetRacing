@@ -31,6 +31,8 @@ namespace SneknetRacing.Model
 
     public class PacketMotionData : INotifyPropertyChanged
     {
+        private string _info;
+
         private PacketHeader _header;                  // Header
 
         private CarMotionData[] _carMotionData;        // Data for all cars on track
@@ -51,6 +53,19 @@ namespace SneknetRacing.Model
         private float _angularAccelerationY;           // Angular velocity y-component
         private float _angularAccelerationZ;           // Angular velocity z-component
         private float _frontWheelsAngle;               // Current front wheels angle in radians
+
+        public string Info
+        {
+            get
+            {
+                return _info;
+            }
+            set
+            {
+                _info = value;
+                OnPropertyChanged("Info");
+            }
+        }
 
         public PacketHeader Header
         {

@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using SneknetRacing.Model;
 using SneknetRacing.Network;
 
 namespace SneknetRacing
@@ -28,20 +28,28 @@ namespace SneknetRacing
         Thread serverThread;
         Thread dataHandleThread;
 
+        PacketMotionData packet = new PacketMotionData();
+
         public MainWindow()
         {
             serverThread = new Thread(() => server.Listen());
             dataHandleThread = new Thread(() => hdc.SubscribeToEvent(server));
+
+
+            DataContext = packet;
+
             InitializeComponent();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("poggers");
+            packet.Info = "Starting threads";
+            
             // Start Server thread
             serverThread.Start();
             // Start Handler thread
             dataHandleThread.Start();
         }
+
     }
 }
