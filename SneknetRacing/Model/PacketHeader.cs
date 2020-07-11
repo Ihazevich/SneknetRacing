@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 
 
@@ -142,6 +143,26 @@ namespace SneknetRacing.Model
                 OnPropertyChanged("SecondaryPlayerCarIndex");
             }
         }
+        public void Desserialize(byte[] data)
+        {
+            using (MemoryStream m = new MemoryStream(data))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    PacketFormat = reader.ReadUInt16();
+                    GameMajorVersion = reader.ReadByte();
+                    GameMinorVersion = reader.ReadByte();
+                    PacketVersion = reader.ReadByte();
+                    PacketID = reader.ReadByte();
+                    SessionUID = reader.ReadUInt32();
+                    SessionTime = (float)reader.ReadDouble();
+                    FrameIdentifier = reader.ReadUInt32();
+                    PlayerCarIndex = reader.ReadByte();
+                    SecondaryPlayerCarIndex = reader.ReadByte();
+                }
+            }
+        }
+
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)

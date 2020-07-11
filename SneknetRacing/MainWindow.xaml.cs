@@ -27,6 +27,7 @@ namespace SneknetRacing
         Thread serverThread;
         Thread dataHandleThread;
 
+        PacketHeader packetHeader = new PacketHeader();
         PacketMotionData packet = new PacketMotionData();
 
         public MainWindow()

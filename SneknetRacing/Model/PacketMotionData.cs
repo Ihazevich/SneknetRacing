@@ -271,7 +271,6 @@ namespace SneknetRacing.Model
 
         public void Desserialize(byte[] data)
         {
-            PacketMotionData result = new PacketMotionData();
             using (MemoryStream m = new MemoryStream(data))
             {
                 using (BinaryReader reader = new BinaryReader(m))
@@ -282,10 +281,74 @@ namespace SneknetRacing.Model
                     Header.PacketVersion = reader.ReadByte();
                     Header.PacketID = reader.ReadByte();
                     Header.SessionUID = reader.ReadUInt32();
-                    Header.SessionTime = (float)reader.ReadDouble();
+                    Header.SessionTime = reader.ReadSingle();
                     Header.FrameIdentifier = reader.ReadUInt32();
                     Header.PlayerCarIndex = reader.ReadByte();
                     Header.SecondaryPlayerCarIndex = reader.ReadByte();
+
+                    CarMotionData = new CarMotionData[20];
+                    for(int i = 0; i < 22; i++)
+                    {
+                        CarMotionData[i].WorldPositionX = reader.ReadSingle();
+                        CarMotionData[i].WorldPositionZ = reader.ReadSingle();
+                        CarMotionData[i].WorldPositionY = reader.ReadSingle();
+                        CarMotionData[i].WorldVelocityX = reader.ReadSingle();
+                        CarMotionData[i].WorldVelocityY = reader.ReadSingle();
+                        CarMotionData[i].WorldVelocityZ = reader.ReadSingle();
+                        CarMotionData[i].WorldForwardDirX = reader.ReadInt16();
+                        CarMotionData[i].WorldForwardDirY = reader.ReadInt16();
+                        CarMotionData[i].WorldForwardDirZ = reader.ReadInt16();
+                        CarMotionData[i].WorldRightDirX = reader.ReadInt16();
+                        CarMotionData[i].WorldRightDirY = reader.ReadInt16();
+                        CarMotionData[i].WorldRightDirZ = reader.ReadInt16();
+                        CarMotionData[i].GForceLateral = reader.ReadSingle();
+                        CarMotionData[i].GForceLongitudinal = reader.ReadSingle();
+                        CarMotionData[i].GForceVertical = reader.ReadSingle();
+                        CarMotionData[i].Yaw= reader.ReadSingle();
+                        CarMotionData[i].Pitch= reader.ReadSingle();
+                        CarMotionData[i].Roll = reader.ReadSingle();
+                    }
+
+                    SuspensionPosition = new float[4];
+                    SuspensionPosition[0] = reader.ReadSingle();
+                    SuspensionPosition[1] = reader.ReadSingle();
+                    SuspensionPosition[2] = reader.ReadSingle();
+                    SuspensionPosition[3] = reader.ReadSingle();
+
+                    SuspensionAcceleration = new float[4];
+                    SuspensionAcceleration[0] = reader.ReadSingle();
+                    SuspensionAcceleration[1] = reader.ReadSingle();
+                    SuspensionAcceleration[2] = reader.ReadSingle();
+                    SuspensionAcceleration[3] = reader.ReadSingle();
+
+                    SuspensionVelocity = new float[4];
+                    SuspensionVelocity[0] = reader.ReadSingle();
+                    SuspensionVelocity[1] = reader.ReadSingle();
+                    SuspensionVelocity[2] = reader.ReadSingle();
+                    SuspensionVelocity[3] = reader.ReadSingle();
+
+                    WheelSpeed = new float[4];
+                    WheelSpeed[0] = reader.ReadSingle();
+                    WheelSpeed[1] = reader.ReadSingle();
+                    WheelSpeed[2] = reader.ReadSingle();
+                    WheelSpeed[3] = reader.ReadSingle();
+
+                    WheelSlip = new float[4];
+                    WheelSlip[0] = reader.ReadSingle();
+                    WheelSlip[1] = reader.ReadSingle();
+                    WheelSlip[2] = reader.ReadSingle();
+                    WheelSlip[3] = reader.ReadSingle();
+
+                    LocalVelocityX = reader.ReadSingle();
+                    LocalVelocityY = reader.ReadSingle();
+                    LocalVelocityZ = reader.ReadSingle();
+                    AngularVelocityX = reader.ReadSingle();
+                    AngularVelocityY = reader.ReadSingle();
+                    AngularVelocityZ = reader.ReadSingle();
+                    AngularAccelerationX = reader.ReadSingle();
+                    AngularAccelerationY = reader.ReadSingle();
+                    AngularAccelerationZ = reader.ReadSingle();
+                    FrontWheelsAngle = reader.ReadSingle();
                 }
             }
         }
