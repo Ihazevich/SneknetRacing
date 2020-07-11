@@ -239,7 +239,6 @@ namespace SneknetRacing.Model
 
         public EventDataDetails()
         {
-
         }
 
         #region INotifyPropertyChanged Members

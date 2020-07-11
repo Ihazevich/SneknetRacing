@@ -255,24 +255,6 @@ namespace SneknetRacing.Model
 
         public CarMotionData()
         {
-            WorldPositionX = 0;
-            WorldPositionY = 0;
-            WorldPositionZ = 0;
-            WorldVelocityX = 0;
-            WorldVelocityY = 0;
-            WorldVelocityZ = 0;
-            WorldForwardDirX = 0;
-            WorldForwardDirY = 0;
-            WorldForwardDirZ = 0;
-            WorldRightDirX = 0;
-            WorldRightDirY = 0;
-            WorldRightDirZ = 0;
-            GForceLateral = 0;
-            GForceLongitudinal = 0;
-            GForceVertical = 0;
-            Yaw = 0;
-            Pitch = 0;
-            Roll = 0;
         }
 
         #region INotifyPropertyChanged Members
