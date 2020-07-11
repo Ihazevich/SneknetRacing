@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class SessionPacket : INotifyPropertyChanged
+    public class PacketSessionData : INotifyPropertyChanged
     {
+        #region Fields
+
         private PacketHeader _header;                    // Header
 
         private byte _weather;                   // Weather - 0 = clear, 1 = light cloud, 2 = overcast
                                             // 3 = light rain, 4 = heavy rain, 5 = storm
-        private byte _trackTemperature;          // Track temp. in degrees celsius
-        private byte _airTemperature;            // Air temp. in degrees celsius
+        private sbyte _trackTemperature;          // Track temp. in degrees celsius
+        private sbyte _airTemperature;            // Air temp. in degrees celsius
         private byte _totalLaps;                 // Total number of laps in this race
         private UInt16 _trackLength;               // Track length in metres
         private byte _sessionType;               // 0 = unknown, 1 = P1, 2 = P2, 3 = P3, 4 = Short P
                                             // 5 = Q1, 6 = Q2, 7 = Q3, 8 = Short Q, 9 = OSQ
                                             // 10 = R, 11 = R2, 12 = Time Trial
-        private byte _trackId;                   // -1 for unknown, 0-21 for tracks, see appendix
+        private sbyte _trackId;                   // -1 for unknown, 0-21 for tracks, see appendix
         private byte _formula;                   // Formula, 0 = F1 Modern, 1 = F1 Classic, 2 = F2,
                                             // 3 = F1 Generic
         private UInt16 _sessionTimeLeft;           // Time left in session in seconds
@@ -35,6 +38,10 @@ namespace SneknetRacing.Model
         private byte _networkGame;               // 0 = offline, 1 = online
         private byte _numWeatherForecastSamples; // Number of weather samples to follow
         private WeatherForecastSample[] _weatherForecastSamples;   // Array of weather forecast samples
+
+        #endregion
+
+        #region Properties
 
         public PacketHeader Header
         {
@@ -62,7 +69,7 @@ namespace SneknetRacing.Model
             }
         }
 
-        public byte TrackTemperature
+        public sbyte TrackTemperature
         {
             get
             {
@@ -74,7 +81,7 @@ namespace SneknetRacing.Model
                 OnPropertyChanged("TrackTemperature");
             }
         }
-        public byte AirTemperature
+        public sbyte AirTemperature
         {
             get
             {
@@ -122,7 +129,7 @@ namespace SneknetRacing.Model
                 OnPropertyChanged("SessionType");
             }
         }
-        public byte TrackID
+        public sbyte TrackID
         {
             get
             {
@@ -307,6 +314,72 @@ namespace SneknetRacing.Model
                 OnPropertyChanged("WeatherForecastSamples");
             }
         }
+
+        #endregion
+
+        #region Methods
+        public void Desserialize(byte[] data)
+        {
+            using (MemoryStream m = new MemoryStream(data))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    Header.PacketFormat = reader.ReadUInt16();
+                    Header.GameMajorVersion = reader.ReadByte();
+                    Header.GameMinorVersion = reader.ReadByte();
+                    Header.PacketVersion = reader.ReadByte();
+                    Header.PacketID = reader.ReadByte();
+                    Header.SessionUID = reader.ReadUInt64();
+                    Header.SessionTime = reader.ReadSingle();
+                    Header.FrameIdentifier = reader.ReadUInt32();
+                    Header.PlayerCarIndex = reader.ReadByte();
+                    Header.SecondaryPlayerCarIndex = reader.ReadByte();
+
+                    Weather = reader.ReadByte();
+                    TrackTemperature = reader.ReadSByte();
+                    AirTemperature = reader.ReadSByte();
+                    TotalLaps = reader.ReadByte();
+                    TrackLength = reader.ReadUInt16();
+                    SessionType = reader.ReadByte();
+                    TrackID = reader.ReadSByte();
+                    Formula = reader.ReadByte();
+                    SessionTimeLeft = reader.ReadUInt16();
+                    SessionDuration = reader.ReadUInt16();
+                    PitSpeedLimit = reader.ReadByte();
+                    GamePaused = reader.ReadByte();
+                    IsSpectating = reader.ReadByte();
+                    SpectatorCarIndex = reader.ReadByte();
+                    SliProNativeSupport = reader.ReadByte();
+                    NumMarshalZones = reader.ReadByte();
+
+                    for (int i = 0; i < 21; i++)
+                    {
+                        MarshalZones[i] = new MarshalZone
+                        {
+                            ZoneStart = reader.ReadSingle(),
+                            ZoneFlag = reader.ReadSByte()
+                        };
+                    }
+
+                    SafetyCarStatus = reader.ReadByte();
+                    NetworkGame = reader.ReadByte();
+                    NumWeatherForecastSamples = reader.ReadByte();
+
+                    for(int i = 0; i < 20; i++)
+                    {
+                        WeatherForecastSamples[i] = new WeatherForecastSample
+                        {
+                            SessionType = reader.ReadByte(),
+                            TimeOffset = reader.ReadByte(),
+                            Weather = reader.ReadByte(),
+                            TrackTemperature = reader.ReadSByte(),
+                            AirTemperature = reader.ReadSByte()
+                        };
+                    }
+                }
+            }
+        }
+        #endregion
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

@@ -8,6 +8,8 @@ namespace SneknetRacing.Model
 {
     public class PacketMotionData : INotifyPropertyChanged
     {
+        #region Fields
+
         private string _info;
 
         private PacketHeader _header;                  // Header
@@ -30,6 +32,10 @@ namespace SneknetRacing.Model
         private float _angularAccelerationY;           // Angular velocity y-component
         private float _angularAccelerationZ;           // Angular velocity z-component
         private float _frontWheelsAngle;               // Current front wheels angle in radians
+
+        #endregion
+
+        #region Properties
 
         public string Info
         {
@@ -264,6 +270,8 @@ namespace SneknetRacing.Model
             }
         }
 
+        #endregion
+
         public PacketMotionData()
         {
             Header = new PacketHeader();
@@ -361,10 +369,7 @@ namespace SneknetRacing.Model
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

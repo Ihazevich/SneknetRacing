@@ -9,7 +9,7 @@ namespace SneknetRacing.Model
     public class MarshalZone : INotifyPropertyChanged
     {
         private float _zoneStart;   // Fraction (0..1) of way through the lap the marshal zone starts
-        private byte _zoneFlag;    // -1 = invalid/unknown, 0 = none, 1 = green, 2 = blue, 3 = yellow, 4 = red
+        private sbyte _zoneFlag;    // -1 = invalid/unknown, 0 = none, 1 = green, 2 = blue, 3 = yellow, 4 = red
 
         public float ZoneStart
         {
@@ -24,7 +24,7 @@ namespace SneknetRacing.Model
             }
         }
 
-        public byte ZoneFlag
+        public sbyte ZoneFlag
         {
             get
             {
@@ -34,18 +34,6 @@ namespace SneknetRacing.Model
             {
                 _zoneFlag = value;
                 OnPropertyChanged("ZoneFlag");
-            }
-        }
-
-        public void Desserialize(byte[] data)
-        {
-            using (MemoryStream m = new MemoryStream(data))
-            {
-                using (BinaryReader reader = new BinaryReader(m))
-                {
-                    ZoneStart = (float)reader.ReadDouble();
-                    ZoneFlag = reader.ReadByte();
-                }
             }
         }
 
