@@ -15,6 +15,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SneknetRacing.Model;
 using SneknetRacing.Network;
+using Nefarius.ViGEm.Client;
+using Nefarius.ViGEm.Client.Targets;
+using Nefarius.ViGEm.Client.Targets.Xbox360;
 
 namespace SneknetRacing
 {
@@ -27,14 +30,19 @@ namespace SneknetRacing
         Thread serverThread;
         Thread dataHandleThread;
 
-        PacketHeader packetHeader = new PacketHeader();
+        PacketHeader header = new PacketHeader();
         PacketMotionData packet = new PacketMotionData();
+
+        ViGEmClient client = new ViGEmClient();
+
+        IXbox360Controller controller;
 
         public MainWindow()
         {
             serverThread = new Thread(() => server.Listen());
             dataHandleThread = new Thread(() => this.SubscribeToEvent(server));
 
+            controller = client.CreateXbox360Controller();
 
             DataContext = packet;
 
@@ -58,9 +66,26 @@ namespace SneknetRacing
 
         private void server_DataReceivedEvent(object sender, ReceivedDataArgs args)
         {
-            packet.Info = Encoding.ASCII.GetString(args.receivedBytes);
-            packet.Desserialize(args.receivedBytes);
+            packet.Info = "beep";
+            header.Desserialize(args.receivedBytes);
+            if(header.PacketID == 0)
+                packet.Desserialize(args.receivedBytes);
+            packet.Info = "boop";
         }
 
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            controller.Connect();
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+            controller.SetSliderValue(Xbox360Slider.RightTrigger, 250);
+        }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            controller.SetSliderValue(Xbox360Slider.RightTrigger, 0);
+        }
     }
 }

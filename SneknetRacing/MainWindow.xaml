@@ -22,12 +22,59 @@
         <TextBox x:Name="textBox_Copy" HorizontalAlignment="Left" Margin="179,155,0,0" Text="{Binding Path=Header.GameMajorVersion}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Left" Margin="179,186,0,0" Text="{Binding Path=Header.GameMinorVersion}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="textBox_Copy2" HorizontalAlignment="Left" Margin="179,217,0,0" Text="{Binding Path=Header.PacketID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="textBox_Copy3" HorizontalAlignment="Left" Margin="179,248,0,0" Text="{Binding Path=Header.SessionUID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_Copy3" HorizontalAlignment="Left" Margin="179,248,0,0" Text="{Binding Path=Header.SessionUID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="201"/>
         <TextBox x:Name="textBox_Copy4" HorizontalAlignment="Left" Margin="179,279,0,0" Text="{Binding Path=Header.SessionTime}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="textBox_Copy5" HorizontalAlignment="Left" Margin="179,310,0,0" Text="{Binding Path=Header.FrameIdentifier}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="textBox_Copy6" HorizontalAlignment="Left" Margin="179,341,0,0" Text="{Binding Path=Header.PlayerCarIndex}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="textBox_Copy7" HorizontalAlignment="Left" Margin="179,372,0,0" Text="{Binding Path=Header.SecondaryPlayerCarIndex}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="InfoLabel" Content="{Binding Path=Info}" HorizontalAlignment="Left" Margin="336,123,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.285,-0.177" Width="278" Background="#FFD4FFB1"/>
+        <Label x:Name="InfoLabel" Content="{Binding Path=Info}" HorizontalAlignment="Left" Margin="141,46,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.285,-0.177" Width="55" Background="#FFD4FFB1" Height="24"/>
+        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="473,115,0,0" Text="{Binding Path=SuspensionPosition[2]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy" HorizontalAlignment="Left" Margin="473,138,0,0" Text="{Binding Path=SuspensionVelocity[2]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy2" HorizontalAlignment="Left" Margin="473,161,0,0" Text="{Binding Path=SuspensionAcceleration[2]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy3" HorizontalAlignment="Left" Margin="473,184,0,0" Text="{Binding Path=WheelSpeed[2]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy4" HorizontalAlignment="Left" Margin="473,207,0,0" Text="{Binding Path=WheelSlip[2]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy6" HorizontalAlignment="Left" Margin="558,138,0,0" Text="{Binding Path=SuspensionVelocity[3]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy7" HorizontalAlignment="Left" Margin="558,115,0,0" Text="{Binding Path=SuspensionPosition[3]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy8" HorizontalAlignment="Left" Margin="558,161,0,0" Text="{Binding Path=SuspensionAcceleration[3]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy9" HorizontalAlignment="Left" Margin="558,184,0,0" Text="{Binding Path=WheelSpeed[3]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy10" HorizontalAlignment="Left" Margin="558,207,0,0" Text="{Binding Path=WheelSlip[3]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy12" HorizontalAlignment="Left" Margin="473,290,0,0" Text="{Binding Path=SuspensionVelocity[0]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy13" HorizontalAlignment="Left" Margin="473,267,0,0" Text="{Binding Path=SuspensionPosition[0]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy14" HorizontalAlignment="Left" Margin="473,313,0,0" Text="{Binding Path=SuspensionAcceleration[0]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy15" HorizontalAlignment="Left" Margin="473,336,0,0" Text="{Binding Path=WheelSpeed[0]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy16" HorizontalAlignment="Left" Margin="473,359,0,0" Text="{Binding Path=WheelSlip[0]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy18" HorizontalAlignment="Left" Margin="558,290,0,0" Text="{Binding Path=SuspensionVelocity[1]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy19" HorizontalAlignment="Left" Margin="558,267,0,0" Text="{Binding Path=SuspensionPosition[1]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy20" HorizontalAlignment="Left" Margin="558,313,0,0" Text="{Binding Path=SuspensionAcceleration[1]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy21" HorizontalAlignment="Left" Margin="558,336,0,0" Text="{Binding Path=WheelSpeed[1]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="textBox1_Copy22" HorizontalAlignment="Left" Margin="558,359,0,0" Text="{Binding Path=WheelSlip[1]}" TextWrapping="NoWrap" VerticalAlignment="Top" Width="50"/>
+        <Label x:Name="label2" Content="SP" HorizontalAlignment="Left" Margin="445,111,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy" Content="SV" HorizontalAlignment="Left" Margin="445,134,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy1" Content="SA" HorizontalAlignment="Left" Margin="445,157,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy2" Content="WSp" HorizontalAlignment="Left" Margin="435,180,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy3" Content="WSl" HorizontalAlignment="Left" Margin="435,203,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy4" Content="SP" HorizontalAlignment="Left" Margin="445,263,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy5" Content="SV" HorizontalAlignment="Left" Margin="445,286,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy6" Content="SA" HorizontalAlignment="Left" Margin="445,309,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy7" Content="WSp" HorizontalAlignment="Left" Margin="435,332,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy8" Content="WSl" HorizontalAlignment="Left" Margin="435,355,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy9" Content="SP" HorizontalAlignment="Left" Margin="615,112,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy10" Content="SV" HorizontalAlignment="Left" Margin="615,135,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy11" Content="SA" HorizontalAlignment="Left" Margin="615,158,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy12" Content="WSp" HorizontalAlignment="Left" Margin="613,181,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy13" Content="WSl" HorizontalAlignment="Left" Margin="615,203,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy14" Content="SP" HorizontalAlignment="Left" Margin="614,263,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy15" Content="SV" HorizontalAlignment="Left" Margin="614,286,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy16" Content="SA" HorizontalAlignment="Left" Margin="614,309,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy17" Content="WSp" HorizontalAlignment="Left" Margin="613,332,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy18" Content="WSl" HorizontalAlignment="Left" Margin="613,355,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy19" Content="FL" HorizontalAlignment="Left" Margin="486,84,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy20" Content="FR" HorizontalAlignment="Left" Margin="571,84,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy21" Content="RR" HorizontalAlignment="Left" Margin="571,236,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2_Copy22" Content="RL" HorizontalAlignment="Left" Margin="486,236,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button1" Content="Connect Gamepad" HorizontalAlignment="Left" Margin="261,18,0,0" VerticalAlignment="Top" Width="139" Click="button1_Click"/>
+        <Button x:Name="button2" Content="Vroom" HorizontalAlignment="Left" Height="20" Margin="261,48,0,0" VerticalAlignment="Top" Width="59" Click="button2_Click"/>
+        <Button x:Name="button3" Content="Not Vroom" HorizontalAlignment="Left" Margin="330,48,0,0" VerticalAlignment="Top" Width="70" Click="button3_Click"/>
 
     </Grid>
 </Window>

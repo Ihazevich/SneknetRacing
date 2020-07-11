@@ -267,6 +267,8 @@ namespace SneknetRacing.Model
         public PacketMotionData()
         {
             Header = new PacketHeader();
+            CarMotionData = new CarMotionData[22];
+            SuspensionPosition = new float[4];
         }
 
         public void Desserialize(byte[] data)
@@ -280,33 +282,35 @@ namespace SneknetRacing.Model
                     Header.GameMinorVersion = reader.ReadByte();
                     Header.PacketVersion = reader.ReadByte();
                     Header.PacketID = reader.ReadByte();
-                    Header.SessionUID = reader.ReadUInt32();
+                    Header.SessionUID = reader.ReadUInt64();
                     Header.SessionTime = reader.ReadSingle();
                     Header.FrameIdentifier = reader.ReadUInt32();
                     Header.PlayerCarIndex = reader.ReadByte();
                     Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
-                    CarMotionData = new CarMotionData[20];
                     for(int i = 0; i < 22; i++)
                     {
-                        CarMotionData[i].WorldPositionX = reader.ReadSingle();
-                        CarMotionData[i].WorldPositionZ = reader.ReadSingle();
-                        CarMotionData[i].WorldPositionY = reader.ReadSingle();
-                        CarMotionData[i].WorldVelocityX = reader.ReadSingle();
-                        CarMotionData[i].WorldVelocityY = reader.ReadSingle();
-                        CarMotionData[i].WorldVelocityZ = reader.ReadSingle();
-                        CarMotionData[i].WorldForwardDirX = reader.ReadInt16();
-                        CarMotionData[i].WorldForwardDirY = reader.ReadInt16();
-                        CarMotionData[i].WorldForwardDirZ = reader.ReadInt16();
-                        CarMotionData[i].WorldRightDirX = reader.ReadInt16();
-                        CarMotionData[i].WorldRightDirY = reader.ReadInt16();
-                        CarMotionData[i].WorldRightDirZ = reader.ReadInt16();
-                        CarMotionData[i].GForceLateral = reader.ReadSingle();
-                        CarMotionData[i].GForceLongitudinal = reader.ReadSingle();
-                        CarMotionData[i].GForceVertical = reader.ReadSingle();
-                        CarMotionData[i].Yaw= reader.ReadSingle();
-                        CarMotionData[i].Pitch= reader.ReadSingle();
-                        CarMotionData[i].Roll = reader.ReadSingle();
+                        CarMotionData[i] = new CarMotionData
+                        {
+                            WorldPositionX = reader.ReadSingle(),
+                            WorldPositionZ = reader.ReadSingle(),
+                            WorldPositionY = reader.ReadSingle(),
+                            WorldVelocityX = reader.ReadSingle(),
+                            WorldVelocityY = reader.ReadSingle(),
+                            WorldVelocityZ = reader.ReadSingle(),
+                            WorldForwardDirX = reader.ReadInt16(),
+                            WorldForwardDirY = reader.ReadInt16(),
+                            WorldForwardDirZ = reader.ReadInt16(),
+                            WorldRightDirX = reader.ReadInt16(),
+                            WorldRightDirY = reader.ReadInt16(),
+                            WorldRightDirZ = reader.ReadInt16(),
+                            GForceLateral = reader.ReadSingle(),
+                            GForceLongitudinal = reader.ReadSingle(),
+                            GForceVertical = reader.ReadSingle(),
+                            Yaw = reader.ReadSingle(),
+                            Pitch = reader.ReadSingle(),
+                            Roll = reader.ReadSingle()
+                        };
                     }
 
                     SuspensionPosition = new float[4];

@@ -30,6 +30,8 @@ namespace SneknetRacing.Model
 
         #endregion
 
+        #region Getters/Setters
+
         public float WorldPositionX
         {
             get 
@@ -247,6 +249,13 @@ namespace SneknetRacing.Model
                 _roll = value;
                 OnPropertyChanged("Roll");
             }
+        }
+
+        #endregion
+
+        public CarMotionData()
+        {
+            _worldPositionX = 0;
         }
 
         #region INotifyPropertyChanged Members

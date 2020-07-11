@@ -154,8 +154,8 @@ namespace SneknetRacing.Model
                     GameMinorVersion = reader.ReadByte();
                     PacketVersion = reader.ReadByte();
                     PacketID = reader.ReadByte();
-                    SessionUID = reader.ReadUInt32();
-                    SessionTime = (float)reader.ReadDouble();
+                    SessionUID = reader.ReadUInt64();
+                    SessionTime = reader.ReadSingle();
                     FrameIdentifier = reader.ReadUInt32();
                     PlayerCarIndex = reader.ReadByte();
                     SecondaryPlayerCarIndex = reader.ReadByte();
