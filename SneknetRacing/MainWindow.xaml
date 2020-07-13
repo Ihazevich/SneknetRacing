@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
@@ -29,8 +29,16 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
-                    <Button Content="Start Listening" materialDesign:ButtonProgressAssist.IsIndeterminate="True" />
-                    <Button Content="Connect Gamepad" materialDesign:ButtonProgressAssist.IsIndeterminate="True" />
+                    <Button x:Name="udpButton" Content="{Binding Path=NetworkButtonStatus}"
+                            Background="{Binding Path=NetworkButtonColor}"
+                            materialDesign:ButtonProgressAssist.IsIndeterminate="True" 
+                            materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Path=NetworkThreadsRunning}" 
+                            Click="udpButton_Click" />
+                    <Button x:Name="gamepadButton" Content="{Binding Path=GamepadButtonStatus}" 
+                            Background="{Binding Path=GamepadButtonColor}"
+                            materialDesign:ButtonProgressAssist.IsIndeterminate="True" 
+                            materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Path=GamepadConnected}" 
+                            Click="gamepadButton_Click"/>
                     <Button Content="Header" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Header"/>
                     <Button Content="Motion" />
                     <Button Content="Session" />

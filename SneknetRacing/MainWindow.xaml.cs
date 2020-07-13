@@ -35,8 +35,9 @@ namespace SneknetRacing
         PacketMotionData packet = new PacketMotionData();
 
         ViGEmClient client = new ViGEmClient();
-
         IXbox360Controller controller;
+
+        MainViewModel mainViewModel = new MainViewModel();
 
         public MainWindow()
         {
@@ -45,9 +46,8 @@ namespace SneknetRacing
 
             controller = client.CreateXbox360Controller();
 
-
             InitializeComponent();
-            DataContext = new MainViewModel();
+            DataContext = mainViewModel;
         }
 
         public void SubscribeToEvent(Server server)
@@ -79,13 +79,35 @@ namespace SneknetRacing
             controller.SetSliderValue(Xbox360Slider.RightTrigger, 0);
         }
 
-        private void udpMenuItem_Click(object sender, RoutedEventArgs e)
+
+        private void udpButton_Click(object sender, RoutedEventArgs e)
         {
-            packet.Info = "Starting threads";
-            // Start Server thread
-            serverThread.Start();
-            // Start Handler thread
-            dataHandleThread.Start();
+            if (mainViewModel.NetworkThreadsRunning)
+            {
+            }
+            else
+            {
+                // Start Server thread
+                serverThread.Start();
+                // Start Handler thread
+                dataHandleThread.Start();
+                mainViewModel.NetworkThreadsRunning = true;
+            }
+
+        }
+
+        private void gamepadButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(mainViewModel.GamepadConnected)
+            {
+                controller.Disconnect();
+                mainViewModel.GamepadConnected = false;
+            }
+            else
+            {
+                controller.Connect();
+                mainViewModel.GamepadConnected = true;
+            }
         }
     }
 }
