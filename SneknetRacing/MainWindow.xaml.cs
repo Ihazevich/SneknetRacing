@@ -13,11 +13,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SneknetRacing.Model;
+using SneknetRacing.Models;
 using SneknetRacing.Network;
 using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
+using SneknetRacing.ViewModels;
 
 namespace SneknetRacing
 {
@@ -44,9 +45,9 @@ namespace SneknetRacing
 
             controller = client.CreateXbox360Controller();
 
-            DataContext = packet;
 
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
 
         public void SubscribeToEvent(Server server)

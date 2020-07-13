@@ -4,16 +4,16 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 
-namespace SneknetRacing.Model
+namespace SneknetRacing.Models
 {
-    public class PacketLobbyInfoData : BaseModel
+    public class PacketFinalClassificationData : BaseModel
     {
         #region Fields
         private PacketHeader _header;
-        private byte _numPlayers;
-        private LobbyInfoData[] _lobbyPlayers;
+        private byte _numCars;
+        private FinalClassificationData[] _classificationData;
         #endregion
-        
+
         #region Properties
         public PacketHeader Header
         {
@@ -21,43 +21,41 @@ namespace SneknetRacing.Model
             {
                 return _header;
             }
-            set 
+            set
             {
                 _header = value;
                 OnPropertyChanged("Header");
             }
         }
-        public byte NumPlayers
+        public byte NumCars
         {
             get
             {
-                return _numPlayers;
+                return _numCars;
             }
             set
             {
-                _numPlayers = value;
-                OnPropertyChanged("NumPlayers");
+                _numCars = value;
+                OnPropertyChanged("NumCars");
             }
         }
-        public LobbyInfoData[] LobbyPlayers
+        public FinalClassificationData[] ClassificationData
         {
             get
             {
-                return _lobbyPlayers;
+                return _classificationData;
             }
             set
             {
-                _lobbyPlayers = value;
-                OnPropertyChanged("LobbyPlayers");
+                _classificationData = value;
+                OnPropertyChanged("ClassificationData");
             }
         }
-        #endregion
 
-        public PacketLobbyInfoData()
+        public PacketFinalClassificationData()
         {
-            LobbyPlayers = new LobbyInfoData[22];
+            ClassificationData = new FinalClassificationData[22];
         }
-
         public void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
@@ -75,21 +73,31 @@ namespace SneknetRacing.Model
                     Header.PlayerCarIndex = reader.ReadByte();
                     Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
-                    NumPlayers = reader.ReadByte();
-
+                    NumCars = reader.ReadByte();
+                    
                     for(int i = 0; i < 22; i++)
                     {
-                        LobbyPlayers[i] = new LobbyInfoData()
+                        ClassificationData[i] = new FinalClassificationData()
                         {
-                            AIControlled = reader.ReadByte(),
-                            TeamID = reader.ReadByte(),
-                            Nationality = reader.ReadByte(),
-                            Name = reader.ReadChars(48),
-                            ReadyStatus = reader.ReadByte()
+                            Position = reader.ReadByte(),
+                            NumLaps = reader.ReadByte(),
+                            GridPosition = reader.ReadByte(),
+                            Points = reader.ReadByte(),
+                            NumPitStops = reader.ReadByte(),
+                            ResultStatus = reader.ReadByte(),
+                            BestLapTime = reader.ReadSingle(),
+                            TotalRaceTime = reader.ReadDouble(),
+                            PenaltiesTime = reader.ReadByte(),
+                            NumPenalties = reader.ReadByte(),
+                            NumTyreStints = reader.ReadByte(),
+                            TyreStintsActual = reader.ReadBytes(8),
+                            TyreStintsVisual = reader.ReadBytes(8)
                         };
                     }
                 }
             }
         }
+
+        #endregion
     }
 }

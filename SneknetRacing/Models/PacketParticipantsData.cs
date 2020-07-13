@@ -4,14 +4,15 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 
-namespace SneknetRacing.Model
+namespace SneknetRacing.Models
 {
-    public class PacketFinalClassificationData : BaseModel
+    public class PacketParticipantsData : BaseModel
     {
         #region Fields
-        private PacketHeader _header;
-        private byte _numCars;
-        private FinalClassificationData[] _classificationData;
+        private PacketHeader _header;           // Header
+        private byte _numActiveCars;  // Number of active cars in the data – should match number of
+                                // cars on HUD
+        private ParticipantData[] _participants;
         #endregion
 
         #region Properties
@@ -27,35 +28,37 @@ namespace SneknetRacing.Model
                 OnPropertyChanged("Header");
             }
         }
-        public byte NumCars
+        public byte NumActiveCars
         {
             get
             {
-                return _numCars;
+                return _numActiveCars;
             }
             set
             {
-                _numCars = value;
-                OnPropertyChanged("NumCars");
+                _numActiveCars = value;
+                OnPropertyChanged("NumActiveCars");
             }
         }
-        public FinalClassificationData[] ClassificationData
+        public ParticipantData[] Participants
         {
             get
             {
-                return _classificationData;
+                return _participants;
             }
             set
             {
-                _classificationData = value;
-                OnPropertyChanged("ClassificationData");
+                _participants = value;
+                OnPropertyChanged("Participants");
             }
+        }
+        #endregion
+
+        public PacketParticipantsData()
+        {
+            Participants = new ParticipantData[22];
         }
 
-        public PacketFinalClassificationData()
-        {
-            ClassificationData = new FinalClassificationData[22];
-        }
         public void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
@@ -73,31 +76,23 @@ namespace SneknetRacing.Model
                     Header.PlayerCarIndex = reader.ReadByte();
                     Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
-                    NumCars = reader.ReadByte();
-                    
+                    NumActiveCars = reader.ReadByte();
+
                     for(int i = 0; i < 22; i++)
                     {
-                        ClassificationData[i] = new FinalClassificationData()
+                        Participants[i] = new ParticipantData()
                         {
-                            Position = reader.ReadByte(),
-                            NumLaps = reader.ReadByte(),
-                            GridPosition = reader.ReadByte(),
-                            Points = reader.ReadByte(),
-                            NumPitStops = reader.ReadByte(),
-                            ResultStatus = reader.ReadByte(),
-                            BestLapTime = reader.ReadSingle(),
-                            TotalRaceTime = reader.ReadDouble(),
-                            PenaltiesTime = reader.ReadByte(),
-                            NumPenalties = reader.ReadByte(),
-                            NumTyreStints = reader.ReadByte(),
-                            TyreStintsActual = reader.ReadBytes(8),
-                            TyreStintsVisual = reader.ReadBytes(8)
+                            AIControlled = reader.ReadByte(),
+                            DriverID = reader.ReadByte(),
+                            TeamID = reader.ReadByte(),
+                            RaceNumber = reader.ReadByte(),
+                            Nationality = reader.ReadByte(),
+                            Name = reader.ReadChars(4),
+                            YourTelemetry = reader.ReadByte()
                         };
                     }
                 }
             }
         }
-
-        #endregion
     }
 }

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 
 
-namespace SneknetRacing.Model
+namespace SneknetRacing.Models
 {
     public class PacketHeader : BaseModel
     {

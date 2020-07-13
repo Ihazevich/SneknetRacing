@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace SneknetRacing.Model
+namespace SneknetRacing.Models
 {
     public class WeatherForecastSample : BaseModel
     {
