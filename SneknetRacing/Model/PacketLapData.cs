@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class PacketLapData : INotifyPropertyChanged
+    public class PacketLapData : BaseModel
     {
         #region Fields
         private PacketHeader _header;             // Header
@@ -42,7 +42,6 @@ namespace SneknetRacing.Model
 
         public PacketLapData()
         {
-            Header = new PacketHeader();
             LapData = new LapData[22];
         }
         public void Desserialize(byte[] data)
@@ -98,12 +97,5 @@ namespace SneknetRacing.Model
                 }
             }
         }
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

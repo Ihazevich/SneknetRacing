@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class LapData : INotifyPropertyChanged
+    public class LapData : BaseModel
     {
         #region Fields
         private float _lastLapTime;               // Last lap time in seconds
@@ -369,14 +369,6 @@ namespace SneknetRacing.Model
                 _resultStatus = value;
                 OnPropertyChanged("ResultStatus");
             }
-        }
-        #endregion
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

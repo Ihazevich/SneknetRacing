@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class FinalClassificationData : INotifyPropertyChanged
+    public class FinalClassificationData : BaseModel
     {
         #region Fields
         private byte _position;              // Finishing position
@@ -190,13 +190,5 @@ namespace SneknetRacing.Model
             TyreStintsActual = new byte[8];
             TyreStintsVisual = new byte[8];
         }
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class CarTelemetryData : INotifyPropertyChanged
+    public class CarTelemetryData : BaseModel
     {
         #region Fields
         private byte _speed;                         // Speed of car in kilometres per hour
@@ -205,14 +205,6 @@ namespace SneknetRacing.Model
                 _surfaceType = value;
                 OnPropertyChanged("SurfaceType");
             }
-        }
-        #endregion
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

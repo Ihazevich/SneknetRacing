@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class CarStatusData : INotifyPropertyChanged
+    public class CarStatusData : BaseModel
     {
         #region Fields
         private byte _tractionControl;          // 0 (off) - 2 (high)
@@ -425,13 +425,5 @@ namespace SneknetRacing.Model
             TyresWear = new byte[4];
             TyresDamage = new byte[4];
         }
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

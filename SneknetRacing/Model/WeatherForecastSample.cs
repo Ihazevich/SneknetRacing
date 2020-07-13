@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class WeatherForecastSample : INotifyPropertyChanged
+    public class WeatherForecastSample : BaseModel
     {
         #region Fields
 
@@ -105,13 +105,5 @@ namespace SneknetRacing.Model
                 }
             }
         }
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

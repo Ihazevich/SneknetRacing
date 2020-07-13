@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class ParticipantData : INotifyPropertyChanged
+    public class ParticipantData : BaseModel
     {
         #region Fields
         private byte _aiControlled;           // Whether the vehicle is AI (1) or Human (0) controlled
@@ -109,13 +109,5 @@ namespace SneknetRacing.Model
         {
             Name = new char[4];
         }
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

@@ -7,9 +7,9 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class PacketHeader : INotifyPropertyChanged
+    public class PacketHeader : BaseModel
     {
-        // Header
+        #region Fields
         private UInt16 _packetFormat;       // 2019
         private byte _gameMajorVersion;     // Game major version - "X.00"
         private byte _gameMinorVersion;     // Game minor version - "1.XX"
@@ -21,8 +21,9 @@ namespace SneknetRacing.Model
         private byte _playerCarIndex;       // Index of player's car in the array
         private byte _secondaryPlayerCarIndex;  // Index of secondary player's car in the array (splitscreen)
                                                 // 255 if no second player
+        #endregion
 
-        // Getters
+        #region Properties
         public UInt16 PacketFormat
         {
             get
@@ -143,6 +144,7 @@ namespace SneknetRacing.Model
                 OnPropertyChanged("SecondaryPlayerCarIndex");
             }
         }
+        #endregion
         public void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
@@ -162,16 +164,5 @@ namespace SneknetRacing.Model
                 }
             }
         }
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            if(PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        #endregion
     }
 }

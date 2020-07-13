@@ -5,10 +5,9 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class CarMotionData : INotifyPropertyChanged
+    public class CarMotionData : BaseModel
     {
-        #region Members
-
+        #region Fields
         private float _worldPositionX;           // World space X position
         private float _worldPositionY;           // World space Y position
         private float _worldPositionZ;           // World space Z position
@@ -27,11 +26,9 @@ namespace SneknetRacing.Model
         private float _yaw;                      // Yaw angle in radians
         private float _pitch;                    // Pitch angle in radians
         private float _roll;                     // Roll angle in radians
-
         #endregion
 
-        #region Getters/Setters
-
+        #region Properties
         public float WorldPositionX
         {
             get 
@@ -250,19 +247,11 @@ namespace SneknetRacing.Model
                 OnPropertyChanged("Roll");
             }
         }
-
         #endregion
 
         public CarMotionData()
         {
         }
 
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

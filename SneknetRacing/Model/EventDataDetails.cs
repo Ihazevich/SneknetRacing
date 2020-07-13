@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class EventDataDetails : INotifyPropertyChanged
+    public class EventDataDetails : BaseModel
     {
         #region Enums
         public enum PenaltyTypes
@@ -240,14 +240,5 @@ namespace SneknetRacing.Model
         public EventDataDetails()
         {
         }
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
-}
 }

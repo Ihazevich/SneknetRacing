@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class CarSetupData : INotifyPropertyChanged
+    public class CarSetupData : BaseModel
     {
         #region Fields
         private byte _frontWing;                // Front wing aero
@@ -299,12 +299,5 @@ namespace SneknetRacing.Model
         }
         #endregion
 
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

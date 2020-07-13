@@ -26,9 +26,9 @@ namespace SneknetRacing
     /// </summary>
     public partial class MainWindow : Window
     {
-        Server server = new Server();
-        Thread serverThread;
-        Thread dataHandleThread;
+        readonly Server server = new Server();
+        readonly Thread serverThread;
+        readonly Thread dataHandleThread;
 
         PacketHeader header = new PacketHeader();
         PacketMotionData packet = new PacketMotionData();
@@ -47,16 +47,6 @@ namespace SneknetRacing
             DataContext = packet;
 
             InitializeComponent();
-        }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            packet.Info = "Starting threads";
-            
-            // Start Server thread
-            serverThread.Start();
-            // Start Handler thread
-            dataHandleThread.Start();
         }
 
         public void SubscribeToEvent(Server server)
@@ -86,6 +76,15 @@ namespace SneknetRacing
         private void button3_Click(object sender, RoutedEventArgs e)
         {
             controller.SetSliderValue(Xbox360Slider.RightTrigger, 0);
+        }
+
+        private void udpMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            packet.Info = "Starting threads";
+            // Start Server thread
+            serverThread.Start();
+            // Start Handler thread
+            dataHandleThread.Start();
         }
     }
 }

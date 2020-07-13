@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class PacketSessionData : INotifyPropertyChanged
+    public class PacketSessionData : BaseModel
     {
         #region Fields
 
@@ -317,6 +317,12 @@ namespace SneknetRacing.Model
 
         #endregion
 
+        public PacketSessionData()
+        {
+            MarshalZones = new MarshalZone[21];
+            WeatherForecastSamples = new WeatherForecastSample[20];
+        }
+
         #region Methods
         public void Desserialize(byte[] data)
         {
@@ -377,17 +383,6 @@ namespace SneknetRacing.Model
                         };
                     }
                 }
-            }
-        }
-        #endregion
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
         #endregion

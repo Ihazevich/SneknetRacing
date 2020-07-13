@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SneknetRacing.Model
 {
-    public class PacketMotionData : INotifyPropertyChanged
+    public class PacketMotionData : BaseModel
     {
         #region Fields
 
@@ -274,7 +274,6 @@ namespace SneknetRacing.Model
 
         public PacketMotionData()
         {
-            Header = new PacketHeader();
             CarMotionData = new CarMotionData[22];
             SuspensionPosition = new float[4];
         }
@@ -364,13 +363,5 @@ namespace SneknetRacing.Model
                 }
             }
         }
-        
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }
