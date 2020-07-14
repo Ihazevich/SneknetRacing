@@ -14,7 +14,7 @@ namespace SneknetRacing.Models
 
         private PacketHeader _header;                  // Header
 
-        private CarMotionData[] _carMotionData;        // Data for all cars on track
+        private BindingList<CarMotionData> _carMotionData;        // Data for all cars on track
 
         // Extra player car ONLY data
         private float[] _suspensionPosition;           // Note: All wheel arrays have the following order:
@@ -63,7 +63,7 @@ namespace SneknetRacing.Models
             }
         }
 
-        public CarMotionData[] CarMotionData
+        public BindingList<CarMotionData> CarMotionData
         {
             get
             {
@@ -275,7 +275,7 @@ namespace SneknetRacing.Models
         public PacketMotionData()
         {
             Header = new PacketHeader();
-            CarMotionData = new CarMotionData[22];
+            CarMotionData = new BindingList<CarMotionData>();
             SuspensionPosition = new float[4];
         }
 
@@ -298,7 +298,7 @@ namespace SneknetRacing.Models
 
                     for(int i = 0; i < 22; i++)
                     {
-                        CarMotionData[i] = new CarMotionData
+                        CarMotionData temp = new CarMotionData
                         {
                             WorldPositionX = reader.ReadSingle(),
                             WorldPositionZ = reader.ReadSingle(),
@@ -319,6 +319,7 @@ namespace SneknetRacing.Models
                             Pitch = reader.ReadSingle(),
                             Roll = reader.ReadSingle()
                         };
+                        CarMotionData.Add(temp);
                     }
 
                     SuspensionPosition = new float[4];

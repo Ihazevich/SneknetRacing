@@ -1,5 +1,6 @@
 ﻿using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Targets;
+using SneknetRacing.AI;
 using SneknetRacing.Commands;
 using SneknetRacing.Models;
 using SneknetRacing.Network;
@@ -137,6 +138,8 @@ namespace SneknetRacing.ViewModels
             }
         }
 
+        public NeuralInputData NeuralInputData { get; }
+
         public long ProcessTime
         {
             get
@@ -153,6 +156,7 @@ namespace SneknetRacing.ViewModels
         public Server Server { get; }
         public Thread ServerThread { get; }
         public Thread DataHandlerThread { get; }
+        public Thread DataSavingThread { get; }
 
         public UpdateViewCommand UpdateViewCommand { get; set; }
         public StartServerCommand StartServerCommand { get; set; }
@@ -189,6 +193,8 @@ namespace SneknetRacing.ViewModels
             ClassificationDataViewModel = new ClassificationDataViewModel();
             LobbyInfoDataViewModel = new LobbyInfoDataViewModel();
 
+            NeuralInputData = new NeuralInputData();
+
             SelectedViewModel = HeaderViewModel;
             HeaderViewModel.Packet = new PacketHeader()
             {
@@ -218,12 +224,14 @@ namespace SneknetRacing.ViewModels
             {
                 case 0:
                     MotionDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    NeuralInputData.MotionDataPackets.Add(MotionDataViewModel.Packet as PacketMotionData);
                     break;
                 case 1:
                     SessionDataViewModel.Packet.Desserialize(args.receivedBytes);
                     break;
                 case 2:
                     LapDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    NeuralInputData.LapDataPackets.Add(LapDataViewModel.Packet as PacketLapData);
                     break;
                 case 3:
                     EventDataViewModel.Packet.Desserialize(args.receivedBytes);
@@ -236,9 +244,11 @@ namespace SneknetRacing.ViewModels
                     break;
                 case 6:
                     CarTelemetryDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    NeuralInputData.CarTelemetryDataPackets.Add(CarTelemetryDataViewModel.Packet as PacketCarTelemetryData);
                     break;
                 case 7:
                     CarStatusDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    NeuralInputData.CarStatusDataPackets.Add(CarStatusDataViewModel.Packet as PacketCarStatusData);
                     break;
                 case 8:
                     ClassificationDataViewModel.Packet.Desserialize(args.receivedBytes);
