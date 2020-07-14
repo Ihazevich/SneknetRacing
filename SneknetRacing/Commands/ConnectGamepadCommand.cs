@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace SneknetRacing.Commands
 {
-    class ConnectGamepadCommand : ICommand
+    public class ConnectGamepadCommand : ICommand
     {
         private MainViewModel _viewModel;
 

@@ -8,40 +8,51 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="50"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
+        </Grid.RowDefinitions>
         <StackPanel Grid.Column="0">
-            <Label Content="Packet Format" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Game Major Version" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Game Minor Version" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Packet ID" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Session UID" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Session Time" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Frame Identifier" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Player Car Index" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Secondary Player Car Index" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <TextBlock Text="Packet Format" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.PacketFormat}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
         </StackPanel>
         <StackPanel Grid.Column="1">
-            <TextBox Text="{Binding Path=Header.PacketFormat}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.GameMajorVersion}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.GameMinorVersion}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.PacketID}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.SessionUID}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.SessionTime}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.FrameIdentifier}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.PlayerCarIndex}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.SecondaryPlayerCarIndex}" VerticalAlignment="Top"/>
+            <TextBlock Text="Game Major Ver." VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.GameMajorVersion}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
         </StackPanel>
-        <StackPanel Grid.Column="3"></StackPanel>
-        <StackPanel Grid.Column="4"></StackPanel>
-        <StackPanel Grid.Column="6"></StackPanel>
-        <StackPanel Grid.Column="7"></StackPanel>
+        <StackPanel Grid.Column="2">
+            <TextBlock Text="Game Minor Ver." VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.GameMinorVersion}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
+        </StackPanel>
+        <StackPanel Grid.Column="3">
+            <TextBlock Text="Packet ID" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.PacketID}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
+        </StackPanel>
+        <StackPanel Grid.Column="0" Grid.Row="1">
+            <TextBlock Text="Session UID" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.SessionUID}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <TextBlock Text="Session Time" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.SessionTime}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Grid.Row="1">
+            <TextBlock Text="Frame Identifier" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.FrameIdentifier}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
+        </StackPanel>
+        <StackPanel Grid.Column="0" Grid.Row="2">
+            <TextBlock Text="Player Car Index" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.PlayerCarIndex}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="2">
+            <TextBlock Text="Sec. Car Index" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Packet.SecondaryPlayerCarIndex}" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="10"/>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -8,7 +8,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="50"/>
@@ -18,6 +19,9 @@
             <ColumnDefinition Width="50"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
+            <ListView ItemsSource="{Binding Path=Packet.CarMotionData}"></ListView>
+        </StackPanel>
+        <StackPanel Grid.Column="1" >
             <Label Content="Suspension Position" VerticalAlignment="Top" HorizontalAlignment="Right"/>
             <Label Content="Suspension Velocity" VerticalAlignment="Top" HorizontalAlignment="Right"/>
             <Label Content="Suspension Acceleration" VerticalAlignment="Top" HorizontalAlignment="Right"/>
@@ -32,11 +36,11 @@
             <Label Content="Angular Acceleration X" VerticalAlignment="Top" HorizontalAlignment="Right"/>
             <Label Content="Angular Acceleration Y" VerticalAlignment="Top" HorizontalAlignment="Right"/>
             <Label Content="Angular Acceleration Z" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Front Wheel Angle" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Front Wheel Angle" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignLabel}"/>
         </StackPanel>
-        <StackPanel Grid.Column="1">
+        <StackPanel Grid.Column="2">
             <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding Path=Header.PacketFormat}" HorizontalAlignment="Left" Width="50"/>
+                <TextBox Text="{Binding Path=Header.PacketFormat}" HorizontalAlignment="Left" Width="50" Style="{StaticResource MaterialDesignTextBox}"/>
                 <TextBox Text="{Binding Path=Header.GameMajorVersion}" HorizontalAlignment="Left" Width="50"/>
                 <TextBox Text="{Binding Path=Header.GameMinorVersion}" HorizontalAlignment="Left" Width="50"/>
                 <TextBox Text="{Binding Path=Header.PacketID}" HorizontalAlignment="Left" Width="50"/>

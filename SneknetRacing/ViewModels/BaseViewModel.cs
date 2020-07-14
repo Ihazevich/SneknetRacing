@@ -8,19 +8,19 @@ namespace SneknetRacing.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
-        private PacketHeader _header;
+        private int _totalPackets;
         private BaseModel _packet;
 
-        public PacketHeader Header
+        public int TotalPackets
         {
             get
             {
-                return _header;
+                return _totalPackets;
             }
             set
             {
-                _header = value;
-                OnPropertyChanged("Header");
+                _totalPackets = value;
+                OnPropertyChanged("TotalPackets");
             }
         }
         public BaseModel Packet
@@ -38,17 +38,18 @@ namespace SneknetRacing.ViewModels
         
         public BaseViewModel()
         {
-            Header = new PacketHeader();
+            TotalPackets = 0;
         }
 
         public BaseViewModel(BaseModel packet)
         {
-            Header = new PacketHeader();
+            TotalPackets = 0;
             Packet = packet;
         }
 
         public virtual void Desserialize(byte[] data)
         {
+            TotalPackets++;
             Packet.Desserialize(data);
         }
 

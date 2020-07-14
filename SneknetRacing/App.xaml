@@ -11,8 +11,38 @@
             <DataTemplate DataType="{x:Type viewmodels:HeaderViewModel}">
                 <views:HeaderView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:MotionDataViewModel}">
+                <views:MotionDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:SessionDataViewModel}">
+                <views:SessionDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:LapDataViewModel}">
+                <views:LapDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:EventDataViewModel}">
+                <views:EventDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:ParticipantsDataViewModel}">
+                <views:ParticipantsDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:CarSetupsDataViewModel}">
+                <views:CarSetupsDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:CarTelemetryDataViewModel}">
+                <views:CarTelemetryDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:CarStatusDataViewModel}">
+                <views:CarStatusDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:ClassificationDataViewModel}">
+                <views:ClassificationDataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:LobbyInfoDataViewModel}">
+                <views:LobbyInfoDataView/>
+            </DataTemplate>
             <ResourceDictionary.MergedDictionaries>
-                <materialDesign:CustomColorTheme BaseTheme="Light" PrimaryColor="LightGray" SecondaryColor="Lime" />
+                <materialDesign:CustomColorTheme BaseTheme="Light" PrimaryColor="Red" SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

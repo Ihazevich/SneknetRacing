@@ -16,8 +16,6 @@ namespace SneknetRacing.ViewModels
         #region Fields
         private BaseViewModel _selectedViewModel;
 
-        private PacketHeader _packetHeader;
-
         private bool _networkThreadsRunning;
         private string _networkButtonStatus;
         private string _networkButtonColor;
@@ -36,9 +34,20 @@ namespace SneknetRacing.ViewModels
             {
                 _selectedViewModel = value;
                 OnPropertyChanged("SelectedViewModel");
+                UpdateViewCommand.RaiseCanExecuteChanged();
             }
         }
-
+        public HeaderViewModel HeaderViewModel { get; }
+        public MotionDataViewModel MotionDataViewModel { get; }
+        public SessionDataViewModel SessionDataViewModel { get; }
+        public LapDataViewModel LapDataViewModel { get; }
+        public EventDataViewModel EventDataViewModel { get; }
+        public ParticipantsDataViewModel ParticipantsDataViewModel { get; }
+        public CarSetupsDataViewModel CarSetupsDataViewModel { get; }
+        public CarTelemetryDataViewModel CarTelemetryDataViewModel { get; }
+        public CarStatusDataViewModel CarStatusDataViewModel { get; }
+        public ClassificationDataViewModel ClassificationDataViewModel { get; }
+        public LobbyInfoDataViewModel LobbyInfoDataViewModel { get; }
         public bool NetworkThreadsRunning
         {
             get { return _networkThreadsRunning; }
@@ -130,24 +139,11 @@ namespace SneknetRacing.ViewModels
         public Thread ServerThread { get; }
         public Thread DataHandlerThread { get; }
 
-        public ICommand UpdateViewCommand { get; set; }
-        public ICommand StartServerCommand { get; set; }
-        public ICommand ConnectGamepadCommand { get; set; }
+        public UpdateViewCommand UpdateViewCommand { get; set; }
+        public StartServerCommand StartServerCommand { get; set; }
+        public ConnectGamepadCommand ConnectGamepadCommand { get; set; }
         public ViGEmClient Client { get; }
         public IXbox360Controller Controller { get; }
-
-        public PacketHeader PacketHeader
-        {
-            get
-            {
-                return _packetHeader;
-            }
-            set
-            {
-                _packetHeader = value;
-                OnPropertyChanged("PacketHeader");
-            }
-        }
         #endregion
 
         public MainViewModel()
@@ -166,15 +162,70 @@ namespace SneknetRacing.ViewModels
             Client = new ViGEmClient();
             Controller = Client.CreateXbox360Controller();
 
-        }
-        public void SubscribeToEvent(Server server)
-        {
-            server.DataReceivedEvent += server_DataReceivedEvent;
+            HeaderViewModel = new HeaderViewModel();
+            MotionDataViewModel = new MotionDataViewModel();
+            SessionDataViewModel = new SessionDataViewModel();
+            LapDataViewModel = new LapDataViewModel();
+            EventDataViewModel = new EventDataViewModel();
+            ParticipantsDataViewModel = new ParticipantsDataViewModel();
+            CarSetupsDataViewModel = new CarSetupsDataViewModel();
+            CarTelemetryDataViewModel = new CarTelemetryDataViewModel();
+            CarStatusDataViewModel = new CarStatusDataViewModel();
+            ClassificationDataViewModel = new ClassificationDataViewModel();
+            LobbyInfoDataViewModel = new LobbyInfoDataViewModel();
+
+            SelectedViewModel = HeaderViewModel;
+            HeaderViewModel.Packet = new PacketHeader()
+            {
+                PacketID = 1
+            };
+
+            MotionDataViewModel.Packet = new PacketMotionData();
         }
 
-        private void server_DataReceivedEvent(object sender, ReceivedDataArgs args)
+        public void SubscribeToEvent(Server server)
         {
-            SelectedViewModel.Header.Desserialize(args.receivedBytes);
+            server.DataReceivedEvent += Server_DataReceivedEvent;
+        }
+
+        private void Server_DataReceivedEvent(object sender, ReceivedDataArgs args)
+        {
+            HeaderViewModel.Packet.Desserialize(args.receivedBytes);
+            var packet = HeaderViewModel.Packet as PacketHeader;
+
+            switch(packet.PacketID)
+            {
+                case 0:
+                    MotionDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 1:
+                    SessionDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 2:
+                    LapDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 3:
+                    EventDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 4:
+                    ParticipantsDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 5:
+                    CarSetupsDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 6:
+                    CarTelemetryDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 7:
+                    CarStatusDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 8:
+                    ClassificationDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+                case 9:
+                    LobbyInfoDataViewModel.Packet.Desserialize(args.receivedBytes);
+                    break;
+            }
         }
 
     }

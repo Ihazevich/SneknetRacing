@@ -39,16 +39,16 @@
                             materialDesign:ButtonProgressAssist.IsIndeterminate="True" 
                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Path=GamepadConnected}" 
                             Command="{Binding Path=ConnectGamepadCommand}"/>
-                    <Button Content="Header" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Header"/>
-                    <Button Content="Motion" />
-                    <Button Content="Session" />
-                    <Button Content="Event" />
-                    <Button Content="Participants" />
-                    <Button Content="Car Setups" />
-                    <Button Content="Car Telemetry" />
-                    <Button Content="Car Status" />
-                    <Button Content="Final Classification" />
-                    <Button Content="Lobby Info" />
+                    <Button Content="Header" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Header" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Motion" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Motion" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Session" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Session" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Event" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Event" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Participants" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Participants" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Car Setups" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Setups" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Car Telemetry" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Telemetry" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Car Status" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Status" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Final Classification" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Classification" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+                    <Button Content="Lobby Info" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Lobby" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
                 </StackPanel>
                 <Grid Grid.Column="1">
                     <ContentControl Content="{Binding Path=SelectedViewModel}"/>

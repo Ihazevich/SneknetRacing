@@ -24,18 +24,11 @@ namespace SneknetRacing.Commands
 
         public void Execute(object parameter)
         {
-            if (_viewModel.NetworkThreadsRunning)
-            {
-            }
-            else
-            {
-                // Start Server thread
-                _viewModel.ServerThread.Start();
-                // Start Handler thread
-                _viewModel.DataHandlerThread.Start();
-                _viewModel.NetworkThreadsRunning = true;
-            }
-
+            // Start Server thread
+            _viewModel.ServerThread.Start();
+            // Start Handler thread
+            _viewModel.DataHandlerThread.Start();
+            _viewModel.NetworkThreadsRunning = true;
         }
     }
 }
