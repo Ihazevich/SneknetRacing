@@ -55,6 +55,7 @@ namespace SneknetRacing.Models
 
         public PacketLobbyInfoData()
         {
+            Header = new PacketHeader();
             LobbyPlayers = new LobbyInfoData[22];
         }
 

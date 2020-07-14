@@ -42,6 +42,7 @@ namespace SneknetRacing.Models
 
         public PacketLapData()
         {
+            Header = new PacketHeader();
             LapData = new LapData[22];
         }
         public override void Desserialize(byte[] data)

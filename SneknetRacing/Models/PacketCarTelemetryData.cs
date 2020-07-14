@@ -104,6 +104,7 @@ namespace SneknetRacing.Models
 
         public PacketCarTelemetryData()
         {
+            Header = new PacketHeader();
             CarTelemetryData = new CarTelemetryData[22];
         }
 

@@ -42,6 +42,7 @@ namespace SneknetRacing.Models
 
         public PacketCarStatusData()
         {
+            Header = new PacketHeader();
             CarStatusData = new CarStatusData[22];
         }
 

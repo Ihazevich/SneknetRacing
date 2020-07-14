@@ -274,6 +274,7 @@ namespace SneknetRacing.Models
 
         public PacketMotionData()
         {
+            Header = new PacketHeader();
             CarMotionData = new CarMotionData[22];
             SuspensionPosition = new float[4];
         }

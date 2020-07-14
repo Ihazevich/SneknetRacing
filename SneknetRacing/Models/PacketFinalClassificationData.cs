@@ -55,6 +55,7 @@ namespace SneknetRacing.Models
 
         public PacketFinalClassificationData()
         {
+            Header = new PacketHeader();
             ClassificationData = new FinalClassificationData[22];
         }
 

@@ -28,22 +28,115 @@
         <StackPanel Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Center">
             <TextBlock Text="Extra Player Info" Style="{StaticResource MaterialDesignHeadline5TextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
-        <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="4">
-            <TextBlock Text="Suspension Position" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-            <TextBlock Text="Suspension Velocity" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-            <TextBlock Text="Suspension Acceleration" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-            <TextBlock Text="Wheel Speed" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-            <TextBlock Text="Wheel Slip" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-            <TextBlock Text="Local Velocity" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-            <TextBlock Text="Angular Velocity" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-            <TextBlock Text="Angular Acceleration" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-            <TextBlock Text="Front Wheel Angle" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
-        </StackPanel>
-        <StackPanel Grid.Column="2">
-        </StackPanel>
-        <StackPanel Grid.Column="3"></StackPanel>
-        <StackPanel Grid.Column="4"></StackPanel>
-        <StackPanel Grid.Column="6"></StackPanel>
-        <StackPanel Grid.Column="7"></StackPanel>
+        <Grid Grid.Column="3" Grid.Row="1" Grid.RowSpan="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Suspension Position" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+            <TextBlock Grid.Row="1" Text="Suspension Velocity" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+            <TextBlock Grid.Row="2" Text="Suspension Acceleration" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+            <TextBlock Grid.Row="3" Text="Wheel Speed" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+            <TextBlock Grid.Row="4" Text="Wheel Slip" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+            <TextBlock Grid.Row="5" Text="Local Velocity" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+            <TextBlock Grid.Row="6" Text="Angular Velocity" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+            <TextBlock Grid.Row="7" Text="Angular Acceleration" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+            <TextBlock Grid.Row="8" Text="Front Wheel Angle" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignButtonTextBlock}" Margin="5"/>
+        </Grid>
+        <Grid Grid.Column="4" Grid.Row="1" Grid.RowSpan="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Text="RR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="RL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Text="RR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="RL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Text="RR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="RL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Text="RR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="RL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Text="RR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="RL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FR" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="FL" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Text="X" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="Y" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="Z" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Text="X" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="Y" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="Z" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="7" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Text="X" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="Y" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="Z" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+            </StackPanel>
+            <TextBlock Grid.Row="8" Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="10,0,0,0"/>
+        </Grid>
     </Grid>
 </UserControl>

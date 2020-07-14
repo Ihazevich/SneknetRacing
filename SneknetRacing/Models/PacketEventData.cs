@@ -57,6 +57,7 @@ namespace SneknetRacing.Models
 
         public PacketEventData()
         {
+            Header = new PacketHeader();
             EventStringCode = new byte[4];
         }
 

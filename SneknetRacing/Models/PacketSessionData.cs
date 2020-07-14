@@ -319,6 +319,7 @@ namespace SneknetRacing.Models
 
         public PacketSessionData()
         {
+            Header = new PacketHeader();
             MarshalZones = new MarshalZone[21];
             WeatherForecastSamples = new WeatherForecastSample[20];
         }

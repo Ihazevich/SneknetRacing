@@ -56,6 +56,7 @@ namespace SneknetRacing.Models
 
         public PacketParticipantsData()
         {
+            Header = new PacketHeader();
             Participants = new ParticipantData[22];
         }
 
