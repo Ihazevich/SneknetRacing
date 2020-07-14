@@ -253,5 +253,9 @@ namespace SneknetRacing.Models
         {
         }
 
+        public override string ToString()
+        {
+            return WorldPositionX.ToString() + ", " + WorldPositionY.ToString();
+        }
     }
 }
