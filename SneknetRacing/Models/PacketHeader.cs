@@ -145,7 +145,7 @@ namespace SneknetRacing.Models
             }
         }
         #endregion
-        public void Desserialize(byte[] data)
+        public override void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
             {

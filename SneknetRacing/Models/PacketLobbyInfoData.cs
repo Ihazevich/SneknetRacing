@@ -58,7 +58,7 @@ namespace SneknetRacing.Models
             LobbyPlayers = new LobbyInfoData[22];
         }
 
-        public void Desserialize(byte[] data)
+        public override void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
             {

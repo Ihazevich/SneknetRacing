@@ -27,87 +27,12 @@ namespace SneknetRacing
     /// </summary>
     public partial class MainWindow : Window
     {
-        readonly Server server = new Server();
-        readonly Thread serverThread;
-        readonly Thread dataHandleThread;
-
-        PacketHeader header = new PacketHeader();
-        PacketMotionData packet = new PacketMotionData();
-
-        ViGEmClient client = new ViGEmClient();
-        IXbox360Controller controller;
-
         MainViewModel mainViewModel = new MainViewModel();
 
         public MainWindow()
         {
-            serverThread = new Thread(() => server.Listen());
-            dataHandleThread = new Thread(() => this.SubscribeToEvent(server));
-
-            controller = client.CreateXbox360Controller();
-
             InitializeComponent();
             DataContext = mainViewModel;
-        }
-
-        public void SubscribeToEvent(Server server)
-        {
-            server.DataReceivedEvent += server_DataReceivedEvent;
-        }
-
-        private void server_DataReceivedEvent(object sender, ReceivedDataArgs args)
-        {
-            packet.Info = "beep";
-            header.Desserialize(args.receivedBytes);
-            if(header.PacketID == 0)
-                packet.Desserialize(args.receivedBytes);
-            packet.Info = "boop";
-        }
-
-        private void button1_Click(object sender, RoutedEventArgs e)
-        {
-            controller.Connect();
-        }
-
-        private void button2_Click(object sender, RoutedEventArgs e)
-        {
-            controller.SetSliderValue(Xbox360Slider.RightTrigger, 250);
-        }
-
-        private void button3_Click(object sender, RoutedEventArgs e)
-        {
-            controller.SetSliderValue(Xbox360Slider.RightTrigger, 0);
-        }
-
-
-        private void udpButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (mainViewModel.NetworkThreadsRunning)
-            {
-            }
-            else
-            {
-                // Start Server thread
-                serverThread.Start();
-                // Start Handler thread
-                dataHandleThread.Start();
-                mainViewModel.NetworkThreadsRunning = true;
-            }
-
-        }
-
-        private void gamepadButton_Click(object sender, RoutedEventArgs e)
-        {
-            if(mainViewModel.GamepadConnected)
-            {
-                controller.Disconnect();
-                mainViewModel.GamepadConnected = false;
-            }
-            else
-            {
-                controller.Connect();
-                mainViewModel.GamepadConnected = true;
-            }
         }
     }
 }

@@ -51,12 +51,14 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("ClassificationData");
             }
         }
+        #endregion
 
         public PacketFinalClassificationData()
         {
             ClassificationData = new FinalClassificationData[22];
         }
-        public void Desserialize(byte[] data)
+
+        public override void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
             {
@@ -98,6 +100,5 @@ namespace SneknetRacing.Models
             }
         }
 
-        #endregion
     }
 }

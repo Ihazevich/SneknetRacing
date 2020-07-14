@@ -1,14 +1,22 @@
-﻿using SneknetRacing.Commands;
+﻿using Nefarius.ViGEm.Client;
+using Nefarius.ViGEm.Client.Targets;
+using SneknetRacing.Commands;
+using SneknetRacing.Models;
+using SneknetRacing.Network;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Windows.Input;
 
 namespace SneknetRacing.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        #region Fields
         private BaseViewModel _selectedViewModel;
+
+        private PacketHeader _packetHeader;
 
         private bool _networkThreadsRunning;
         private string _networkButtonStatus;
@@ -17,6 +25,19 @@ namespace SneknetRacing.ViewModels
         private bool _gamepadConnected;
         private string _gamepadButtonStatus;
         private string _gamepadButtonColor;
+
+        #endregion
+
+        #region Properties
+        public BaseViewModel SelectedViewModel
+        {
+            get { return _selectedViewModel; }
+            set
+            {
+                _selectedViewModel = value;
+                OnPropertyChanged("SelectedViewModel");
+            }
+        }
 
         public bool NetworkThreadsRunning
         {
@@ -37,7 +58,6 @@ namespace SneknetRacing.ViewModels
                 }
             }
         }
-
         public string NetworkButtonStatus
         {
             get
@@ -50,7 +70,6 @@ namespace SneknetRacing.ViewModels
                 OnPropertyChanged("NetworkButtonStatus");
             }
         }
-
         public string NetworkButtonColor
         {
             get
@@ -63,7 +82,6 @@ namespace SneknetRacing.ViewModels
                 OnPropertyChanged("NetworkButtonColor");
             }
         }
-
         public bool GamepadConnected
         {
             get { return _gamepadConnected; }
@@ -83,7 +101,6 @@ namespace SneknetRacing.ViewModels
                 }
             }
         }
-
         public string GamepadButtonStatus
         {
             get
@@ -96,7 +113,6 @@ namespace SneknetRacing.ViewModels
                 OnPropertyChanged("GamepadButtonStatus");
             }
         }
-
         public string GamepadButtonColor
         {
             get
@@ -109,26 +125,57 @@ namespace SneknetRacing.ViewModels
                 OnPropertyChanged("GamepadButtonColor");
             }
         }
-        public BaseViewModel SelectedViewModel
+
+        public Server Server { get; }
+        public Thread ServerThread { get; }
+        public Thread DataHandlerThread { get; }
+
+        public ICommand UpdateViewCommand { get; set; }
+        public ICommand StartServerCommand { get; set; }
+        public ICommand ConnectGamepadCommand { get; set; }
+        public ViGEmClient Client { get; }
+        public IXbox360Controller Controller { get; }
+
+        public PacketHeader PacketHeader
         {
-            get { return _selectedViewModel; }
-            set 
-            { 
-                _selectedViewModel = value;
-                OnPropertyChanged("SelectedViewModel");
+            get
+            {
+                return _packetHeader;
+            }
+            set
+            {
+                _packetHeader = value;
+                OnPropertyChanged("PacketHeader");
             }
         }
-
-        public ICommand UpdateViewCommand { get; set; } 
+        #endregion
 
         public MainViewModel()
         {
             UpdateViewCommand = new UpdateViewCommand(this);
+            StartServerCommand = new StartServerCommand(this);
+            ConnectGamepadCommand = new ConnectGamepadCommand(this);
+
             NetworkThreadsRunning = false;
             GamepadConnected = false;
+
+            Server = new Server();
+            ServerThread = new Thread(() => Server.Listen());
+            DataHandlerThread = new Thread(() => this.SubscribeToEvent(Server));
+
+            Client = new ViGEmClient();
+            Controller = Client.CreateXbox360Controller();
+
+        }
+        public void SubscribeToEvent(Server server)
+        {
+            server.DataReceivedEvent += server_DataReceivedEvent;
         }
 
-
+        private void server_DataReceivedEvent(object sender, ReceivedDataArgs args)
+        {
+            SelectedViewModel.Header.Desserialize(args.receivedBytes);
+        }
 
     }
 }

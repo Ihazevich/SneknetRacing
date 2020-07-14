@@ -278,7 +278,7 @@ namespace SneknetRacing.Models
             SuspensionPosition = new float[4];
         }
 
-        public void Desserialize(byte[] data)
+        public override void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
             {
@@ -353,12 +353,15 @@ namespace SneknetRacing.Models
                     LocalVelocityX = reader.ReadSingle();
                     LocalVelocityY = reader.ReadSingle();
                     LocalVelocityZ = reader.ReadSingle();
+
                     AngularVelocityX = reader.ReadSingle();
                     AngularVelocityY = reader.ReadSingle();
                     AngularVelocityZ = reader.ReadSingle();
+
                     AngularAccelerationX = reader.ReadSingle();
                     AngularAccelerationY = reader.ReadSingle();
                     AngularAccelerationZ = reader.ReadSingle();
+
                     FrontWheelsAngle = reader.ReadSingle();
                 }
             }

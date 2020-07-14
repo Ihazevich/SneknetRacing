@@ -7,6 +7,9 @@ namespace SneknetRacing.Models
 {
     public abstract class BaseModel : INotifyPropertyChanged
     {
+        public virtual void Desserialize(byte[] data)
+        { }
+
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)

@@ -60,7 +60,7 @@ namespace SneknetRacing.Models
             EventStringCode = new byte[4];
         }
 
-        public void Desserialize(byte[] data)
+        public override void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
             {

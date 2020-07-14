@@ -107,7 +107,7 @@ namespace SneknetRacing.Models
             CarTelemetryData = new CarTelemetryData[22];
         }
 
-        public void Desserialize(byte[] data)
+        public override void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
             {

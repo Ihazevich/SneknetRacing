@@ -21,18 +21,27 @@
             <Label Content="Suspension Position" VerticalAlignment="Top" HorizontalAlignment="Right"/>
             <Label Content="Suspension Velocity" VerticalAlignment="Top" HorizontalAlignment="Right"/>
             <Label Content="Suspension Acceleration" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Packet ID" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Session UID" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Session Time" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Frame Identifier" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Player Car Index" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-            <Label Content="Secondary Player Car Index" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Wheel Speed" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Wheel Slip" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Local Velocity X" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Local Velocity Y" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Local Velocity Z" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Angular Velocity X" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Angular Velocity Y" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Angular Velocity Z" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Angular Acceleration X" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Angular Acceleration Y" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Angular Acceleration Z" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Label Content="Front Wheel Angle" VerticalAlignment="Top" HorizontalAlignment="Right"/>
         </StackPanel>
         <StackPanel Grid.Column="1">
-            <TextBox Text="{Binding Path=Header.PacketFormat}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.GameMajorVersion}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.GameMinorVersion}" VerticalAlignment="Top"/>
-            <TextBox Text="{Binding Path=Header.PacketID}" VerticalAlignment="Top"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding Path=Header.PacketFormat}" HorizontalAlignment="Left" Width="50"/>
+                <TextBox Text="{Binding Path=Header.GameMajorVersion}" HorizontalAlignment="Left" Width="50"/>
+                <TextBox Text="{Binding Path=Header.GameMinorVersion}" HorizontalAlignment="Left" Width="50"/>
+                <TextBox Text="{Binding Path=Header.PacketID}" HorizontalAlignment="Left" Width="50"/>
+
+            </StackPanel>
             <TextBox Text="{Binding Path=Header.SessionUID}" VerticalAlignment="Top"/>
             <TextBox Text="{Binding Path=Header.SessionTime}" VerticalAlignment="Top"/>
             <TextBox Text="{Binding Path=Header.FrameIdentifier}" VerticalAlignment="Top"/>

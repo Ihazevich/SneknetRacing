@@ -33,12 +33,12 @@
                             Background="{Binding Path=NetworkButtonColor}"
                             materialDesign:ButtonProgressAssist.IsIndeterminate="True" 
                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Path=NetworkThreadsRunning}" 
-                            Click="udpButton_Click" />
+                            Command="{Binding Path=StartServerCommand}"/>
                     <Button x:Name="gamepadButton" Content="{Binding Path=GamepadButtonStatus}" 
                             Background="{Binding Path=GamepadButtonColor}"
                             materialDesign:ButtonProgressAssist.IsIndeterminate="True" 
                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Path=GamepadConnected}" 
-                            Click="gamepadButton_Click"/>
+                            Command="{Binding Path=ConnectGamepadCommand}"/>
                     <Button Content="Header" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Header"/>
                     <Button Content="Motion" />
                     <Button Content="Session" />
