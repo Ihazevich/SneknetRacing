@@ -22,7 +22,6 @@
                     <MenuItem x:Name="exitMenuItem" Header="_Exit" />
                 </MenuItem>
                 <MenuItem Header="_About"></MenuItem>
-                <MenuItem Header="{Binding Path=ProcessTime}"/>
             </Menu>
             <Grid DockPanel.Dock="Left">
                 <Grid.ColumnDefinitions>
@@ -30,6 +29,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding Path=ProcessTime}"/>
                     <Button x:Name="udpButton" Content="{Binding Path=NetworkButtonStatus}"
                             Background="{Binding Path=NetworkButtonColor}"
                             materialDesign:ButtonProgressAssist.IsIndeterminate="True" 
