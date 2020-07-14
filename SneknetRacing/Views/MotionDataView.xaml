@@ -114,29 +114,29 @@
             </StackPanel>
             <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <TextBlock Text="X" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.LocalVelocityX}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
                 <TextBlock Text="Y" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.LocalVelocityY}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
                 <TextBlock Text="Z" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.LocalVelocityZ}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
             </StackPanel>
             <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <TextBlock Text="X" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.AngularVelocityX}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
                 <TextBlock Text="Y" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.AngularVelocityY}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
                 <TextBlock Text="Z" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.AngularVelocityZ}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
             </StackPanel>
             <StackPanel Grid.Row="7" Orientation="Horizontal" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <TextBlock Text="X" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.AngularAccelerationX}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
                 <TextBlock Text="Y" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.AngularAccelerationY}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
                 <TextBlock Text="Z" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
-                <TextBlock Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Packet.AngularAccelerationZ}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
             </StackPanel>
-            <TextBlock Grid.Row="8" Text="" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="10,0,0,0"/>
+            <TextBlock Grid.Row="8" Text="{Binding Path=Packet.FrontWheelAngle}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="10,0,0,0"/>
         </Grid>
     </Grid>
 </UserControl>
