@@ -5,6 +5,7 @@ using SneknetRacing.Models;
 using SneknetRacing.Network;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Windows.Input;
@@ -24,6 +25,7 @@ namespace SneknetRacing.ViewModels
         private string _gamepadButtonStatus;
         private string _gamepadButtonColor;
 
+        private long _processTime;
         #endregion
 
         #region Properties
@@ -135,6 +137,19 @@ namespace SneknetRacing.ViewModels
             }
         }
 
+        public long ProcessTime
+        {
+            get
+            {
+                return _processTime;
+            }
+            set
+            {
+                _processTime = value;
+                OnPropertyChanged("ProcessTime");
+            }
+        }
+
         public Server Server { get; }
         public Thread ServerThread { get; }
         public Thread DataHandlerThread { get; }
@@ -181,6 +196,8 @@ namespace SneknetRacing.ViewModels
             };
 
             MotionDataViewModel.Packet = new PacketMotionData();
+
+            ProcessTime = 0;
         }
 
         public void SubscribeToEvent(Server server)
@@ -190,6 +207,10 @@ namespace SneknetRacing.ViewModels
 
         private void Server_DataReceivedEvent(object sender, ReceivedDataArgs args)
         {
+            Stopwatch stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
             HeaderViewModel.Packet.Desserialize(args.receivedBytes);
             var packet = HeaderViewModel.Packet as PacketHeader;
 
@@ -226,6 +247,9 @@ namespace SneknetRacing.ViewModels
                     LobbyInfoDataViewModel.Packet.Desserialize(args.receivedBytes);
                     break;
             }
+
+            stopwatch.Stop();
+            ProcessTime = stopwatch.ElapsedMilliseconds;
         }
 
     }

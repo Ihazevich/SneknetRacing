@@ -11,4 +11,8 @@
     <PackageReference Include="Nefarius.ViGEm.Client" Version="1.16.150" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AI\" />
+  </ItemGroup>
+
 </Project>

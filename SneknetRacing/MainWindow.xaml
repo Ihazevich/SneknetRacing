@@ -22,6 +22,7 @@
                     <MenuItem x:Name="exitMenuItem" Header="_Exit" />
                 </MenuItem>
                 <MenuItem Header="_About"></MenuItem>
+                <MenuItem Header="{Binding Path=ProcessTime}"/>
             </Menu>
             <Grid DockPanel.Dock="Left">
                 <Grid.ColumnDefinitions>
