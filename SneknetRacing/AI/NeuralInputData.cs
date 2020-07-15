@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Windows.Data;
 
 namespace SneknetRacing.AI
 {
@@ -12,6 +13,11 @@ namespace SneknetRacing.AI
         private BindingList<PacketCarTelemetryData> _carTelemetryDataPackets;
         private BindingList<PacketLapData> _lapDataPackets;
         private BindingList<PacketMotionData> _motionDataPackets;
+
+        private object _carStatusDataPacketsLock = new object();
+        private object _carTelemetryDataPacketsLock = new object();
+        private object _lapDataPacketsLock = new object();
+        private object _motionDataPacketsLock = new object();
 
         public BindingList<PacketCarStatusData> CarStatusDataPackets
         {
@@ -64,6 +70,7 @@ namespace SneknetRacing.AI
 
         public NeuralInputData()
         {
+
             _carStatusDataPackets = new BindingList<PacketCarStatusData>();
             _carTelemetryDataPackets = new BindingList<PacketCarTelemetryData>();
             _lapDataPackets = new BindingList<PacketLapData>();
@@ -71,32 +78,21 @@ namespace SneknetRacing.AI
 
             _carStatusDataPackets.AllowNew = true;
             _carStatusDataPackets.AllowEdit = false;
-            _carStatusDataPackets.AllowRemove = true;
-            _carStatusDataPackets.RaiseListChangedEvents = true;
 
             _carTelemetryDataPackets.AllowNew = true;
             _carTelemetryDataPackets.AllowEdit = false;
-            _carTelemetryDataPackets.AllowRemove = true;
-            _carTelemetryDataPackets.RaiseListChangedEvents = true;
 
             _lapDataPackets.AllowNew = true;
             _lapDataPackets.AllowEdit = false;
-            _lapDataPackets.AllowRemove = true;
-            _lapDataPackets.RaiseListChangedEvents = true;
 
             _motionDataPackets.AllowNew = true;
             _motionDataPackets.AllowEdit = false;
-            _motionDataPackets.AllowRemove = true;
-            _motionDataPackets.RaiseListChangedEvents = true;
 
-        }
+            BindingOperations.EnableCollectionSynchronization(CarStatusDataPackets, _carStatusDataPackets);
+            BindingOperations.EnableCollectionSynchronization(CarTelemetryDataPackets, _carTelemetryDataPackets);
+            BindingOperations.EnableCollectionSynchronization(LapDataPackets, _lapDataPackets);
+            BindingOperations.EnableCollectionSynchronization(MotionDataPackets, _motionDataPackets);
 
-        private void ListChanged(object sender, ListChangedEventArgs e)
-        {
-            if(MotionDataPackets.Count != 0 && LapDataPackets.Count != 0 && CarTelemetryDataPackets.Count != 0 && CarStatusDataPackets.Count != 0)
-            {
-
-            }
         }
 
         #region INotifyPropertyChanged Members

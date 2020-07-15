@@ -68,6 +68,10 @@ namespace SneknetRacing.Commands
             {
                 return false;
             }
+            if (parameter.ToString() == "Neural" && _viewModel.SelectedViewModel.GetType() == _viewModel.NeuralDataViewModel.GetType())
+            {
+                return false;
+            }
             else
             {
                 return true;
@@ -119,6 +123,10 @@ namespace SneknetRacing.Commands
             else if (parameter.ToString() == "Lobby")
             {
                 _viewModel.SelectedViewModel = _viewModel.LobbyInfoDataViewModel;
+            }
+            else if (parameter.ToString() == "Neural")
+            {
+                _viewModel.SelectedViewModel = _viewModel.NeuralDataViewModel;
             }
 
         }
