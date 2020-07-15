@@ -78,7 +78,7 @@ namespace SneknetRacing.Models
 
                     NumPlayers = reader.ReadByte();
 
-                    for(int i = 0; i < 22; i++)
+                    for (int i = 0; i < 22; i++)
                     {
                         LobbyPlayers[i] = new LobbyInfoData()
                         {

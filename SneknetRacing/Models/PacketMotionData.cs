@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -13,9 +14,9 @@ namespace SneknetRacing.Models
 
         private string _info;
 
-        private PacketHeader _header;                  // Header
+        private PacketHeader _header = new PacketHeader();                  // Header
 
-        private BindingList<CarMotionData> _carMotionData;        // Data for all cars on track
+        private ObservableCollection<CarMotionData> _carMotionData = new ObservableCollection<CarMotionData>();        // Data for all cars on track
 
         // Extra player car ONLY data
         private float[] _suspensionPosition;           // Note: All wheel arrays have the following order:
@@ -64,7 +65,7 @@ namespace SneknetRacing.Models
             }
         }
 
-        public BindingList<CarMotionData> CarMotionData
+        public ObservableCollection<CarMotionData> CarMotionData
         {
             get
             {
@@ -276,11 +277,8 @@ namespace SneknetRacing.Models
 
         public PacketMotionData()
         {
-            Header = new PacketHeader();
-            CarMotionData = new BindingList<CarMotionData>();
-            CarMotionData.ListChanged += CarMotionData_ListChanged;
-            SuspensionPosition = new float[4];
         }
+
         public override void Desserialize(byte[] data)
         {
             using (MemoryStream m = new MemoryStream(data))
@@ -370,11 +368,5 @@ namespace SneknetRacing.Models
                 }
             }
         }
-
-        private void CarMotionData_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            OnPropertyChanged("CarMotionData");
-        }
-
     }
 }
