@@ -1,13 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
 namespace SneknetRacing.Network
 {
-    public class Server
+    public class Server : INotifyPropertyChanged
     {
+        private long _totalPackets = 0;
+        private static double _avgPacketsPerSecond = 0;
+        private Stopwatch _stopwatch;
+
+        public double AvgPacketsPerSecond
+        {
+            get
+            {
+                return _avgPacketsPerSecond;
+            }
+            set
+            {
+                _avgPacketsPerSecond = value;
+                OnPropertyChanged("AvgPacketsPerSecond");
+            }
+        }
+
+        public Server()
+        {
+            _stopwatch = Stopwatch.StartNew();
+        }
+
         public void Listen()
         {
             UdpClient listener = new UdpClient(20777);
@@ -16,6 +40,11 @@ namespace SneknetRacing.Network
             while(true)
             {
                 byte[] data = listener.Receive(ref serverEP);
+                _totalPackets++;
+                if(_stopwatch.ElapsedMilliseconds % 1000 == 0)
+                {
+                    AvgPacketsPerSecond = _totalPackets * 1000 / _stopwatch.ElapsedMilliseconds;
+                }
                 RaiseDataReceived(new ReceivedDataArgs(serverEP.Address, serverEP.Port, data));
             }
         }
@@ -28,19 +57,14 @@ namespace SneknetRacing.Network
         {
             DataReceivedEvent?.Invoke(this, args);
         }
-    }
 
-    public class ReceivedDataArgs
-    {
-        public IPAddress IpAddress { get; set; }
-        public int Port { get; set; }
-        public byte[] receivedBytes;
-
-        public ReceivedDataArgs(IPAddress ip, int port, byte[] data)
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
         {
-            IpAddress = ip;
-            Port = port;
-            receivedBytes = data;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
     }
+
 }
