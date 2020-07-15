@@ -36,6 +36,7 @@
                 <RowDefinition Height="*" MinHeight="30"/>
                 <RowDefinition Height="*" MinHeight="30"/>
                 <RowDefinition Height="*" MinHeight="30"/>
+                <RowDefinition Height="*" MinHeight="30"/>
             </Grid.RowDefinitions>
             <Button Grid.Row="0" x:Name="udpButton" Content="{Binding Path=NetworkButtonStatus}"
                     Background="{Binding Path=NetworkButtonColor}"
@@ -47,16 +48,17 @@
                     materialDesign:ButtonProgressAssist.IsIndeterminate="True" 
                     materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Path=GamepadConnected}" 
                     Command="{Binding Path=ConnectGamepadCommand}"/>
-            <Button Grid.Row="2" Content="Header" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Header" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="3" Content="Motion" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Motion" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="4" Content="Session" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Session" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="5" Content="Event" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Event" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="6" Content="Participants" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Participants" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="7" Content="Car Setups" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Setups" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="8" Content="Car Telemetry" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Telemetry" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="9" Content="Car Status" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Status" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="10" Content="Final Classification" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Classification" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
-            <Button Grid.Row="11" Content="Lobby Info" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Lobby" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="2" Content="Neural Data" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Neural" Style="{StaticResource MaterialDesignFlatLightBgButton}"/>
+            <Button Grid.Row="3" Content="Header" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Header" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="4" Content="Motion" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Motion" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="5" Content="Session" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Session" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="6" Content="Event" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Event" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="7" Content="Participants" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Participants" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="8" Content="Car Setups" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Setups" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="9" Content="Car Telemetry" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Telemetry" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="10" Content="Car Status" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Status" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="11" Content="Final Classification" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Classification" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="12" Content="Lobby Info" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Lobby" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
         </Grid>
         <Grid Grid.Column="1">
             <ContentControl Content="{Binding Path=SelectedViewModel}"/>

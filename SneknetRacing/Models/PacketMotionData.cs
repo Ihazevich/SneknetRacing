@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Windows.Data;
 
 namespace SneknetRacing.Models
 {
@@ -15,6 +16,7 @@ namespace SneknetRacing.Models
         private PacketHeader _header;                  // Header
 
         private BindingList<CarMotionData> _carMotionData;        // Data for all cars on track
+        object _lock = new object();
 
         // Extra player car ONLY data
         private float[] _suspensionPosition;           // Note: All wheel arrays have the following order:
@@ -277,6 +279,8 @@ namespace SneknetRacing.Models
             Header = new PacketHeader();
             CarMotionData = new BindingList<CarMotionData>();
             SuspensionPosition = new float[4];
+
+            BindingOperations.EnableCollectionSynchronization(CarMotionData, _lock);
         }
 
         public override void Desserialize(byte[] data)
@@ -319,7 +323,7 @@ namespace SneknetRacing.Models
                             Pitch = reader.ReadSingle(),
                             Roll = reader.ReadSingle()
                         };
-                        CarMotionData.Add(temp);
+                        CarMotionData.Insert(i,temp);
                     }
 
                     SuspensionPosition = new float[4];

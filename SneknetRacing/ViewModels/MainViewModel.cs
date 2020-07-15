@@ -51,6 +51,7 @@ namespace SneknetRacing.ViewModels
         public CarStatusDataViewModel CarStatusDataViewModel { get; }
         public ClassificationDataViewModel ClassificationDataViewModel { get; }
         public LobbyInfoDataViewModel LobbyInfoDataViewModel { get; }
+        public NeuralDataViewModel NeuralDataViewModel { get; }
         public bool NetworkThreadsRunning
         {
             get { return _networkThreadsRunning; }
@@ -174,9 +175,6 @@ namespace SneknetRacing.ViewModels
             NetworkThreadsRunning = false;
             GamepadConnected = false;
 
-            Server = new Server();
-            ServerThread = new Thread(() => Server.Listen());
-            DataHandlerThread = new Thread(() => this.SubscribeToEvent(Server));
 
             Client = new ViGEmClient();
             Controller = Client.CreateXbox360Controller();
@@ -193,17 +191,16 @@ namespace SneknetRacing.ViewModels
             ClassificationDataViewModel = new ClassificationDataViewModel();
             LobbyInfoDataViewModel = new LobbyInfoDataViewModel();
 
+            NeuralDataViewModel = new NeuralDataViewModel();
             NeuralInputData = new NeuralInputData();
 
             SelectedViewModel = HeaderViewModel;
-            HeaderViewModel.Packet = new PacketHeader()
-            {
-                PacketID = 1
-            };
-
-            MotionDataViewModel.Packet = new PacketMotionData();
 
             ProcessTime = 0;
+
+            Server = new Server();
+            ServerThread = new Thread(() => Server.Listen());
+            DataHandlerThread = new Thread(() => this.SubscribeToEvent(Server));
         }
 
         public void SubscribeToEvent(Server server)

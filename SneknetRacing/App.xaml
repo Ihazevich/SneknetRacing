@@ -42,6 +42,9 @@
             <DataTemplate DataType="{x:Type viewmodels:LobbyInfoDataViewModel}">
                 <views:LobbyInfoDataView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:NeuralDataViewModel}">
+                <views:NeuralDataView/>
+            </DataTemplate>
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:CustomColorTheme BaseTheme="Light" PrimaryColor="Red" SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
