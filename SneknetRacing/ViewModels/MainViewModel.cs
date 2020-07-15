@@ -200,7 +200,10 @@ namespace SneknetRacing.ViewModels
 
             Server = new Server();
             ServerThread = new Thread(() => Server.Listen());
-            DataHandlerThread = new Thread(() => this.SubscribeToEvent(Server));
+            DataHandlerThread = new Thread(() => SubscribeToEvent(Server));
+
+            ServerThread.IsBackground = true;
+            DataHandlerThread.IsBackground = true;
         }
 
         public void SubscribeToEvent(Server server)
