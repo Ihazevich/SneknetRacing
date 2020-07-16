@@ -10,16 +10,16 @@ namespace SneknetRacing.Models
     public class PacketHeader : BaseModel
     {
         #region Fields
-        private UInt16 _packetFormat;       // 2019
-        private byte _gameMajorVersion;     // Game major version - "X.00"
-        private byte _gameMinorVersion;     // Game minor version - "1.XX"
-        private byte _packetVersion;        // Version of this packet type, all start from 1
-        private byte _packetID;             // Identifier for the packet type, see below
-        private UInt64 _sessionUID;         // Unique identifier for the session    
-        private float _sessionTime;         // Session timestamp
-        private uint _frameIdentifier;      // Identifier for the frame the data was retrieved on
-        private byte _playerCarIndex;       // Index of player's car in the array
-        private byte _secondaryPlayerCarIndex;  // Index of secondary player's car in the array (splitscreen)
+        private UInt16 _packetFormat = 0;       // 2019
+        private byte _gameMajorVersion = 0;     // Game major version - "X.00"
+        private byte _gameMinorVersion = 0;     // Game minor version - "1.XX"
+        private byte _packetVersion = 0;        // Version of this packet type, all start from 1
+        private byte _packetID = 0;             // Identifier for the packet type, see below
+        private UInt64 _sessionUID = 0;         // Unique identifier for the session    
+        private float _sessionTime = 0;         // Session timestamp
+        private uint _frameIdentifier = 0;      // Identifier for the frame the data was retrieved on
+        private byte _playerCarIndex = 0;       // Index of player's car in the array
+        private byte _secondaryPlayerCarIndex = 0;  // Index of secondary player's car in the array (splitscreen)
                                                 // 255 if no second player
         #endregion
 

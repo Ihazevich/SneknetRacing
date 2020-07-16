@@ -7,9 +7,9 @@ namespace SneknetRacing.ViewModels
 {
     public class EventDataViewModel :  BaseViewModel
     {
-        public EventDataViewModel() : base(new PacketEventData())
+        public EventDataViewModel()
         {
-
+            Packet = new PacketEventData();
         }
     }
 }

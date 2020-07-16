@@ -4,6 +4,7 @@ using SneknetRacing.AI;
 using SneknetRacing.Commands;
 using SneknetRacing.Models;
 using SneknetRacing.Network;
+using SneknetRacing.Views;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -161,7 +162,6 @@ namespace SneknetRacing.ViewModels
         public Task ServerThread { get; }
         public Task DataHandlerThread { get; }
         public Task DataSavingThread { get; }
-        public Task DesserializationThread { get; }
 
         public UpdateViewCommand UpdateViewCommand { get; set; }
         public StartServerCommand StartServerCommand { get; set; }
@@ -180,7 +180,6 @@ namespace SneknetRacing.ViewModels
 
             NetworkThreadsRunning = false;
             GamepadConnected = false;
-
 
             Client = new ViGEmClient();
             Controller = Client.CreateXbox360Controller();
@@ -222,6 +221,7 @@ namespace SneknetRacing.ViewModels
 
         public override void Desserialize()
         {
+            Console.WriteLine(this + " DesserializationThread started...");
             while (true)
             {
                 byte[] rawPacket;
@@ -237,7 +237,7 @@ namespace SneknetRacing.ViewModels
                             //Task motionTask2 = motionTask1.ContinueWith(ant => NeuralInputData.MotionDataPackets.Add(MotionDataViewModel.Packet as PacketMotionData));
                             break;
                         case 1:
-                            Packet = SessionDataViewModel.Packet.Desserialize(rawPacket);
+                            SessionDataViewModel.AddPacketToDesserializationQueue(rawPacket);
                             break;
                         case 2:
                             LapDataViewModel.AddPacketToDesserializationQueue(rawPacket);

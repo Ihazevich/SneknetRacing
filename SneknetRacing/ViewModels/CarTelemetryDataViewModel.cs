@@ -7,9 +7,9 @@ namespace SneknetRacing.ViewModels
 {
     public class CarTelemetryDataViewModel : BaseViewModel
     {
-        public CarTelemetryDataViewModel() : base(new PacketCarTelemetryData())
+        public CarTelemetryDataViewModel()
         {
-
+            Packet = new PacketCarTelemetryData();
         }
     }
 }

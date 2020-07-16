@@ -7,9 +7,9 @@ namespace SneknetRacing.ViewModels
 {
     public class ClassificationDataViewModel : BaseViewModel
     {
-        public ClassificationDataViewModel() : base(new PacketFinalClassificationData())
+        public ClassificationDataViewModel()
         {
-
+            Packet = new PacketFinalClassificationData();
         }
     }
 }

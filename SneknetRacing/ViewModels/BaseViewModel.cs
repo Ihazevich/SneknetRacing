@@ -7,17 +7,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace SneknetRacing.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
-        private int _totalPackets = 0;
+        private long _totalPackets = 0;
         private BaseModel _packet;
         private ConcurrentQueue<byte[]> _receivedRawPackets = new ConcurrentQueue<byte[]>();
         private ConcurrentQueue<BaseModel> _processedPackets = new ConcurrentQueue<BaseModel>();
 
-        public int TotalPackets
+        private Stopwatch _stopwatch;
+
+        public long TotalPackets
         {
             get
             {
@@ -27,6 +30,15 @@ namespace SneknetRacing.ViewModels
             {
                 _totalPackets = value;
                 OnPropertyChanged("TotalPackets");
+                OnPropertyChanged("PacketsPerSecond");
+            }
+        }
+
+        public string PacketsPerSecond
+        {
+            get 
+            {
+                return "Packets: " + TotalPackets + " | Ellapsed time in seconds: " + _stopwatch.ElapsedMilliseconds / 1000 + " | Rate: " + TotalPackets / (_stopwatch.ElapsedMilliseconds / 1000) + " packets/sec";
             }
         }
 
@@ -73,16 +85,13 @@ namespace SneknetRacing.ViewModels
         
         public BaseViewModel()
         {
+            _stopwatch = Stopwatch.StartNew(); 
             DesserializationThread = Task.Factory.StartNew(() => Desserialize());
-        }
-
-        public BaseViewModel(BaseModel packet) : this()
-        {
-            Packet = packet;
         }
 
         public virtual void Desserialize()
         {
+            Console.WriteLine(this + " DesserializationThread started...");
             while(true)
             {
                 byte[] rawPacket;
@@ -90,7 +99,6 @@ namespace SneknetRacing.ViewModels
                 {
                     Packet = Packet.Desserialize(rawPacket);
                     ProcessedPackets.Enqueue(Packet);
-                    TotalPackets--;
                 }
             }
         }

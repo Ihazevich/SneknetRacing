@@ -7,9 +7,9 @@ namespace SneknetRacing.ViewModels
 {
     public class ParticipantsDataViewModel : BaseViewModel
     {
-        public ParticipantsDataViewModel() : base(new PacketParticipantsData())
+        public ParticipantsDataViewModel()
         {
-
+            Packet = new PacketParticipantsData();
         }
     }
 }

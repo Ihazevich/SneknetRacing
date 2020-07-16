@@ -7,9 +7,9 @@ namespace SneknetRacing.ViewModels
 {
     public class LapDataViewModel : BaseViewModel
     {
-        public LapDataViewModel() : base(new PacketLapData())
+        public LapDataViewModel()
         {
-
+            Packet = new PacketLapData();
         }
     }
 }

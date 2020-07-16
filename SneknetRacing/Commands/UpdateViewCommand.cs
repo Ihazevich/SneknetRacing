@@ -129,6 +129,7 @@ namespace SneknetRacing.Commands
                 _viewModel.SelectedViewModel = _viewModel.NeuralDataViewModel;
             }
 
+            _viewModel.Packet = _viewModel.SelectedViewModel.Packet;
         }
     }
 }

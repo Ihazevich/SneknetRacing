@@ -25,8 +25,9 @@ namespace SneknetRacing.ViewModels
             }
         }
 
-        public MotionDataViewModel() : base(new PacketMotionData())
+        public MotionDataViewModel()
         {
+            Packet = new PacketMotionData();
             SelectedCarMotionDataView = new SelectedCarMotionDataView();
         }
     }

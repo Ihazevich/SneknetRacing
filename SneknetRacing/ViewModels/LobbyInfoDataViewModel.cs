@@ -7,9 +7,9 @@ namespace SneknetRacing.ViewModels
 {
     public class LobbyInfoDataViewModel : BaseViewModel
     {
-        public LobbyInfoDataViewModel() : base(new PacketLobbyInfoData())
+        public LobbyInfoDataViewModel() 
         {
-
+            Packet = new PacketLobbyInfoData();
         }
     }
 }

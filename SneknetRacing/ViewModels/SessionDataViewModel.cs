@@ -7,9 +7,9 @@ namespace SneknetRacing.ViewModels
 {
     public class SessionDataViewModel : BaseViewModel
     {
-        public SessionDataViewModel() : base(new PacketSessionData())
+        public SessionDataViewModel()
         {
-
+            Packet = new PacketSessionData();
         }
     }
 }

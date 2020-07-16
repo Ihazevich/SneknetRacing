@@ -10,11 +10,9 @@ namespace SneknetRacing.ViewModels
 {
     public class HeaderViewModel : BaseViewModel
     {
-        public BindingList<PacketHeader> PacketHeaders { get; set; }
-
-        public HeaderViewModel() : base(new PacketHeader())
+        public HeaderViewModel()
         {
-
+            Packet = new PacketHeader();
         }
     }
 }
