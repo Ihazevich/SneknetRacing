@@ -166,6 +166,7 @@ namespace SneknetRacing.ViewModels
         public UpdateViewCommand UpdateViewCommand { get; set; }
         public StartServerCommand StartServerCommand { get; set; }
         public ConnectGamepadCommand ConnectGamepadCommand { get; set; }
+        public UpdateMotionViewCommand UpdateMotionViewCommand { get; set; }
         public ViGEmClient Client { get; }
         public IXbox360Controller Controller { get; }
         #endregion
@@ -175,6 +176,7 @@ namespace SneknetRacing.ViewModels
             UpdateViewCommand = new UpdateViewCommand(this);
             StartServerCommand = new StartServerCommand(this);
             ConnectGamepadCommand = new ConnectGamepadCommand(this);
+            UpdateMotionViewCommand = new UpdateMotionViewCommand(this);
 
             NetworkThreadsRunning = false;
             GamepadConnected = false;
