@@ -108,26 +108,27 @@ namespace SneknetRacing.Models
             CarTelemetryData = new CarTelemetryData[22];
         }
 
-        public override void Desserialize(byte[] data)
+        public override BaseModel Desserialize(byte[] data)
         {
+            PacketCarTelemetryData temp = new PacketCarTelemetryData();
             using (MemoryStream m = new MemoryStream(data))
             {
                 using (BinaryReader reader = new BinaryReader(m))
                 {
-                    Header.PacketFormat = reader.ReadUInt16();
-                    Header.GameMajorVersion = reader.ReadByte();
-                    Header.GameMinorVersion = reader.ReadByte();
-                    Header.PacketVersion = reader.ReadByte();
-                    Header.PacketID = reader.ReadByte();
-                    Header.SessionUID = reader.ReadUInt64();
-                    Header.SessionTime = reader.ReadSingle();
-                    Header.FrameIdentifier = reader.ReadUInt32();
-                    Header.PlayerCarIndex = reader.ReadByte();
-                    Header.SecondaryPlayerCarIndex = reader.ReadByte();
+                    temp.Header.PacketFormat = reader.ReadUInt16();
+                    temp.Header.GameMajorVersion = reader.ReadByte();
+                    temp.Header.GameMinorVersion = reader.ReadByte();
+                    temp.Header.PacketVersion = reader.ReadByte();
+                    temp.Header.PacketID = reader.ReadByte();
+                    temp.Header.SessionUID = reader.ReadUInt64();
+                    temp.Header.SessionTime = reader.ReadSingle();
+                    temp.Header.FrameIdentifier = reader.ReadUInt32();
+                    temp.Header.PlayerCarIndex = reader.ReadByte();
+                    temp.Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
                     for(int i = 0; i < 22; i++)
                     {
-                        CarTelemetryData[i] = new CarTelemetryData()
+                        temp.CarTelemetryData[i] = new CarTelemetryData()
                         {
                             Speed = reader.ReadByte(),
                             Throttle = reader.ReadSingle(),
@@ -145,38 +146,39 @@ namespace SneknetRacing.Models
                         brakesTemp[1] = reader.ReadUInt16();
                         brakesTemp[2] = reader.ReadUInt16();
                         brakesTemp[3] = reader.ReadUInt16();
-                        CarTelemetryData[i].BrakesTemperature = brakesTemp;
+                        temp.CarTelemetryData[i].BrakesTemperature = brakesTemp;
                         
                         byte[] temps = new byte[4];
                         temps[0] = reader.ReadByte();
                         temps[1] = reader.ReadByte();
                         temps[2] = reader.ReadByte();
                         temps[3] = reader.ReadByte();
-                        CarTelemetryData[i].TyresSurfaceTemperature = temps;
+                        temp.CarTelemetryData[i].TyresSurfaceTemperature = temps;
                         
                         temps[0] = reader.ReadByte();
                         temps[1] = reader.ReadByte();
                         temps[2] = reader.ReadByte();
                         temps[3] = reader.ReadByte();
-                        CarTelemetryData[i].TyresInnerTemperature = temps;
-                        
-                        CarTelemetryData[i].EngineTemperature = reader.ReadUInt16();
+                        temp.CarTelemetryData[i].TyresInnerTemperature = temps;
+
+                        temp.CarTelemetryData[i].EngineTemperature = reader.ReadUInt16();
                         
                         float[] pressure = new float[4];
                         pressure[0] = reader.ReadSingle();
                         pressure[1] = reader.ReadSingle();
                         pressure[2] = reader.ReadSingle();
                         pressure[3] = reader.ReadSingle();
-                        CarTelemetryData[i].TyresPressure = pressure;
+                        temp.CarTelemetryData[i].TyresPressure = pressure;
 
                         temps[0] = reader.ReadByte();
                         temps[1] = reader.ReadByte();
                         temps[2] = reader.ReadByte();
                         temps[3] = reader.ReadByte();
-                        CarTelemetryData[i].SurfaceType = temps;
+                        temp.CarTelemetryData[i].SurfaceType = temps;
                     }
                 }
             }
+            return temp;
         }
     }
 }

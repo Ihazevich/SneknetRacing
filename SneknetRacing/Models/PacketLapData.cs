@@ -45,26 +45,27 @@ namespace SneknetRacing.Models
             Header = new PacketHeader();
             LapData = new LapData[22];
         }
-        public override void Desserialize(byte[] data)
+        public override BaseModel Desserialize(byte[] data)
         {
+            PacketLapData temp = new PacketLapData();
             using (MemoryStream m = new MemoryStream(data))
             {
                 using (BinaryReader reader = new BinaryReader(m))
                 {
-                    Header.PacketFormat = reader.ReadUInt16();
-                    Header.GameMajorVersion = reader.ReadByte();
-                    Header.GameMinorVersion = reader.ReadByte();
-                    Header.PacketVersion = reader.ReadByte();
-                    Header.PacketID = reader.ReadByte();
-                    Header.SessionUID = reader.ReadUInt64();
-                    Header.SessionTime = reader.ReadSingle();
-                    Header.FrameIdentifier = reader.ReadUInt32();
-                    Header.PlayerCarIndex = reader.ReadByte();
-                    Header.SecondaryPlayerCarIndex = reader.ReadByte();
+                    temp.Header.PacketFormat = reader.ReadUInt16();
+                    temp.Header.GameMajorVersion = reader.ReadByte();
+                    temp.Header.GameMinorVersion = reader.ReadByte();
+                    temp.Header.PacketVersion = reader.ReadByte();
+                    temp.Header.PacketID = reader.ReadByte();
+                    temp.Header.SessionUID = reader.ReadUInt64();
+                    temp.Header.SessionTime = reader.ReadSingle();
+                    temp.Header.FrameIdentifier = reader.ReadUInt32();
+                    temp.Header.PlayerCarIndex = reader.ReadByte();
+                    temp.Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
                     for(int i = 0; i < 22; i++)
                     {
-                        LapData[i] = new LapData()
+                        temp.LapData[i] = new LapData()
                         {
                             LastLapTime = reader.ReadSingle(),
                             CurrentLapTime = reader.ReadSingle(),
@@ -97,6 +98,7 @@ namespace SneknetRacing.Models
                     }
                 }
             }
+            return temp;
         }
     }
 }

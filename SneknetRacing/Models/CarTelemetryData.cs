@@ -207,5 +207,10 @@ namespace SneknetRacing.Models
             }
         }
         #endregion
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

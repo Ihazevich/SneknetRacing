@@ -6,7 +6,9 @@ using SneknetRacing.Models;
 using SneknetRacing.Network;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,15 +58,15 @@ namespace SneknetRacing.ViewModels
         public bool NetworkThreadsRunning
         {
             get { return _networkThreadsRunning; }
-            set 
-            { 
+            set
+            {
                 _networkThreadsRunning = value;
                 OnPropertyChanged("NetworkThreadsRunning");
-                if(value)
+                if (value)
                 {
                     NetworkButtonStatus = "UDP Socket listening";
                     NetworkButtonColor = "Green";
-                } 
+                }
                 else
                 {
                     NetworkButtonStatus = "Start listening";
@@ -158,7 +160,8 @@ namespace SneknetRacing.ViewModels
         public Server Server { get; }
         public Task ServerThread { get; }
         public Task DataHandlerThread { get; }
-        public Thread DataSavingThread { get; }
+        public Task DataSavingThread { get; }
+        public Task DesserializationThread { get; }
 
         public UpdateViewCommand UpdateViewCommand { get; set; }
         public StartServerCommand StartServerCommand { get; set; }
@@ -203,11 +206,6 @@ namespace SneknetRacing.ViewModels
             
             ServerThread = new Task(() => Server.Listen());
             DataHandlerThread = new Task(() => SubscribeToEvent(Server));
-            //ServerThread = new Thread(() => Server.Listen());
-            //DataHandlerThread = new Thread(() => SubscribeToEvent(Server));
-
-            //ServerThread.IsBackground = true;
-            //DataHandlerThread.IsBackground = true;
         }
 
         public void SubscribeToEvent(Server server)
@@ -217,53 +215,58 @@ namespace SneknetRacing.ViewModels
 
         private void Server_DataReceivedEvent(object sender, ReceivedDataArgs args)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            AddPacketToDesserializationQueue(args.receivedBytes);            
+        }
 
-            stopwatch.Start();
-
-            HeaderViewModel.Packet.Desserialize(args.receivedBytes);
-            var packet = HeaderViewModel.Packet as PacketHeader;
-
-            switch(packet.PacketID)
+        public override void Desserialize()
+        {
+            while (true)
             {
-                case 0:
-                    Task motionTask1 = Task.Factory.StartNew(() => MotionDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    Task motionTask2 = motionTask1.ContinueWith(ant => NeuralInputData.MotionDataPackets.Add(MotionDataViewModel.Packet as PacketMotionData));
-                    break;
-                case 1:
-                    Task sessionTask1 = Task.Factory.StartNew(() => SessionDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    break;
-                case 2:
-                    Task lapTask1 = Task.Factory.StartNew(() => LapDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    Task lapTask2 = lapTask1.ContinueWith(ant => NeuralInputData.LapDataPackets.Add(LapDataViewModel.Packet as PacketLapData));
-                    break;
-                case 3:
-                    Task eventTask1 = Task.Factory.StartNew(() => EventDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    break;
-                case 4:
-                    Task participantsTask1 = Task.Factory.StartNew(() => ParticipantsDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    break;
-                case 5:
-                    Task setupsTask1 = Task.Factory.StartNew(() => CarSetupsDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    break;
-                case 6:
-                    Task telemetryTask1 = Task.Factory.StartNew(() => CarTelemetryDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    Task telemetryTask2 = telemetryTask1.ContinueWith(ant => NeuralInputData.CarTelemetryDataPackets.Add(CarTelemetryDataViewModel.Packet as PacketCarTelemetryData));
-                    break;
-                case 7:
-                    Task statusTask1 = Task.Factory.StartNew(() => CarStatusDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    Task statusTask2 = statusTask1.ContinueWith(ant => NeuralInputData.CarStatusDataPackets.Add(CarStatusDataViewModel.Packet as PacketCarStatusData));
-                    break;
-                case 8:
-                    Task classificationTask1 = Task.Factory.StartNew(() => ClassificationDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    break;
-                case 9:
-                    Task lobbyTask1 = Task.Factory.StartNew(() => LobbyInfoDataViewModel.Packet.Desserialize(args.receivedBytes));
-                    break;
-            }
+                byte[] rawPacket;
+                if (ReceivedPackets.TryDequeue(out rawPacket))
+                {
+                    HeaderViewModel.Packet = HeaderViewModel.Packet.Desserialize(rawPacket);
+                    var header = HeaderViewModel.Packet as PacketHeader;
 
-            stopwatch.Stop();
-            ProcessTime = stopwatch.ElapsedMilliseconds;
+                    switch (header.PacketID)
+                    {
+                        case 0:
+                            Packet = MotionDataViewModel.Packet.Desserialize(rawPacket);
+                            //Task motionTask2 = motionTask1.ContinueWith(ant => NeuralInputData.MotionDataPackets.Add(MotionDataViewModel.Packet as PacketMotionData));
+                            break;
+                        case 1:
+                            Packet = SessionDataViewModel.Packet.Desserialize(rawPacket);
+                            break;
+                        case 2:
+                            LapDataViewModel.AddPacketToDesserializationQueue(rawPacket);
+                            //Task lapTask2 = lapTask1.ContinueWith(ant => NeuralInputData.LapDataPackets.Add(LapDataViewModel.Packet as PacketLapData));
+                            break;
+                        case 3:
+                            EventDataViewModel.AddPacketToDesserializationQueue(rawPacket);
+                            break;
+                        case 4:
+                            ParticipantsDataViewModel.AddPacketToDesserializationQueue(rawPacket);
+                            break;
+                        case 5:
+                            CarSetupsDataViewModel.AddPacketToDesserializationQueue(rawPacket);
+                            break;
+                        case 6:
+                            CarTelemetryDataViewModel.AddPacketToDesserializationQueue(rawPacket);
+                            //Task telemetryTask2 = telemetryTask1.ContinueWith(ant => NeuralInputData.CarTelemetryDataPackets.Add(CarTelemetryDataViewModel.Packet as PacketCarTelemetryData));
+                            break;
+                        case 7:
+                            CarStatusDataViewModel.AddPacketToDesserializationQueue(rawPacket);
+                            //Task statusTask2 = statusTask1.ContinueWith(ant => NeuralInputData.CarStatusDataPackets.Add(CarStatusDataViewModel.Packet as PacketCarStatusData));
+                            break;
+                        case 8:
+                            ClassificationDataViewModel.AddPacketToDesserializationQueue(rawPacket);
+                            break;
+                        case 9:
+                            LobbyInfoDataViewModel.AddPacketToDesserializationQueue(rawPacket);
+                            break;
+                    }
+                }
+            }
         }
 
     }

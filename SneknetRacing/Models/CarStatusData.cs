@@ -425,5 +425,10 @@ namespace SneknetRacing.Models
             TyresWear = new byte[4];
             TyresDamage = new byte[4];
         }
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

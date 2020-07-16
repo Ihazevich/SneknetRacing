@@ -9,7 +9,7 @@ namespace SneknetRacing.ViewModels
     {
         public MotionDataViewModel() : base(new PacketMotionData())
         {
-
+            
         }
     }
 }

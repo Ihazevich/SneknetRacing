@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -13,9 +14,10 @@ namespace SneknetRacing.Models
 
         private string _info;
 
-        private PacketHeader _header;                  // Header
+        private PacketHeader _header = new PacketHeader();                  // Header
 
-        private BindingList<CarMotionData> _carMotionData;        // Data for all cars on track
+        private BindingList<CarMotionData> _carMotionData = new BindingList<CarMotionData>();        // Data for all cars on track
+        private object _lock = new object();
 
         // Extra player car ONLY data
         private float[] _suspensionPosition;           // Note: All wheel arrays have the following order:
@@ -276,33 +278,33 @@ namespace SneknetRacing.Models
 
         public PacketMotionData()
         {
-            Header = new PacketHeader();
-            CarMotionData = new BindingList<CarMotionData>();
-            CarMotionData.ListChanged += CarMotionData_ListChanged;
-            SuspensionPosition = new float[4];
         }
-        public override void Desserialize(byte[] data)
+
+        public override BaseModel Desserialize(byte[] data)
         {
+            PacketMotionData temp = new PacketMotionData();
             using (MemoryStream m = new MemoryStream(data))
             {
                 using (BinaryReader reader = new BinaryReader(m))
                 {
-                    Header.PacketFormat = reader.ReadUInt16();
-                    Header.GameMajorVersion = reader.ReadByte();
-                    Header.GameMinorVersion = reader.ReadByte();
-                    Header.PacketVersion = reader.ReadByte();
-                    Header.PacketID = reader.ReadByte();
-                    Header.SessionUID = reader.ReadUInt64();
-                    Header.SessionTime = reader.ReadSingle();
-                    Header.FrameIdentifier = reader.ReadUInt32();
-                    Header.PlayerCarIndex = reader.ReadByte();
-                    Header.SecondaryPlayerCarIndex = reader.ReadByte();
+                    temp.Header.PacketFormat = reader.ReadUInt16();
+                    temp.Header.GameMajorVersion = reader.ReadByte();
+                    temp.Header.GameMinorVersion = reader.ReadByte();
+                    temp.Header.PacketVersion = reader.ReadByte();
+                    temp.Header.PacketID = reader.ReadByte();
+                    temp.Header.SessionUID = reader.ReadUInt64();
+                    temp.Header.SessionTime = reader.ReadSingle();
+                    temp.Header.FrameIdentifier = reader.ReadUInt32();
+                    temp.Header.PlayerCarIndex = reader.ReadByte();
+                    temp.Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
-                    for(int i = 0; i < 22; i++)
+                    BindingList<CarMotionData> temp1 = new BindingList<CarMotionData>();
+                    for (int i = 0; i < 22; i++)
                     {
-                        CarMotionData temp = new CarMotionData
+                        temp1.Add(new CarMotionData
                         {
                             WorldPositionX = reader.ReadSingle(),
+
                             WorldPositionZ = reader.ReadSingle(),
                             WorldPositionY = reader.ReadSingle(),
                             WorldVelocityX = reader.ReadSingle(),
@@ -320,9 +322,9 @@ namespace SneknetRacing.Models
                             Yaw = reader.ReadSingle(),
                             Pitch = reader.ReadSingle(),
                             Roll = reader.ReadSingle()
-                        };
-                        CarMotionData.Insert(i,temp);
+                        });
                     }
+                    CarMotionData = temp1;
 
                     SuspensionPosition = new float[4];
                     SuspensionPosition[0] = reader.ReadSingle();
@@ -369,6 +371,7 @@ namespace SneknetRacing.Models
                     FrontWheelsAngle = reader.ReadSingle();
                 }
             }
+            return temp;
         }
 
         private void CarMotionData_ListChanged(object sender, ListChangedEventArgs e)

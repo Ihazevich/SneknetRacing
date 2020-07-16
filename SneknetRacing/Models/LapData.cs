@@ -370,6 +370,11 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("ResultStatus");
             }
         }
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }
