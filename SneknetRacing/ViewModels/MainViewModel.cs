@@ -207,10 +207,10 @@ namespace SneknetRacing.ViewModels
             Server = new Server();
             
             ServerThread = new Task(() => Server.Listen());
-            DataHandlerThread = new Task(() => SubscribeToEvent(Server));
+            DataHandlerThread = new Task(() => SubscribeToServerEvent(Server));
         }
 
-        public void SubscribeToEvent(Server server)
+        public void SubscribeToServerEvent(Server server)
         {
             server.DataReceivedEvent += Server_DataReceivedEvent;
         }
@@ -233,7 +233,7 @@ namespace SneknetRacing.ViewModels
                     switch (header.PacketID)
                     {
                         case 0:
-                            Packet = MotionDataViewModel.Packet.Desserialize(rawPacket);
+                            MotionDataViewModel.AddPacketToDesserializationQueue(rawPacket);
                             //Task motionTask2 = motionTask1.ContinueWith(ant => NeuralInputData.MotionDataPackets.Add(MotionDataViewModel.Packet as PacketMotionData));
                             break;
                         case 1:
