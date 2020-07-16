@@ -190,5 +190,10 @@ namespace SneknetRacing.Models
             TyreStintsActual = new byte[8];
             TyreStintsVisual = new byte[8];
         }
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -297,6 +297,11 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("FuelLoad");
             }
         }
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
     }

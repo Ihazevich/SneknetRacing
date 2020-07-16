@@ -240,5 +240,10 @@ namespace SneknetRacing.Models
         public EventDataDetails()
         {
         }
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -145,24 +145,26 @@ namespace SneknetRacing.Models
             }
         }
         #endregion
-        public override void Desserialize(byte[] data)
+        public override BaseModel Desserialize(byte[] data)
         {
+            PacketHeader temp = new PacketHeader();
             using (MemoryStream m = new MemoryStream(data))
             {
                 using (BinaryReader reader = new BinaryReader(m))
                 {
-                    PacketFormat = reader.ReadUInt16();
-                    GameMajorVersion = reader.ReadByte();
-                    GameMinorVersion = reader.ReadByte();
-                    PacketVersion = reader.ReadByte();
-                    PacketID = reader.ReadByte();
-                    SessionUID = reader.ReadUInt64();
-                    SessionTime = reader.ReadSingle();
-                    FrameIdentifier = reader.ReadUInt32();
-                    PlayerCarIndex = reader.ReadByte();
-                    SecondaryPlayerCarIndex = reader.ReadByte();
+                    temp.PacketFormat = reader.ReadUInt16();
+                    temp.GameMajorVersion = reader.ReadByte();
+                    temp.GameMinorVersion = reader.ReadByte();
+                    temp.PacketVersion = reader.ReadByte();
+                    temp.PacketID = reader.ReadByte();
+                    temp.SessionUID = reader.ReadUInt64();
+                    temp.SessionTime = reader.ReadSingle();
+                    temp.FrameIdentifier = reader.ReadUInt32();
+                    temp.PlayerCarIndex = reader.ReadByte();
+                    temp.SecondaryPlayerCarIndex = reader.ReadByte();
                 }
             }
+            return temp;
         }
     }
 }

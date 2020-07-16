@@ -257,5 +257,10 @@ namespace SneknetRacing.Models
         {
             return WorldPositionX.ToString() + ", " + WorldPositionY.ToString();
         }
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

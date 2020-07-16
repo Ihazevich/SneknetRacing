@@ -90,20 +90,9 @@ namespace SneknetRacing.Models
 
         #endregion
 
-        public void Desserialize(byte[] data)
+        public override BaseModel Desserialize(byte[] data)
         {
-            PacketMotionData result = new PacketMotionData();
-            using (MemoryStream m = new MemoryStream(data))
-            {
-                using (BinaryReader reader = new BinaryReader(m))
-                {
-                    SessionType = reader.ReadByte();
-                    TimeOffset = reader.ReadByte();
-                    Weather = reader.ReadByte();
-                    TrackTemperature = reader.ReadSByte();
-                    AirTemperature = reader.ReadSByte();
-                }
-            }
+            throw new NotImplementedException();
         }
     }
 }

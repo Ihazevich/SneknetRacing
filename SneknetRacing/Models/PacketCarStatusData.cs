@@ -46,26 +46,27 @@ namespace SneknetRacing.Models
             CarStatusData = new CarStatusData[22];
         }
 
-        public override void Desserialize(byte[] data)
+        public override BaseModel Desserialize(byte[] data)
         {
+            PacketCarStatusData temp = new PacketCarStatusData();
             using (MemoryStream m = new MemoryStream(data))
             {
                 using (BinaryReader reader = new BinaryReader(m))
                 {
-                    Header.PacketFormat = reader.ReadUInt16();
-                    Header.GameMajorVersion = reader.ReadByte();
-                    Header.GameMinorVersion = reader.ReadByte();
-                    Header.PacketVersion = reader.ReadByte();
-                    Header.PacketID = reader.ReadByte();
-                    Header.SessionUID = reader.ReadUInt64();
-                    Header.SessionTime = reader.ReadSingle();
-                    Header.FrameIdentifier = reader.ReadUInt32();
-                    Header.PlayerCarIndex = reader.ReadByte();
-                    Header.SecondaryPlayerCarIndex = reader.ReadByte();
+                    temp.Header.PacketFormat = reader.ReadUInt16();
+                    temp.Header.GameMajorVersion = reader.ReadByte();
+                    temp.Header.GameMinorVersion = reader.ReadByte();
+                    temp.Header.PacketVersion = reader.ReadByte();
+                    temp.Header.PacketID = reader.ReadByte();
+                    temp.Header.SessionUID = reader.ReadUInt64();
+                    temp.Header.SessionTime = reader.ReadSingle();
+                    temp.Header.FrameIdentifier = reader.ReadUInt32();
+                    temp.Header.PlayerCarIndex = reader.ReadByte();
+                    temp.Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
                     for(int i = 0; i < 22; i++)
                     {
-                        CarStatusData[i] = new CarStatusData()
+                        temp.CarStatusData[i] = new CarStatusData()
                         {
                             TractionControl = reader.ReadByte(),
                             AntiLockBrakes = reader.ReadByte(),
@@ -101,6 +102,7 @@ namespace SneknetRacing.Models
                     }
                 }
             }
+            return temp;
         }
     }
 }

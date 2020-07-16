@@ -61,22 +61,23 @@ namespace SneknetRacing.Models
             EventStringCode = new byte[4];
         }
 
-        public override void Desserialize(byte[] data)
+        public override BaseModel Desserialize(byte[] data)
         {
+            PacketEventData temp = new PacketEventData();
             using (MemoryStream m = new MemoryStream(data))
             {
                 using (BinaryReader reader = new BinaryReader(m))
                 {
-                    Header.PacketFormat = reader.ReadUInt16();
-                    Header.GameMajorVersion = reader.ReadByte();
-                    Header.GameMinorVersion = reader.ReadByte();
-                    Header.PacketVersion = reader.ReadByte();
-                    Header.PacketID = reader.ReadByte();
-                    Header.SessionUID = reader.ReadUInt64();
-                    Header.SessionTime = reader.ReadSingle();
-                    Header.FrameIdentifier = reader.ReadUInt32();
-                    Header.PlayerCarIndex = reader.ReadByte();
-                    Header.SecondaryPlayerCarIndex = reader.ReadByte();
+                    temp.Header.PacketFormat = reader.ReadUInt16();
+                    temp.Header.GameMajorVersion = reader.ReadByte();
+                    temp.Header.GameMinorVersion = reader.ReadByte();
+                    temp.Header.PacketVersion = reader.ReadByte();
+                    temp.Header.PacketID = reader.ReadByte();
+                    temp.Header.SessionUID = reader.ReadUInt64();
+                    temp.Header.SessionTime = reader.ReadSingle();
+                    temp.Header.FrameIdentifier = reader.ReadUInt32();
+                    temp.Header.PlayerCarIndex = reader.ReadByte();
+                    temp.Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
                     EventStringCode[0] = reader.ReadByte();
                     EventStringCode[1] = reader.ReadByte();
@@ -88,34 +89,35 @@ namespace SneknetRacing.Models
                     switch(eventCode)
                     {
                         case "FTLP":
-                            EventDetails.FastestLapVehicleIdx = reader.ReadByte();
-                            EventDetails.FastestLapLapTime = reader.ReadSingle();
+                            temp.EventDetails.FastestLapVehicleIdx = reader.ReadByte();
+                            temp.EventDetails.FastestLapLapTime = reader.ReadSingle();
                             break;
                         case "RTMT":
-                            EventDetails.RetirementVehicleIdx = reader.ReadByte();
+                            temp.EventDetails.RetirementVehicleIdx = reader.ReadByte();
                             break;
                         case "TMPT":
-                            EventDetails.TeammateInPitsVehicleIdx = reader.ReadByte();
+                            temp.EventDetails.TeammateInPitsVehicleIdx = reader.ReadByte();
                             break;
                         case "RCWN":
-                            EventDetails.RaceWinnerVehicleIdx = reader.ReadByte();
+                            temp.EventDetails.RaceWinnerVehicleIdx = reader.ReadByte();
                             break;
                         case "PENA":
-                            EventDetails.PenaltyType = reader.ReadByte();
-                            EventDetails.PenaltyInfringementType = reader.ReadByte();
-                            EventDetails.PenaltyVehicleIdx = reader.ReadByte();
-                            EventDetails.PenaltyOtherVehicleIdx = reader.ReadByte();
-                            EventDetails.PenaltyTime = reader.ReadByte();
-                            EventDetails.PenaltyLapNum = reader.ReadByte();
-                            EventDetails.PenaltyPlacesGained = reader.ReadByte();
+                            temp.EventDetails.PenaltyType = reader.ReadByte();
+                            temp.EventDetails.PenaltyInfringementType = reader.ReadByte();
+                            temp.EventDetails.PenaltyVehicleIdx = reader.ReadByte();
+                            temp.EventDetails.PenaltyOtherVehicleIdx = reader.ReadByte();
+                            temp.EventDetails.PenaltyTime = reader.ReadByte();
+                            temp.EventDetails.PenaltyLapNum = reader.ReadByte();
+                            temp.EventDetails.PenaltyPlacesGained = reader.ReadByte();
                             break;
                         case "SPTP":
-                            EventDetails.SpeedTrapVehicleIdx = reader.ReadByte();
-                            EventDetails.SpeedTrapSpeed = reader.ReadSingle();
+                            temp.EventDetails.SpeedTrapVehicleIdx = reader.ReadByte();
+                            temp.EventDetails.SpeedTrapSpeed = reader.ReadSingle();
                             break;
                     }
                 }
             }
+            return temp;
         }
     }
 }

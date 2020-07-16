@@ -325,56 +325,57 @@ namespace SneknetRacing.Models
         }
 
         #region Methods
-        public override void Desserialize(byte[] data)
+        public override BaseModel Desserialize(byte[] data)
         {
+            PacketSessionData temp = new PacketSessionData();
             using (MemoryStream m = new MemoryStream(data))
             {
                 using (BinaryReader reader = new BinaryReader(m))
                 {
-                    Header.PacketFormat = reader.ReadUInt16();
-                    Header.GameMajorVersion = reader.ReadByte();
-                    Header.GameMinorVersion = reader.ReadByte();
-                    Header.PacketVersion = reader.ReadByte();
-                    Header.PacketID = reader.ReadByte();
-                    Header.SessionUID = reader.ReadUInt64();
-                    Header.SessionTime = reader.ReadSingle();
-                    Header.FrameIdentifier = reader.ReadUInt32();
-                    Header.PlayerCarIndex = reader.ReadByte();
-                    Header.SecondaryPlayerCarIndex = reader.ReadByte();
+                    temp.Header.PacketFormat = reader.ReadUInt16();
+                    temp.Header.GameMajorVersion = reader.ReadByte();
+                    temp.Header.GameMinorVersion = reader.ReadByte();
+                    temp.Header.PacketVersion = reader.ReadByte();
+                    temp.Header.PacketID = reader.ReadByte();
+                    temp.Header.SessionUID = reader.ReadUInt64();
+                    temp.Header.SessionTime = reader.ReadSingle();
+                    temp.Header.FrameIdentifier = reader.ReadUInt32();
+                    temp.Header.PlayerCarIndex = reader.ReadByte();
+                    temp.Header.SecondaryPlayerCarIndex = reader.ReadByte();
 
-                    Weather = reader.ReadByte();
-                    TrackTemperature = reader.ReadSByte();
-                    AirTemperature = reader.ReadSByte();
-                    TotalLaps = reader.ReadByte();
-                    TrackLength = reader.ReadUInt16();
-                    SessionType = reader.ReadByte();
-                    TrackID = reader.ReadSByte();
-                    Formula = reader.ReadByte();
-                    SessionTimeLeft = reader.ReadUInt16();
-                    SessionDuration = reader.ReadUInt16();
-                    PitSpeedLimit = reader.ReadByte();
-                    GamePaused = reader.ReadByte();
-                    IsSpectating = reader.ReadByte();
-                    SpectatorCarIndex = reader.ReadByte();
-                    SliProNativeSupport = reader.ReadByte();
-                    NumMarshalZones = reader.ReadByte();
+                    temp.Weather = reader.ReadByte();
+                    temp.TrackTemperature = reader.ReadSByte();
+                    temp.AirTemperature = reader.ReadSByte();
+                    temp.TotalLaps = reader.ReadByte();
+                    temp.TrackLength = reader.ReadUInt16();
+                    temp.SessionType = reader.ReadByte();
+                    temp.TrackID = reader.ReadSByte();
+                    temp.Formula = reader.ReadByte();
+                    temp.SessionTimeLeft = reader.ReadUInt16();
+                    temp.SessionDuration = reader.ReadUInt16();
+                    temp.PitSpeedLimit = reader.ReadByte();
+                    temp.GamePaused = reader.ReadByte();
+                    temp.IsSpectating = reader.ReadByte();
+                    temp.SpectatorCarIndex = reader.ReadByte();
+                    temp.SliProNativeSupport = reader.ReadByte();
+                    temp.NumMarshalZones = reader.ReadByte();
 
                     for (int i = 0; i < 21; i++)
                     {
-                        MarshalZones[i] = new MarshalZone
+                        temp.MarshalZones[i] = new MarshalZone
                         {
                             ZoneStart = reader.ReadSingle(),
                             ZoneFlag = reader.ReadSByte()
                         };
                     }
 
-                    SafetyCarStatus = reader.ReadByte();
-                    NetworkGame = reader.ReadByte();
-                    NumWeatherForecastSamples = reader.ReadByte();
+                    temp.SafetyCarStatus = reader.ReadByte();
+                    temp.NetworkGame = reader.ReadByte();
+                    temp.NumWeatherForecastSamples = reader.ReadByte();
 
                     for(int i = 0; i < 20; i++)
                     {
-                        WeatherForecastSamples[i] = new WeatherForecastSample
+                        temp.WeatherForecastSamples[i] = new WeatherForecastSample
                         {
                             SessionType = reader.ReadByte(),
                             TimeOffset = reader.ReadByte(),
@@ -385,6 +386,7 @@ namespace SneknetRacing.Models
                     }
                 }
             }
+            return temp;
         }
         #endregion
     }

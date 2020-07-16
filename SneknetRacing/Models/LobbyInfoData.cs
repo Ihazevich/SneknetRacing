@@ -83,5 +83,10 @@ namespace SneknetRacing.Models
         {
             Name = new char[48];
         }
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

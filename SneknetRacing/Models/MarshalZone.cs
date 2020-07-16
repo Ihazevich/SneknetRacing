@@ -36,5 +36,10 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("ZoneFlag");
             }
         }
+
+        public override BaseModel Desserialize(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
