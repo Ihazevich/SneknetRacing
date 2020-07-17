@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace SneknetRacing.Models
@@ -81,11 +82,11 @@ namespace SneknetRacing.Models
                             MaxGears = reader.ReadByte(),
                             DrsAllowed = reader.ReadByte(),
                             DrsActivationDistance = reader.ReadUInt16(),
-                            TyresWear = reader.ReadBytes(4),
+                            TyresWear = reader.ReadBytes(4).OfType<byte>().ToList(),
                             ActualTyreCompound = reader.ReadByte(),
                             VisualTyreCompound = reader.ReadByte(),
                             TyresAgeLaps = reader.ReadByte(),
-                            TyresDamage = reader.ReadBytes(4),
+                            TyresDamage = reader.ReadBytes(4).OfType<byte>().ToList(),
                             FrontLeftWingDamage = reader.ReadByte(),
                             FrontRightWingDamage = reader.ReadByte(),
                             RearWingDamage = reader.ReadByte(),

@@ -89,7 +89,7 @@ namespace SneknetRacing.Models
                             TeamID = reader.ReadByte(),
                             RaceNumber = reader.ReadByte(),
                             Nationality = reader.ReadByte(),
-                            Name = reader.ReadChars(4),
+                            Name = reader.ReadChars(48),
                             YourTelemetry = reader.ReadByte()
                         };
                     }

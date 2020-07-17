@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace SneknetRacing.Models
@@ -140,41 +141,23 @@ namespace SneknetRacing.Models
                             Drs = reader.ReadByte(),
                             RevLightsPercent = reader.ReadByte()
                         };
-                        
-                        UInt16[] brakesTemp = new UInt16[4];
-                        brakesTemp[0] = reader.ReadUInt16();
-                        brakesTemp[1] = reader.ReadUInt16();
-                        brakesTemp[2] = reader.ReadUInt16();
-                        brakesTemp[3] = reader.ReadUInt16();
-                        temp.CarTelemetryData[i].BrakesTemperature = brakesTemp;
-                        
-                        byte[] temps = new byte[4];
-                        temps[0] = reader.ReadByte();
-                        temps[1] = reader.ReadByte();
-                        temps[2] = reader.ReadByte();
-                        temps[3] = reader.ReadByte();
-                        temp.CarTelemetryData[i].TyresSurfaceTemperature = temps;
-                        
-                        temps[0] = reader.ReadByte();
-                        temps[1] = reader.ReadByte();
-                        temps[2] = reader.ReadByte();
-                        temps[3] = reader.ReadByte();
-                        temp.CarTelemetryData[i].TyresInnerTemperature = temps;
+
+                        temp.CarTelemetryData[i].BrakesTemperature.Add(reader.ReadUInt16());
+                        temp.CarTelemetryData[i].BrakesTemperature.Add(reader.ReadUInt16());
+                        temp.CarTelemetryData[i].BrakesTemperature.Add(reader.ReadUInt16());
+                        temp.CarTelemetryData[i].BrakesTemperature.Add(reader.ReadUInt16());
+
+                        temp.CarTelemetryData[i].TyresSurfaceTemperature = reader.ReadBytes(4).OfType<byte>().ToList();
+                        temp.CarTelemetryData[i].TyresInnerTemperature = reader.ReadBytes(4).OfType<byte>().ToList();
 
                         temp.CarTelemetryData[i].EngineTemperature = reader.ReadUInt16();
-                        
-                        float[] pressure = new float[4];
-                        pressure[0] = reader.ReadSingle();
-                        pressure[1] = reader.ReadSingle();
-                        pressure[2] = reader.ReadSingle();
-                        pressure[3] = reader.ReadSingle();
-                        temp.CarTelemetryData[i].TyresPressure = pressure;
 
-                        temps[0] = reader.ReadByte();
-                        temps[1] = reader.ReadByte();
-                        temps[2] = reader.ReadByte();
-                        temps[3] = reader.ReadByte();
-                        temp.CarTelemetryData[i].SurfaceType = temps;
+                        temp.CarTelemetryData[i].TyresPressure.Add(reader.ReadSingle());
+                        temp.CarTelemetryData[i].TyresPressure.Add(reader.ReadSingle());
+                        temp.CarTelemetryData[i].TyresPressure.Add(reader.ReadSingle());
+                        temp.CarTelemetryData[i].TyresPressure.Add(reader.ReadSingle());
+
+                        temp.CarTelemetryData[i].SurfaceType = reader.ReadBytes(4).OfType<byte>().ToList();
                     }
                 }
             }

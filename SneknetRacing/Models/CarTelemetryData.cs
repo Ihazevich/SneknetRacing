@@ -17,12 +17,12 @@ namespace SneknetRacing.Models
         private UInt16 _engineRPM;                     // Engine RPM
         private byte _drs;                           // 0 = off, 1 = on
         private byte _revLightsPercent;              // Rev lights indicator (percentage)
-        private UInt16[] _brakesTemperature;          // Brakes temperature (celsius)
-        private byte[] _tyresSurfaceTemperature;    // Tyres surface temperature (celsius)
-        private byte[] _tyresInnerTemperature;      // Tyres inner temperature (celsius)
+        private List<UInt16> _brakesTemperature = new List<UInt16>();          // Brakes temperature (celsius)
+        private List<byte> _tyresSurfaceTemperature = new List<byte>();    // Tyres surface temperature (celsius)
+        private List<byte> _tyresInnerTemperature = new List<byte>();      // Tyres inner temperature (celsius)
         private UInt16 _engineTemperature;             // Engine temperature (celsius)
-        private float[] _tyresPressure;              // Tyres pressure (PSI)
-        private byte[] _surfaceType;                // Driving surface, see appendices
+        private List<float> _tyresPressure = new List<float>();              // Tyres pressure (PSI)
+        private List<byte> _surfaceType = new List<byte>();                // Driving surface, see appendices
         #endregion
 
         #region Properties
@@ -134,7 +134,7 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("RevLightsPercent");
             }
         }
-        public UInt16[] BrakesTemperature
+        public List<UInt16> BrakesTemperature
         {
             get
             {
@@ -146,7 +146,7 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("BrakesTemperature");
             }
         }
-        public byte[] TyresSurfaceTemperature
+        public List<byte> TyresSurfaceTemperature
         {
             get
             {
@@ -158,7 +158,7 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("TyresSurfaceTemperature");
             }
         }
-        public byte[] TyresInnerTemperature
+        public List<byte> TyresInnerTemperature
         {
             get
             {
@@ -182,7 +182,7 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("EngineTemperature");
             }
         }
-        public float[] TyresPressure
+        public List<float> TyresPressure
         {
             get
             {
@@ -194,7 +194,7 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("TyresPressure");
             }
         }
-        public byte[] SurfaceType
+        public List<byte> SurfaceType
         {
             get
             {

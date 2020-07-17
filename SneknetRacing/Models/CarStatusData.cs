@@ -26,7 +26,7 @@ namespace SneknetRacing.Models
         private UInt16 _drsActivationDistance;    // 0 = DRS not available, non-zero - DRS will be available
                                                   // in [X] metres
 
-        private byte[] _tyresWear;             // Tyre wear percentage
+        private List<byte> _tyresWear;             // Tyre wear percentage
         private byte _actualTyreCompound;     // F1 Modern - 16 = C5, 17 = C4, 18 = C3, 19 = C2, 20 = C1
                                               // 7 = inter, 8 = wet
                                               // F1 Classic - 9 = dry, 10 = wet
@@ -37,7 +37,7 @@ namespace SneknetRacing.Models
                                                  // F1 Classic – same as above
                                                  // F2 – same as above
         private byte _tyresAgeLaps;             // Age in laps of the current set of tyres
-        private byte[] _tyresDamage;           // Tyre damage (percentage)
+        private List<byte> _tyresDamage;           // Tyre damage (percentage)
         private byte _frontLeftWingDamage;      // Front left wing damage (percentage)
         private byte _frontRightWingDamage;     // Front right wing damage (percentage)
         private byte _rearWingDamage;           // Rear wing damage (percentage)
@@ -214,7 +214,7 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("DrsActivationDistance");
             }
         }
-        public byte[] TyresWear
+        public List<byte> TyresWear
         {
             get
             {
@@ -262,7 +262,7 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("TyresAgeLaps");
             }
         }
-        public byte[] TyresDamage
+        public List<byte> TyresDamage
         {
             get
             {
@@ -422,8 +422,6 @@ namespace SneknetRacing.Models
 
         public CarStatusData()
         {
-            TyresWear = new byte[4];
-            TyresDamage = new byte[4];
         }
 
         public override BaseModel Desserialize(byte[] data)
