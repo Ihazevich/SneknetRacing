@@ -6,6 +6,7 @@ using SneknetRacing.Models;
 using SneknetRacing.Network;
 using SneknetRacing.Views;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -21,6 +22,7 @@ namespace SneknetRacing.ViewModels
     {
         #region Fields
         private BaseViewModel _selectedViewModel;
+        private ConcurrentQueue<byte[]> _receivedRawPackets = new ConcurrentQueue<byte[]>();
 
         private bool _networkThreadsRunning;
         private string _networkButtonStatus;
@@ -34,6 +36,18 @@ namespace SneknetRacing.ViewModels
         #endregion
 
         #region Properties
+        public ConcurrentQueue<byte[]> ReceivedPackets
+        {
+            get
+            {
+                return _receivedRawPackets;
+            }
+            set 
+            {
+                _receivedRawPackets = value;
+                OnPropertyChanged("ReceivedPackets");
+            } 
+        }
         public BaseViewModel SelectedViewModel
         {
             get { return _selectedViewModel; }
@@ -207,6 +221,7 @@ namespace SneknetRacing.ViewModels
             
             ServerThread = new Task(() => Server.Listen());
             DataHandlerThread = new Task(() => SubscribeToServerEvent(Server));
+            DesserializationThread = Task.Factory.StartNew(() => Desserialize());
         }
 
         public void SubscribeToServerEvent(Server server)
@@ -219,7 +234,7 @@ namespace SneknetRacing.ViewModels
             AddPacketToDesserializationQueue(args.receivedBytes);            
         }
 
-        public override void Desserialize()
+        public void Desserialize()
         {
             Console.WriteLine(this + " DesserializationThread started...");
             while (true)
@@ -227,10 +242,10 @@ namespace SneknetRacing.ViewModels
                 byte[] rawPacket;
                 if (ReceivedPackets.TryDequeue(out rawPacket))
                 {
-                    HeaderViewModel.Packet = HeaderViewModel.Packet.Desserialize(rawPacket);
-                    var header = HeaderViewModel.Packet as PacketHeader;
+                    HeaderViewModel.Packet = HeaderViewModel.Packet.Desserialize(rawPacket) as PacketHeader;
+                    Console.Write(HeaderViewModel.Packet.PacketID);
 
-                    switch (header.PacketID)
+                    switch (HeaderViewModel.Packet.PacketID)
                     {
                         case 0:
                             MotionDataViewModel.AddPacketToDesserializationQueue(rawPacket);
@@ -271,5 +286,42 @@ namespace SneknetRacing.ViewModels
             }
         }
 
+        public void SerializeNeuralInputs()
+        {
+            bool newPacket = false;
+            
+            PacketCarSetupData carSetupData;
+            PacketCarStatusData carStatusData;
+            PacketCarTelemetryData carTelemetryData;
+            //PacketEventData packetEventData;
+            //PacketFinalClassificationData packetFinalClassificationData;
+            PacketLapData packetLapData;
+            PacketMotionData packetMotionData;
+            PacketParticipantsData packetParticipantsData;
+            PacketSessionData packetSessionData;
+
+            while(true)
+            {
+                CarSetupsDataViewModel.ProcessedPackets.TryDequeue(out carSetupData);
+            }
+        }
+
+        public bool AddPacketToDesserializationQueue(byte[] data)
+        {
+            try
+            {
+                ReceivedPackets.Enqueue(data);
+                TotalPackets++;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+            finally
+            {
+            }
+        }
     }
 }

@@ -7,91 +7,108 @@ using System.Windows.Data;
 
 namespace SneknetRacing.AI
 {
+    [Serializable]
     public class NeuralInputData : INotifyPropertyChanged
     {
-        private BindingList<PacketCarStatusData> _carStatusDataPackets;
-        private BindingList<PacketCarTelemetryData> _carTelemetryDataPackets;
-        private BindingList<PacketLapData> _lapDataPackets;
-        private BindingList<PacketMotionData> _motionDataPackets;
+        #region Fields
+        private PacketCarSetupData _carSetupData = new PacketCarSetupData();
+        private PacketCarStatusData _carStatusData = new PacketCarStatusData();
+        private PacketCarTelemetryData _carTelemetryData = new PacketCarTelemetryData();
+        //private PacketFinalClassificationData _finalClassificationData = new PacketFinalClassificationData();
+        private PacketLapData _lapData = new PacketLapData();
+        private PacketMotionData _motionData = new PacketMotionData();
+        private PacketParticipantsData _participantsData = new PacketParticipantsData();
+        #endregion
 
-        private object _carStatusDataPacketsLock = new object();
-        private object _carTelemetryDataPacketsLock = new object();
-        private object _lapDataPacketsLock = new object();
-        private object _motionDataPacketsLock = new object();
-
-        public BindingList<PacketCarStatusData> CarStatusDataPackets
+        #region Properties
+        public PacketCarSetupData CarSetupData
         {
             get
             {
-                return _carStatusDataPackets;
+                return _carSetupData;
             }
             set
             {
-                _carStatusDataPackets = value;
-                OnPropertyChanged("CarStatusDataPackets");
+                _carSetupData = value;
+                OnPropertyChanged("CarSetupData");
             }
         }
-        public BindingList<PacketCarTelemetryData> CarTelemetryDataPackets
+        public PacketCarStatusData CarStatusData
         {
             get
             {
-                return _carTelemetryDataPackets;
+                return _carStatusData;
             }
             set
             {
-                _carTelemetryDataPackets = value;
-                OnPropertyChanged("CarTelemetryDataPackets");
+                _carStatusData = value;
+                OnPropertyChanged("CarStatusData");
             }
         }
-        public BindingList<PacketLapData> LapDataPackets
+        public PacketCarTelemetryData CarTelemetryData
         {
             get
             {
-                return _lapDataPackets;
+                return _carTelemetryData;
             }
             set
             {
-                _lapDataPackets = value;
-                OnPropertyChanged("LapDataPackets");
+                _carTelemetryData = value;
+                OnPropertyChanged("CarTelemetryData");
             }
         }
-        public BindingList<PacketMotionData> MotionDataPackets
+        /*public PacketFinalClassificationData FinalClassificationData
         {
             get
             {
-                return _motionDataPackets;
+                return _finalClassificationData;
             }
             set
             {
-                _motionDataPackets = value;
-                OnPropertyChanged("MotionDataPackets");
+                _finalClassificationData = value;
+                OnPropertyChanged("FinalClassificationData");
+            }
+        }*/
+        public PacketLapData LapData
+        {
+            get
+            {
+                return _lapData;
+            }
+            set
+            {
+                _lapData = value;
+                OnPropertyChanged("LapData");
             }
         }
+        public PacketMotionData MotionData
+        {
+            get
+            {
+                return _motionData;
+            }
+            set
+            {
+                _motionData = value;
+                OnPropertyChanged("MotionData");
+            }
+        }
+        public PacketParticipantsData ParticipantsData
+        {
+            get
+            {
+                return _participantsData;
+            }
+            set
+            {
+                _participantsData = value;
+                OnPropertyChanged("MotionData");
+            }
+        }
+        #endregion
 
         public NeuralInputData()
         {
-
-            _carStatusDataPackets = new BindingList<PacketCarStatusData>();
-            _carTelemetryDataPackets = new BindingList<PacketCarTelemetryData>();
-            _lapDataPackets = new BindingList<PacketLapData>();
-            _motionDataPackets = new BindingList<PacketMotionData>();
-
-            _carStatusDataPackets.AllowNew = true;
-            _carStatusDataPackets.AllowEdit = false;
-
-            _carTelemetryDataPackets.AllowNew = true;
-            _carTelemetryDataPackets.AllowEdit = false;
-
-            _lapDataPackets.AllowNew = true;
-            _lapDataPackets.AllowEdit = false;
-
-            _motionDataPackets.AllowNew = true;
-            _motionDataPackets.AllowEdit = false;
-
-            BindingOperations.EnableCollectionSynchronization(CarStatusDataPackets, _carStatusDataPackets);
-            BindingOperations.EnableCollectionSynchronization(CarTelemetryDataPackets, _carTelemetryDataPackets);
-            BindingOperations.EnableCollectionSynchronization(LapDataPackets, _lapDataPackets);
-            BindingOperations.EnableCollectionSynchronization(MotionDataPackets, _motionDataPackets);
 
         }
 

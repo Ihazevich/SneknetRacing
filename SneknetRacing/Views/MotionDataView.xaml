@@ -221,7 +221,7 @@
                     <TextBlock Grid.Column="4" Text="Z" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="5,0,0,0"/>
                     <TextBlock Grid.Column="5" Text="{Binding Path=Packet.AngularAccelerationZ}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}"  Margin="5,0,0,0"/>
                 </Grid>
-                <TextBlock Grid.Row="8" Text="{Binding Path=Packet.FrontWheelAngle}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="10,0,0,0"/>
+                <TextBlock Grid.Row="8" Text="{Binding Path=Packet.FrontWheelsAngle}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignOverlineTextBlock}" Margin="10,0,0,0"/>
             </Grid>
         </Grid>
         

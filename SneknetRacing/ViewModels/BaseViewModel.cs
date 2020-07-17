@@ -14,11 +14,10 @@ namespace SneknetRacing.ViewModels
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
         private long _totalPackets = 0;
-        private BaseModel _packet;
-        private ConcurrentQueue<byte[]> _receivedRawPackets = new ConcurrentQueue<byte[]>();
-        private ConcurrentQueue<BaseModel> _processedPackets = new ConcurrentQueue<BaseModel>();
 
         private Stopwatch _stopwatch;
+
+        private MainViewModel _parentView;
 
         public long TotalPackets
         {
@@ -42,83 +41,16 @@ namespace SneknetRacing.ViewModels
             }
         }
 
-        public BaseModel Packet
-        {
-            get
-            {
-                return _packet;
-            }
-            set
-            {
-                _packet = value;
-                OnPropertyChanged("Packet");
-            }
-        }
-
-        public ConcurrentQueue<byte[]> ReceivedPackets
-        {
-            get
-            {
-                return _receivedRawPackets;
-            }
-            set
-            {
-                _receivedRawPackets = value;
-                OnPropertyChanged("ReceivedPackets");
-            }
-        }
-
-        public ConcurrentQueue<BaseModel> ProcessedPackets
-        {
-            get
-            {
-                return _processedPackets;
-            }
-            set
-            {
-                _processedPackets = value;
-                OnPropertyChanged("ProcessedPackets");
-            }
-        }
-
-        public Task DesserializationThread { get; }
+        public Task DesserializationThread { get; set; }
         
         public BaseViewModel()
         {
             _stopwatch = Stopwatch.StartNew(); 
-            DesserializationThread = Task.Factory.StartNew(() => Desserialize());
         }
 
-        public virtual void Desserialize()
+        public BaseViewModel(MainViewModel parentView) : this()
         {
-            Console.WriteLine(this + " DesserializationThread started...");
-            while(true)
-            {
-                byte[] rawPacket;
-                if (ReceivedPackets.TryDequeue(out rawPacket))
-                {
-                    Packet = Packet.Desserialize(rawPacket);
-                    ProcessedPackets.Enqueue(Packet);
-                }
-            }
-        }
-
-        public virtual bool AddPacketToDesserializationQueue(byte[] data)
-        {
-            try
-            {
-                ReceivedPackets.Enqueue(data);
-                TotalPackets++;
-                return true;
-            }
-            catch(Exception)
-            {
-                return false;
-                throw;
-            }
-            finally
-            {
-            }
+            _parentView = parentView;
         }
 
         #region INotifyPropertyChanged Members
