@@ -107,7 +107,7 @@ namespace SneknetRacing.Models
 
         public ParticipantData()
         {
-            Name = new char[4];
+            Name = new char[48];
         }
 
         public override BaseModel Desserialize(byte[] data)
