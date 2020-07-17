@@ -8,7 +8,7 @@ namespace SneknetRacing.Models
     public class CarTelemetryData : BaseModel
     {
         #region Fields
-        private byte _speed;                         // Speed of car in kilometres per hour
+        private UInt16 _speed;                         // Speed of car in kilometres per hour
         private float _throttle;                      // Amount of throttle applied (0.0 to 1.0)
         private float _steer;                         // Steering (-1.0 (full lock left) to 1.0 (full lock right))
         private float _brake;                         // Amount of brake applied (0.0 to 1.0)
@@ -26,7 +26,7 @@ namespace SneknetRacing.Models
         #endregion
 
         #region Properties
-        public byte Speed
+        public UInt16 Speed
         {
             get
             {

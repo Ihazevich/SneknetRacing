@@ -130,7 +130,7 @@ namespace SneknetRacing.Models
                     {
                         temp.CarTelemetryData[i] = new CarTelemetryData()
                         {
-                            Speed = reader.ReadByte(),
+                            Speed = reader.ReadUInt16(),
                             Throttle = reader.ReadSingle(),
                             Steer = reader.ReadSingle(),
                             Brake = reader.ReadSingle(),
