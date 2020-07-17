@@ -402,7 +402,7 @@ namespace SneknetRacing.ViewModels
                         WriteIndented = true,
                     };
                     string jsonString = JsonSerializer.Serialize(NeuralInputData, options);
-                    File.WriteAllText("/NeuralData/" + DateTime.Now.ToString() + ".json", jsonString);
+                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
                 }               
             }
         }
