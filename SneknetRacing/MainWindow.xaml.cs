@@ -19,6 +19,7 @@ using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
 using SneknetRacing.ViewModels;
+using System.Windows.Threading;
 
 namespace SneknetRacing
 {
@@ -27,12 +28,13 @@ namespace SneknetRacing
     /// </summary>
     public partial class MainWindow : Window
     {
-        MainViewModel mainViewModel = new MainViewModel();
+        MainViewModel mainViewModel;
 
         public MainWindow()
         {
+            mainViewModel = new MainViewModel();
             InitializeComponent();
-            DataContext = mainViewModel;
+            DataContext = mainViewModel; 
         }
     }
 }

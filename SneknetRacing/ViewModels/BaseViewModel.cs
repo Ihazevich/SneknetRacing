@@ -8,16 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Windows.Threading;
+using System.Windows;
 
 namespace SneknetRacing.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
         private long _totalPackets = 0;
-
         private Stopwatch _stopwatch;
-
-        private MainViewModel _parentView;
 
         public long TotalPackets
         {
@@ -35,30 +34,36 @@ namespace SneknetRacing.ViewModels
 
         public string PacketsPerSecond
         {
-            get 
+            get
             {
                 return "Packets: " + TotalPackets + " | Ellapsed time in seconds: " + _stopwatch.ElapsedMilliseconds / 1000 + " | Rate: " + TotalPackets / (_stopwatch.ElapsedMilliseconds / 1000) + " packets/sec";
             }
         }
 
         public Task DesserializationThread { get; set; }
-        
+
         public BaseViewModel()
         {
-            _stopwatch = Stopwatch.StartNew(); 
-        }
-
-        public BaseViewModel(MainViewModel parentView) : this()
-        {
-            _parentView = parentView;
+            _stopwatch = Stopwatch.StartNew();
         }
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+            {
+                if (Application.Current.Dispatcher.CheckAccess())
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                }
+                else
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() => PropertyChanged(this, new PropertyChangedEventArgs(propertyName))));
+                }
+            }
         }
         #endregion
     }
 }
+
