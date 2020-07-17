@@ -18,6 +18,7 @@ namespace SneknetRacing.AI
         private PacketLapData _lapData = new PacketLapData();
         private PacketMotionData _motionData = new PacketMotionData();
         private PacketParticipantsData _participantsData = new PacketParticipantsData();
+        private PacketSessionData _sessionData = new PacketSessionData();
         #endregion
 
         #region Properties
@@ -103,6 +104,18 @@ namespace SneknetRacing.AI
             {
                 _participantsData = value;
                 OnPropertyChanged("MotionData");
+            }
+        }
+        public PacketSessionData SessionData
+        {
+            get
+            {
+                return _sessionData;
+            }
+            set
+            {
+                _sessionData = value;
+                OnPropertyChanged("SessionData");
             }
         }
         #endregion

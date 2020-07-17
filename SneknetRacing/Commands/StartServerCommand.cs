@@ -29,6 +29,8 @@ namespace SneknetRacing.Commands
             // Start Handler thread
             _viewModel.DataHandlerThread.Start();
             _viewModel.NetworkThreadsRunning = true;
+            // Start Serializer thread
+            _viewModel.SerializerThread.Start();
         }
     }
 }
