@@ -89,9 +89,16 @@ namespace SneknetRacing.Models
                             TeamID = reader.ReadByte(),
                             RaceNumber = reader.ReadByte(),
                             Nationality = reader.ReadByte(),
-                            Name = reader.ReadChars(48),
-                            YourTelemetry = reader.ReadByte()
                         };
+                        for (int j = 0; j < 48; j++)
+                        {
+                            char c = (char)reader.ReadByte();
+                            if(c != '\0')
+                            {
+                                temp.Participants[i].Name += c;
+                            }
+                        }
+                        temp.Participants[i].YourTelemetry = reader.ReadByte();
                     }
                 }
             }

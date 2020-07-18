@@ -13,7 +13,7 @@ namespace SneknetRacing.Models
         private byte _teamID;                 // Team id - see appendix
         private byte _raceNumber;             // Race number of the car
         private byte _nationality;            // Nationality of the driver
-        char[] _name;                         // Name of participant in UTF-8 format – null terminated
+        string _name = "";                         // Name of participant in UTF-8 format – null terminated
                                               // Will be truncated with … (U+2026) if too long
         private byte _yourTelemetry;          // The player's UDP setting, 0 = restricted, 1 = public
         #endregion
@@ -79,7 +79,7 @@ namespace SneknetRacing.Models
                 OnPropertyChanged("Nationality");
             }
         }
-        public char[] Name
+        public string Name
         {
             get
             {
@@ -107,7 +107,6 @@ namespace SneknetRacing.Models
 
         public ParticipantData()
         {
-            Name = new char[48];
         }
 
         public override BaseModel Desserialize(byte[] data)

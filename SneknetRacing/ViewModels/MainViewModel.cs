@@ -225,7 +225,8 @@ namespace SneknetRacing.ViewModels
             ServerThread = new Task(() => Server.Listen());
             DataHandlerThread = new Task(() => SubscribeToServerEvent(Server));
             DesserializationThread = Task.Factory.StartNew(() => Desserialize());
-            SerializerThread = new Task(() => SerializeNeuralInputs());
+            //SerializerThread = new Task(() => SerializeNeuralInputs());
+            SerializerThread = new Task(() => GenerateNeuralDataModel());
         }
 
         public void SubscribeToServerEvent(Server server)
@@ -402,9 +403,122 @@ namespace SneknetRacing.ViewModels
                         WriteIndented = true,
                     };
                     string jsonString = JsonSerializer.Serialize(NeuralInputData, options);
-                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
+                    //File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
+                    File.WriteAllText("D:\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
                 }               
             }
+        }
+
+        public void GenerateNeuralDataModel()
+        {
+            PacketCarSetupData carSetupPacket = null;
+            PacketCarStatusData carStatusPacket = null;
+            PacketCarTelemetryData carTelemetryPacket = null;
+            //PacketEventData packetEventData;
+            //PacketFinalClassificationData packetFinalClassificationData;
+            PacketLapData lapPacket = null;
+            PacketMotionData motionPacket = null;
+            PacketParticipantsData participantsPacket = null;
+            PacketSessionData sessionPacket = null;
+
+            // Grab track and drivers and create directory tree
+            int track = -1;
+            List<string> drivers = new List<string>();
+            while (true)
+            {
+                if (SessionDataViewModel.ProcessedPackets.TryPeek(out sessionPacket))
+                {
+                    track = sessionPacket.TrackID;
+                    Directory.CreateDirectory("D:\\NeuralData\\" + track);
+                    while (true)
+                    {
+                        if (ParticipantsDataViewModel.ProcessedPackets.TryPeek(out participantsPacket))
+                        {
+                            for (int i = 0; i < participantsPacket.NumActiveCars; i++)
+                            {
+                                drivers.Add(participantsPacket.Participants[i].Name);
+                                Directory.CreateDirectory("D:\\NeuralData\\" + track + "\\" + drivers[i]);
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            while (true)
+            {
+                if (CarStatusDataViewModel.ProcessedPackets.TryPeek(out _) &&
+                        CarTelemetryDataViewModel.ProcessedPackets.TryPeek(out _) &&
+                        MotionDataViewModel.ProcessedPackets.TryPeek(out _) &&
+                        LapDataViewModel.ProcessedPackets.TryPeek(out _))
+                {
+                    // If they exist, dequeue them and assign them to their correspoonding variables
+                    CarStatusDataViewModel.ProcessedPackets.TryDequeue(out carStatusPacket);
+                    CarTelemetryDataViewModel.ProcessedPackets.TryDequeue(out carTelemetryPacket);
+                    MotionDataViewModel.ProcessedPackets.TryDequeue(out motionPacket);
+                    LapDataViewModel.ProcessedPackets.TryDequeue(out lapPacket);
+
+                    // Check if car setup packet was ever retrieved
+                    if (carSetupPacket != null)
+                    {
+                        // If it was, check if there is a new packet
+                        if (CarSetupsDataViewModel.ProcessedPackets.TryPeek(out PacketCarSetupData newSetupPacket))
+                        {
+                            // Check if the session time in the new packet is less than the session time in our most recent motion packet
+                            if (newSetupPacket.Header.SessionTime <= motionPacket.Header.SessionTime)
+                            {
+                                // If it is, replace car setup packet with the new one
+                                CarSetupsDataViewModel.ProcessedPackets.TryDequeue(out carSetupPacket);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // If a car status packet was never retrieved, wait until one gets to the queue and retrieve it
+                        while (!CarSetupsDataViewModel.ProcessedPackets.TryDequeue(out carSetupPacket))
+                        {
+                        };
+                    }
+
+                    // Check if there is a new participants packet
+                    if (ParticipantsDataViewModel.ProcessedPackets.TryPeek(out PacketParticipantsData newParticipantPacket))
+                    {
+                        // Check if the session time in the new packet is less than the session time in our most recent motion packet
+                        if (newParticipantPacket.Header.SessionTime <= motionPacket.Header.SessionTime)
+                        {
+                            // If it is, replace session packet with the new one
+                            ParticipantsDataViewModel.ProcessedPackets.TryDequeue(out participantsPacket);
+                        }
+                    }
+
+                    // When we have all packets, create NeuralDataModel for each driver and save it
+                    for(int i = 0; i < participantsPacket.NumActiveCars; i++)
+                    {
+                        NeuralDataModel dataModel = new NeuralDataModel();
+                        dataModel.TelemetryData = carTelemetryPacket.CarTelemetryData[i];
+                        dataModel.MotionData = motionPacket.CarMotionData[i];
+                        dataModel.LapData = lapPacket.LapData[i];
+                        dataModel.SetupData = carSetupPacket.CarSetups[i];
+                        dataModel.StatusData = carStatusPacket.CarStatusData[i];
+
+                        // Serialize the model to a JSON file, using the current timestamp as the file name
+                        var options = new JsonSerializerOptions
+                        {
+                            WriteIndented = true,
+                        };
+                        string jsonString = JsonSerializer.Serialize(dataModel, options);
+                        //File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
+                        File.WriteAllText("D:\\NeuralData\\" + sessionPacket.TrackID + "\\" + participantsPacket.Participants[i].Name + "\\" + DateTime.Now.Ticks + ".json", jsonString);
+                    }
+                }
+
+            }
+        }
+
+        public async Task CreateAndSaveNeuralDataModel()
+        {
+
         }
 
         public bool AddPacketToDesserializationQueue(byte[] data)
