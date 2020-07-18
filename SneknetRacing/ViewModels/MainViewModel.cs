@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -495,12 +496,35 @@ namespace SneknetRacing.ViewModels
                     // When we have all packets, create NeuralDataModel for each driver and save it
                     for(int i = 0; i < participantsPacket.NumActiveCars; i++)
                     {
+                        /*
                         NeuralDataModel dataModel = new NeuralDataModel();
                         dataModel.TelemetryData = carTelemetryPacket.CarTelemetryData[i];
                         dataModel.MotionData = motionPacket.CarMotionData[i];
                         dataModel.LapData = lapPacket.LapData[i];
                         dataModel.SetupData = carSetupPacket.CarSetups[i];
                         dataModel.StatusData = carStatusPacket.CarStatusData[i];
+                        */
+
+                        RacerSample sample = new RacerSample()
+                        {
+                            Speed = carTelemetryPacket.CarTelemetryData[i].Speed,
+                            Gear = carTelemetryPacket.CarTelemetryData[i].Gear,
+                            EngineRPM = carTelemetryPacket.CarTelemetryData[i].EngineRPM,
+                            SurfaceTypeRL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[0],
+                            SurfaceTypeRR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[1],
+                            SurfaceTypeFL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[2],
+                            SurfaceTypeFR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[3],
+                            LapDistance = lapPacket.LapData[i].LapDistance,
+                            WorldPosX = motionPacket.CarMotionData[i].WorldPositionX,
+                            WorldPosY = motionPacket.CarMotionData[i].WorldPositionY,
+                            WorldForwardDirX = motionPacket.CarMotionData[i].WorldForwardDirX,
+                            WorldForwardDirY = motionPacket.CarMotionData[i].WorldForwardDirY,
+                            WorldRightDirX = motionPacket.CarMotionData[i].WorldRightDirX,
+                            WorldRightDirY = motionPacket.CarMotionData[i].WorldRightDirY,
+                            Yaw = motionPacket.CarMotionData[i].WorldRightDirY,
+                            Pitch = motionPacket.CarMotionData[i].WorldRightDirY,
+                            Roll = motionPacket.CarMotionData[i].WorldRightDirY
+                        };
 
                         // Serialize the model to a JSON file, using the current timestamp as the file name
                         var options = new JsonSerializerOptions
@@ -516,9 +540,30 @@ namespace SneknetRacing.ViewModels
             }
         }
 
-        public async Task CreateAndSaveNeuralDataModel()
+        public void SaveToCSV(RacerSample sample, string path)
         {
+            string data = "";
 
+            data += sample.Speed + ",";
+            data += sample.EngineRPM + ",";
+            data += sample.SurfaceTypeRL + ",";
+            data += sample.SurfaceTypeRR + ",";
+            data += sample.SurfaceTypeFL + ",";
+            data += sample.SurfaceTypeFR + ",";
+            data += sample.LapDistance + ",";
+            data += sample.WorldPosX + ",";
+            data += sample.WorldPosY + ",";
+            data += sample.WorldForwardDirX + ",";
+            data += sample.WorldForwardDirY + ",";
+            data += sample.WorldRightDirX + ",";
+            data += sample.WorldRightDirY + ",";
+            data += sample.Yaw + ",";
+            data += sample.Pitch + ",";
+            data += sample.Roll + ",";
+
+            data += sample.Gear + ",";
+
+            File.AppendAllText(path, data);
         }
 
         public bool AddPacketToDesserializationQueue(byte[] data)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.ML;
 using Microsoft.ML.Data;
 
 namespace SneknetRacing.AI
@@ -24,6 +25,11 @@ namespace SneknetRacing.AI
         public float Yaw;
         public float Pitch;
         public float Roll;
+
+        public float Throttle;
+        public float Steer;
+        public float Brake;
+        public float Gear;
     }
 
     public class RacerPrediction
