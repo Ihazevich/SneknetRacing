@@ -53,7 +53,7 @@ namespace SneknetRacing.ViewModels
         }
         public CarTelemetryDataViewModel()
         {
-            DesserializationThread = Task.Factory.StartNew(() => Desserialize());
+            DesserializationThread = new Task(() => Desserialize());
         }
 
         public void Desserialize()

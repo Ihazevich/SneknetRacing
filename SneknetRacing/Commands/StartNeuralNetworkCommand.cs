@@ -15,7 +15,7 @@ using SneknetRacing.ViewModels;
 
 namespace SneknetRacing.Commands
 {
-    class StartNeuralNetworkCommand : ICommand
+    public class StartNeuralNetworkCommand : ICommand
     {
         private bool _isNetworkRunning = false;
         private MainViewModel _viewModel;
@@ -40,15 +40,16 @@ namespace SneknetRacing.Commands
             }
             else
             {
+                _isNetworkRunning = true;
+
+                Console.WriteLine("Creating network");
                 var network = new SimpleNeuralNetwork(RacerSample.SampleSize);
 
                 var layerFactory = new NeuralLayerFactory();
 
-                network.AddLayer(layerFactory.CreateNeuralLayer(200, new ReLUActivationFunction(), new WeightedSumFunction()));
-                network.AddLayer(layerFactory.CreateNeuralLayer(200, new ReLUActivationFunction(), new WeightedSumFunction()));
-                network.AddLayer(layerFactory.CreateNeuralLayer(200, new ReLUActivationFunction(), new WeightedSumFunction()));
-                network.AddLayer(layerFactory.CreateNeuralLayer(100, new ReLUActivationFunction(), new WeightedSumFunction()));
-                network.AddLayer(layerFactory.CreateNeuralLayer(4, new SigmoidActivationFunction(0.7), new WeightedSumFunction()));
+                network.AddLayer(layerFactory.CreateNeuralLayer(50, new ReLUActivationFunction(), new WeightedSumFunction()));
+                network.AddLayer(layerFactory.CreateNeuralLayer(50, new ReLUActivationFunction(), new WeightedSumFunction()));
+                network.AddLayer(layerFactory.CreateNeuralLayer(3, new SigmoidActivationFunction(0.7), new WeightedSumFunction()));
 
                 List<double[]> trainingSamples = new List<double[]>();
                 List<double[]> expectedValues = new List<double[]>();
@@ -58,6 +59,7 @@ namespace SneknetRacing.Commands
                 List<Task> tasks = new List<Task>();
                 ConcurrentQueue<string> readedSamples = new ConcurrentQueue<string>();
 
+                Console.WriteLine("Found {0} files, loading them to memory...", files.Length);
                 foreach (string s in files)
                 {
                     tasks.Add(Task.Factory.StartNew(() => readedSamples.Enqueue(File.ReadAllText(s))));
@@ -65,6 +67,7 @@ namespace SneknetRacing.Commands
 
                 Task.WaitAll(tasks.ToArray());
 
+                Console.WriteLine("Deserializing {0} samples....", readedSamples.Count);
                 foreach (string s in readedSamples)
                 {
                     RacerSample sample = JsonSerializer.Deserialize<RacerSample>(s);
@@ -82,6 +85,7 @@ namespace SneknetRacing.Commands
                     inputs.Add(sample.LapDistance);
                     inputs.Add(sample.WorldPosX);
                     inputs.Add(sample.WorldPosZ);
+                    /*
                     inputs.Add(sample.WorldForwardDirX);
                     inputs.Add(sample.WorldForwardDirZ);
                     inputs.Add(sample.WorldRightDirX);
@@ -89,16 +93,19 @@ namespace SneknetRacing.Commands
                     inputs.Add(sample.Yaw);
                     inputs.Add(sample.Pitch);
                     inputs.Add(sample.Roll);
-
+                    */
                     outputs.Add(sample.Throttle);
                     outputs.Add(sample.Steer);
-                    outputs.Add(sample.CurrentGear / 9);
+                    outputs.Add(sample.CurrentGear);
 
                     trainingSamples.Add(inputs.ToArray());
                     expectedValues.Add(outputs.ToArray());
                 }
 
                 network.PushExpectedValue(expectedValues.ToArray());
+
+                Console.WriteLine("Training...");
+
                 network.Train(trainingSamples.ToArray(), 10000);
             }
         }

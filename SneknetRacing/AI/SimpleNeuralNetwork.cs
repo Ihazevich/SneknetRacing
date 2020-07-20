@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SneknetRacing.AI
 {
     public class SimpleNeuralNetwork
     {
         private NeuralLayerFactory _layerFactory;
+        private Stopwatch stopwatch = new Stopwatch();
 
         internal List<NeuralLayer> _layers;
         internal double _learningRate;
@@ -62,22 +65,34 @@ namespace SneknetRacing.AI
             double totalError = 0;
             for(int i = 0; i < numberOfEpochs; i++)
             {
+                Console.WriteLine("Eppoch {0}", i);
+                stopwatch.Restart();
                 for(int j = 0; j < inputs.GetLength(0); j++)
                 {
                     PushInputValues(inputs[j]);
 
                     var outputs = new List<double>();
+                    var tasks = new List<Task>();
 
-                    _layers.Last().Neurons.ForEach(x =>
+                    /*Parallel.ForEach(_layers.Last().Neurons, x =>
                     {
                         outputs.Add(x.CalculateOutput());
+                    });*/
+                    
+                    _layers.Last().Neurons.ForEach(x =>
+                    {
+                        tasks.Add(Task.Factory.StartNew(() => outputs.Add(x.CalculateOutput())));
                     });
-
+                    
+                    //_layers.Last().Neurons.ForEach(x => outputs.Add(x.CalculateOutput()));
+                    Task.WaitAll(tasks.ToArray());
                     totalError = CalculateTotalError(outputs, j);
+                    stopwatch.Stop();
+                    Console.WriteLine("Sample {0} processed in {1}ms Error: {2}", j, stopwatch.ElapsedMilliseconds, totalError);
                     HandleOutputLayer(j);
                     HandleHiddenLayers();
                 }
-            }
+                Console.WriteLine("Eppoch: {0} | Total Error: {1}", i, totalError);            }
         }
 
         public void CreateInputLayer(int numberOfInputNeurons)

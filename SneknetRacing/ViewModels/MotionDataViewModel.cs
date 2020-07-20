@@ -70,7 +70,7 @@ namespace SneknetRacing.ViewModels
 
         public MotionDataViewModel()
         {
-            DesserializationThread = Task.Factory.StartNew(() => Desserialize());
+            DesserializationThread = new Task(() => Desserialize());
         }
 
         public void Desserialize()

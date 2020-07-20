@@ -54,7 +54,7 @@ namespace SneknetRacing.ViewModels
 
         public SessionDataViewModel()
         {
-            DesserializationThread = Task.Factory.StartNew(() => Desserialize());
+            DesserializationThread = new Task(() => Desserialize());
         }
 
         public void Desserialize()

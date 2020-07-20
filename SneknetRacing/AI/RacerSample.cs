@@ -5,10 +5,9 @@ namespace SneknetRacing.AI
     [Serializable]
     public class RacerSample
     {
-        public static int SampleSize = 17;
+        public static int SampleSize = 9;
 
         public double Speed { get; set; }
-        public double CurrentGear { get; set; }
         public double EngineRPM { get; set; }
         public double SurfaceTypeRL { get; set; }
         public double SurfaceTypeRR { get; set; }
@@ -17,6 +16,7 @@ namespace SneknetRacing.AI
         public double LapDistance { get; set; }
         public double WorldPosX { get; set; }
         public double WorldPosZ { get; set; }
+        /*
         public double WorldForwardDirX { get; set; }
         public double WorldForwardDirZ { get; set; }
         public double WorldRightDirX { get; set; }
@@ -24,14 +24,13 @@ namespace SneknetRacing.AI
         public double Yaw { get; set; }
         public double Pitch { get; set; }
         public double Roll { get; set; }
-
+        */
         public double Throttle { get; set; }
         public double Steer { get; set; }
-        public double Gear { get; set; }
+        public double CurrentGear { get; set; }
 
         public RacerSample()
         {
-            Console.WriteLine("Creating new RacerSample");
         }
     }
 }

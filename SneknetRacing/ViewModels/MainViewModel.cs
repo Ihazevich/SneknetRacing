@@ -185,6 +185,9 @@ namespace SneknetRacing.ViewModels
         public StartServerCommand StartServerCommand { get; set; }
         public ConnectGamepadCommand ConnectGamepadCommand { get; set; }
         public UpdateMotionViewCommand UpdateMotionViewCommand { get; set; }
+        public StartNeuralNetworkCommand StartNeuralNetworkCommand { get; set; }
+
+
         public ViGEmClient Client { get; }
         public IXbox360Controller Controller { get; }
         #endregion
@@ -195,6 +198,7 @@ namespace SneknetRacing.ViewModels
             StartServerCommand = new StartServerCommand(this);
             ConnectGamepadCommand = new ConnectGamepadCommand(this);
             UpdateMotionViewCommand = new UpdateMotionViewCommand(this);
+            StartNeuralNetworkCommand = new StartNeuralNetworkCommand(this);
 
             NetworkThreadsRunning = false;
             GamepadConnected = false;
@@ -225,7 +229,7 @@ namespace SneknetRacing.ViewModels
             
             ServerThread = new Task(() => Server.Listen());
             DataHandlerThread = new Task(() => SubscribeToServerEvent(Server));
-            DesserializationThread = Task.Factory.StartNew(() => Desserialize());
+            DesserializationThread = new Task(() => Desserialize());
             //SerializerThread = new Task(() => SerializeNeuralInputs());
             SerializerThread = new Task(() => GenerateNeuralDataModel());
         }
@@ -453,15 +457,20 @@ namespace SneknetRacing.ViewModels
                 bool foundTelemetry = false;
                 bool foundMotion = false;
                 bool foundLap = false;
+                bool foundStatus = false;
 
-                if ( //CarStatusDataViewModel.ProcessedPackets.TryPeek(out _) &&
+                if ( CarStatusDataViewModel.ProcessedPackets.TryPeek(out _) &&
                      CarTelemetryDataViewModel.ProcessedPackets.TryPeek(out _) &&
                      MotionDataViewModel.ProcessedPackets.TryPeek(out _) &&
                      LapDataViewModel.ProcessedPackets.TryPeek(out _))
                 {
                     // If they exist, dequeue them and assign them to their correspoonding variables
                     // CarStatusDataViewModel.ProcessedPackets.TryDequeue(out carStatusPacket);
-                    while(!foundTelemetry)
+                    while (!foundStatus)
+                    {
+                        foundStatus = CarStatusDataViewModel.ProcessedPackets.TryDequeue(out carStatusPacket);
+                    }
+                    while (!foundTelemetry)
                     {
                         foundTelemetry = CarTelemetryDataViewModel.ProcessedPackets.TryDequeue(out carTelemetryPacket);
                     }
@@ -520,23 +529,24 @@ namespace SneknetRacing.ViewModels
 
                             sample.Speed = carTelemetryPacket.CarTelemetryData[i].Speed;
                             Console.WriteLine("Speed: " + sample.Speed);
-                            sample.CurrentGear = carTelemetryPacket.CarTelemetryData[i].Gear;
-                            sample.EngineRPM = carTelemetryPacket.CarTelemetryData[i].EngineRPM;
+                            sample.CurrentGear = carTelemetryPacket.CarTelemetryData[i].Gear / (double)carStatusPacket.CarStatusData[i].MaxGears;
+                            sample.EngineRPM = (double)carTelemetryPacket.CarTelemetryData[i].EngineRPM / (double)carStatusPacket.CarStatusData[i].MaxRPM;
                             sample.SurfaceTypeRL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[0];
                             sample.SurfaceTypeRR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[1];
                             sample.SurfaceTypeFL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[2];
                             sample.SurfaceTypeFR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[3];
-                            sample.LapDistance = lapPacket.LapData[i].LapDistance;
+                            sample.LapDistance = lapPacket.LapData[i].LapDistance / sessionPacket.TrackLength;
                             sample.WorldPosX = motionPacket.CarMotionData[i].WorldPositionX;
                             sample.WorldPosZ = motionPacket.CarMotionData[i].WorldPositionZ;
+                            /*
                             sample.WorldForwardDirX = motionPacket.CarMotionData[i].WorldForwardDirX;
                             sample.WorldForwardDirZ = motionPacket.CarMotionData[i].WorldForwardDirZ;
                             sample.WorldRightDirX = motionPacket.CarMotionData[i].WorldRightDirX;
                             sample.WorldRightDirZ = motionPacket.CarMotionData[i].WorldRightDirZ;
-                            sample.Yaw = motionPacket.CarMotionData[i].Yaw;
-                            sample.Pitch = motionPacket.CarMotionData[i].Pitch;
-                            sample.Roll = motionPacket.CarMotionData[i].Roll;
-
+                            sample.Yaw = motionPacket.CarMotionData[i].Yaw / (Math.PI * 2);
+                            sample.Pitch = motionPacket.CarMotionData[i].Pitch / (Math.PI * 2);
+                            sample.Roll = motionPacket.CarMotionData[i].Roll / (Math.PI * 2);
+                            */
                             sample.Throttle = carTelemetryPacket.CarTelemetryData[i].Throttle - carTelemetryPacket.CarTelemetryData[i].Brake;
                             sample.Steer = carTelemetryPacket.CarTelemetryData[i].Steer;
 
@@ -550,8 +560,8 @@ namespace SneknetRacing.ViewModels
 
                             string jsonString = JsonSerializer.Serialize(sample, options);
                             //File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
-                            File.WriteAllText(path, jsonString);
-                            //Task.Factory.StartNew(() => SaveToJSON(sample, path));
+                            // File.WriteAllText(path, jsonString);
+                            Task.Factory.StartNew(() => SaveToJSON(sample, path));
                         }
                     }
                 }
@@ -572,6 +582,7 @@ namespace SneknetRacing.ViewModels
             File.WriteAllText(path, jsonString);
         }
 
+        /*
         public void SaveToCSV(RacerSample sample, string path)
         {
             string data = "";
@@ -597,7 +608,7 @@ namespace SneknetRacing.ViewModels
 
             File.AppendAllText(path, data);
         }
-
+        */
         public bool AddPacketToDesserializationQueue(byte[] data)
         {
             try
