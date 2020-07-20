@@ -77,18 +77,18 @@ namespace SneknetRacing.AI
                     /*Parallel.ForEach(_layers.Last().Neurons, x =>
                     {
                         outputs.Add(x.CalculateOutput());
-                    });*/
-                    
-                    _layers.Last().Neurons.ForEach(x =>
+                    });
+                    */
+                    /*_layers.Last().Neurons.ForEach(x =>
                     {
                         tasks.Add(Task.Factory.StartNew(() => outputs.Add(x.CalculateOutput())));
-                    });
+                    });*/
                     
-                    //_layers.Last().Neurons.ForEach(x => outputs.Add(x.CalculateOutput()));
-                    Task.WaitAll(tasks.ToArray());
+                    _layers.Last().Neurons.ForEach(x => outputs.Add(x.CalculateOutput()));
+                    //Task.WaitAll(tasks.ToArray());
                     totalError = CalculateTotalError(outputs, j);
                     stopwatch.Stop();
-                    Console.WriteLine("Sample {0} processed in {1}ms Error: {2}", j, stopwatch.ElapsedMilliseconds, totalError);
+                    Console.WriteLine("Sample {0} processed in {1}ms | Outputs: {2},{3},{4} | Expected: {5},{6},{7} | Error: {8}", j, stopwatch.ElapsedMilliseconds, outputs[0], outputs[1], outputs[2], _expectedResult[j][0], _expectedResult[j][1], _expectedResult[j][2], totalError);
                     HandleOutputLayer(j);
                     HandleHiddenLayers();
                 }

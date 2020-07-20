@@ -24,6 +24,18 @@ namespace SneknetRacing.Commands
 
         public void Execute(object parameter)
         {
+            _viewModel.CarSetupsDataViewModel.DesserializationThread.Start();
+            _viewModel.CarStatusDataViewModel.DesserializationThread.Start();
+            _viewModel.CarTelemetryDataViewModel.DesserializationThread.Start();
+            _viewModel.ClassificationDataViewModel.DesserializationThread.Start();
+            _viewModel.EventDataViewModel.DesserializationThread.Start();
+            _viewModel.HeaderViewModel.DesserializationThread.Start();
+            _viewModel.LapDataViewModel.DesserializationThread.Start();
+            _viewModel.LobbyInfoDataViewModel.DesserializationThread.Start();
+            _viewModel.MotionDataViewModel.DesserializationThread.Start();
+            _viewModel.ParticipantsDataViewModel.DesserializationThread.Start();
+            _viewModel.SessionDataViewModel.DesserializationThread.Start();
+            _viewModel.DesserializationThread.Start();
             // Start Server thread
             _viewModel.ServerThread.Start();
             // Start Handler thread

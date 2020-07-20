@@ -435,7 +435,7 @@ namespace SneknetRacing.ViewModels
                 if (SessionDataViewModel.ProcessedPackets.TryPeek(out sessionPacket))
                 {
                     track = sessionPacket.TrackID;
-                    Directory.CreateDirectory("C:\\NeuralData\\" + track);
+                    Directory.CreateDirectory("D:\\NeuralData\\" + track);
                     while (true)
                     {
                         if (ParticipantsDataViewModel.ProcessedPackets.TryPeek(out participantsPacket))
@@ -443,7 +443,7 @@ namespace SneknetRacing.ViewModels
                             for (int i = 0; i < participantsPacket.NumActiveCars; i++)
                             {
                                 drivers.Add(participantsPacket.Participants[i].Name);
-                                Directory.CreateDirectory("C:\\NeuralData\\" + track + "\\" + drivers[i]);
+                                Directory.CreateDirectory("D:\\NeuralData\\" + track + "\\" + drivers[i]);
                             }
                             break;
                         }
@@ -550,7 +550,7 @@ namespace SneknetRacing.ViewModels
                             sample.Throttle = carTelemetryPacket.CarTelemetryData[i].Throttle - carTelemetryPacket.CarTelemetryData[i].Brake;
                             sample.Steer = carTelemetryPacket.CarTelemetryData[i].Steer;
 
-                            string path = "C:\\NeuralData\\" + sessionPacket.TrackID + "\\" + participantsPacket.Participants[i].Name + "\\" + DateTime.Now.Ticks + ".json";
+                            string path = "D:\\NeuralData\\" + sessionPacket.TrackID + "\\" + participantsPacket.Participants[i].Name + "\\" + DateTime.Now.Ticks + ".json";
 
                             Console.WriteLine(DateTime.Now.Ticks);
                             var options = new JsonSerializerOptions

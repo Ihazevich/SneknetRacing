@@ -48,13 +48,12 @@ namespace SneknetRacing.Commands
                 var layerFactory = new NeuralLayerFactory();
 
                 network.AddLayer(layerFactory.CreateNeuralLayer(50, new ReLUActivationFunction(), new WeightedSumFunction()));
-                network.AddLayer(layerFactory.CreateNeuralLayer(50, new ReLUActivationFunction(), new WeightedSumFunction()));
                 network.AddLayer(layerFactory.CreateNeuralLayer(3, new SigmoidActivationFunction(0.7), new WeightedSumFunction()));
 
                 List<double[]> trainingSamples = new List<double[]>();
                 List<double[]> expectedValues = new List<double[]>();
 
-                string[] files = Directory.GetFiles("C:\\NeuralData\\0\\HAMILTON");
+                string[] files = Directory.GetFiles("D:\\NeuralData\\0\\HAMILTON");
 
                 List<Task> tasks = new List<Task>();
                 ConcurrentQueue<string> readedSamples = new ConcurrentQueue<string>();

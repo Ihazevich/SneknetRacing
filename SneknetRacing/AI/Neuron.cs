@@ -43,8 +43,9 @@ namespace SneknetRacing.AI
         }
 
         public double CalculateOutput()
-        {            
-            return _activationFunction.CalculateOutput(_inputFunction.CalculateInput(this.Inputs));
+        {
+            var output = _activationFunction.CalculateOutput(_inputFunction.CalculateInput(this.Inputs));
+            return output;
         }
 
         public void AddInputSynapse(double inputValue)
