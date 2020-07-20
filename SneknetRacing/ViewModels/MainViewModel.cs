@@ -412,6 +412,7 @@ namespace SneknetRacing.ViewModels
 
         public void GenerateNeuralDataModel()
         {
+            Console.WriteLine("Starting NeuralData saving thread...");
             PacketCarSetupData carSetupPacket = null;
             PacketCarStatusData carStatusPacket = null;
             PacketCarTelemetryData carTelemetryPacket = null;
@@ -430,7 +431,7 @@ namespace SneknetRacing.ViewModels
                 if (SessionDataViewModel.ProcessedPackets.TryPeek(out sessionPacket))
                 {
                     track = sessionPacket.TrackID;
-                    Directory.CreateDirectory("D:\\NeuralData\\" + track);
+                    Directory.CreateDirectory("C:\\NeuralData\\" + track);
                     while (true)
                     {
                         if (ParticipantsDataViewModel.ProcessedPackets.TryPeek(out participantsPacket))
@@ -438,7 +439,7 @@ namespace SneknetRacing.ViewModels
                             for (int i = 0; i < participantsPacket.NumActiveCars; i++)
                             {
                                 drivers.Add(participantsPacket.Participants[i].Name);
-                                Directory.CreateDirectory("D:\\NeuralData\\" + track + "\\" + drivers[i]);
+                                Directory.CreateDirectory("C:\\NeuralData\\" + track + "\\" + drivers[i]);
                             }
                             break;
                         }
@@ -449,6 +450,7 @@ namespace SneknetRacing.ViewModels
 
             while (true)
             {
+                Console.Write("Waiting for packets");
                 if (CarStatusDataViewModel.ProcessedPackets.TryPeek(out _) &&
                         CarTelemetryDataViewModel.ProcessedPackets.TryPeek(out _) &&
                         MotionDataViewModel.ProcessedPackets.TryPeek(out _) &&
@@ -460,6 +462,7 @@ namespace SneknetRacing.ViewModels
                     MotionDataViewModel.ProcessedPackets.TryDequeue(out motionPacket);
                     LapDataViewModel.ProcessedPackets.TryDequeue(out lapPacket);
 
+                    Console.WriteLine("Found, Processing");
                     // Check if car setup packet was ever retrieved
                     if (carSetupPacket != null)
                     {
@@ -504,40 +507,56 @@ namespace SneknetRacing.ViewModels
                         dataModel.SetupData = carSetupPacket.CarSetups[i];
                         dataModel.StatusData = carStatusPacket.CarStatusData[i];
                         */
+                        Console.WriteLine(participantsPacket.Participants[i].Name);
 
-                        RacerSample sample = new RacerSample()
+                        if(participantsPacket.Participants[i].Name == "HAMILTON")
                         {
-                            Speed = carTelemetryPacket.CarTelemetryData[i].Speed,
-                            Gear = carTelemetryPacket.CarTelemetryData[i].Gear,
-                            EngineRPM = carTelemetryPacket.CarTelemetryData[i].EngineRPM,
-                            SurfaceTypeRL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[0],
-                            SurfaceTypeRR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[1],
-                            SurfaceTypeFL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[2],
-                            SurfaceTypeFR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[3],
-                            LapDistance = lapPacket.LapData[i].LapDistance,
-                            WorldPosX = motionPacket.CarMotionData[i].WorldPositionX,
-                            WorldPosY = motionPacket.CarMotionData[i].WorldPositionY,
-                            WorldForwardDirX = motionPacket.CarMotionData[i].WorldForwardDirX,
-                            WorldForwardDirY = motionPacket.CarMotionData[i].WorldForwardDirY,
-                            WorldRightDirX = motionPacket.CarMotionData[i].WorldRightDirX,
-                            WorldRightDirY = motionPacket.CarMotionData[i].WorldRightDirY,
-                            Yaw = motionPacket.CarMotionData[i].WorldRightDirY,
-                            Pitch = motionPacket.CarMotionData[i].WorldRightDirY,
-                            Roll = motionPacket.CarMotionData[i].WorldRightDirY
-                        };
+                            Console.WriteLine("Creating HAMILTON sample");
+                            RacerSample sample = new RacerSample();
 
-                        // Serialize the model to a JSON file, using the current timestamp as the file name
-                        var options = new JsonSerializerOptions
-                        {
-                            WriteIndented = true,
-                        };
-                        string jsonString = JsonSerializer.Serialize(dataModel, options);
-                        //File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
-                        File.WriteAllText("D:\\NeuralData\\" + sessionPacket.TrackID + "\\" + participantsPacket.Participants[i].Name + "\\" + DateTime.Now.Ticks + ".json", jsonString);
+                            sample.Speed = carTelemetryPacket.CarTelemetryData[i].Speed;
+                            sample.CurrentGear = carTelemetryPacket.CarTelemetryData[i].Gear;
+                            sample.EngineRPM = carTelemetryPacket.CarTelemetryData[i].EngineRPM;
+                            sample.SurfaceTypeRL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[0];
+                            sample.SurfaceTypeRR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[1];
+                            sample.SurfaceTypeFL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[2];
+                            sample.SurfaceTypeFR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[3];
+                            sample.LapDistance = lapPacket.LapData[i].LapDistance;
+                            sample.WorldPosX = motionPacket.CarMotionData[i].WorldPositionX;
+                            sample.WorldPosZ = motionPacket.CarMotionData[i].WorldPositionZ;
+                            sample.WorldForwardDirX = motionPacket.CarMotionData[i].WorldForwardDirX;
+                            sample.WorldForwardDirZ = motionPacket.CarMotionData[i].WorldForwardDirZ;
+                            sample.WorldRightDirX = motionPacket.CarMotionData[i].WorldRightDirX;
+                            sample.WorldRightDirZ = motionPacket.CarMotionData[i].WorldRightDirZ;
+                            sample.Yaw = motionPacket.CarMotionData[i].Yaw;
+                            sample.Pitch = motionPacket.CarMotionData[i].Pitch;
+                            sample.Roll = motionPacket.CarMotionData[i].Roll;
+
+                            sample.Throttle = carTelemetryPacket.CarTelemetryData[i].Throttle - carTelemetryPacket.CarTelemetryData[i].Brake;
+                            sample.Steer = carTelemetryPacket.CarTelemetryData[i].Steer;
+
+                            string path = "C:\\NeuralData\\" + sessionPacket.TrackID + "\\" + participantsPacket.Participants[i].Name + "\\" + DateTime.Now.Ticks + ".json";
+
+                            Console.WriteLine(DateTime.Now.Ticks);
+                            Task.Factory.StartNew(() => SaveToJSON(sample, path));
+                        }
                     }
                 }
-
             }
+        }
+
+        public void SaveToJSON(RacerSample sample, string path)
+        {
+            Console.WriteLine("Savinhg file");
+            // Serialize the model to a JSON file, using the current timestamp as the file name
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            };
+
+            string jsonString = JsonSerializer.Serialize(sample, options);
+            //File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
+            File.WriteAllText(path, jsonString);
         }
 
         public void SaveToCSV(RacerSample sample, string path)
@@ -552,16 +571,16 @@ namespace SneknetRacing.ViewModels
             data += sample.SurfaceTypeFR + ",";
             data += sample.LapDistance + ",";
             data += sample.WorldPosX + ",";
-            data += sample.WorldPosY + ",";
+            data += sample.WorldPosZ + ",";
             data += sample.WorldForwardDirX + ",";
-            data += sample.WorldForwardDirY + ",";
+            data += sample.WorldForwardDirZ + ",";
             data += sample.WorldRightDirX + ",";
-            data += sample.WorldRightDirY + ",";
+            data += sample.WorldRightDirZ + ",";
             data += sample.Yaw + ",";
             data += sample.Pitch + ",";
             data += sample.Roll + ",";
 
-            data += sample.Gear + ",";
+            data += sample.CurrentGear + ",";
 
             File.AppendAllText(path, data);
         }

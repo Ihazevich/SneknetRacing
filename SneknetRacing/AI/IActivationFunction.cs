@@ -4,7 +4,8 @@ using System.Text;
 
 namespace SneknetRacing.AI
 {
-    class NeuralNetwork
+    public interface IActivationFunction
     {
+        double CalculateOutput(double input);
     }
 }

@@ -8,35 +8,33 @@ namespace SneknetRacing.AI
 {
     public class RacerSample
     {
-        public float Speed;
-        public float Gear;
-        public float EngineRPM;
-        public float SurfaceTypeRL;
-        public float SurfaceTypeRR;
-        public float SurfaceTypeFL;
-        public float SurfaceTypeFR;
-        public float LapDistance;
-        public float WorldPosX;
-        public float WorldPosY;
-        public float WorldForwardDirX;
-        public float WorldForwardDirY;
-        public float WorldRightDirX;
-        public float WorldRightDirY;
-        public float Yaw;
-        public float Pitch;
-        public float Roll;
+        public static int SampleSize = 17;
 
-        public float Throttle;
-        public float Steer;
-        public float Brake;
-        public float Gear;
-    }
+        public double Speed;
+        public double CurrentGear;
+        public double EngineRPM;
+        public double SurfaceTypeRL;
+        public double SurfaceTypeRR;
+        public double SurfaceTypeFL;
+        public double SurfaceTypeFR;
+        public double LapDistance;
+        public double WorldPosX;
+        public double WorldPosZ;
+        public double WorldForwardDirX;
+        public double WorldForwardDirZ;
+        public double WorldRightDirX;
+        public double WorldRightDirZ;
+        public double Yaw;
+        public double Pitch;
+        public double Roll;
 
-    public class RacerPrediction
-    {
-        public float Throttle;
-        public float Steer;
-        public float Brake;
-        public float Gear;
+        public double Throttle;
+        public double Steer;
+        public double Brake;
+
+        public RacerSample()
+        {
+            Console.WriteLine("Creating new RacerSample");
+        }
     }
 }

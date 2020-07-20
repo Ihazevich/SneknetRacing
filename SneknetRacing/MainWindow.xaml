@@ -37,6 +37,7 @@
                 <RowDefinition Height="*" MinHeight="30"/>
                 <RowDefinition Height="*" MinHeight="30"/>
                 <RowDefinition Height="*" MinHeight="30"/>
+                <RowDefinition Height="*" MinHeight="30"/>
             </Grid.RowDefinitions>
             <Button Grid.Row="0" x:Name="udpButton" Content="{Binding Path=NetworkButtonStatus}"
                     Background="{Binding Path=NetworkButtonColor}"
@@ -59,6 +60,7 @@
             <Button Grid.Row="10" Content="Car Status" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Status" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
             <Button Grid.Row="11" Content="Final Classification" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Classification" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
             <Button Grid.Row="12" Content="Lobby Info" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Lobby" Style="{StaticResource MaterialDesignFlatDarkBgButton}"/>
+            <Button Grid.Row="13" Content="Test Network" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Lobby" Style="{StaticResource MaterialDesignRaisedLightButton}"/>
         </Grid>
         <Grid Grid.Column="1">
             <ContentControl Content="{Binding Path=SelectedViewModel}"/>
