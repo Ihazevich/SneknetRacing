@@ -12,12 +12,8 @@ namespace SneknetRacing.Models
     {
         #region Fields
 
-        private string _info;
-
         private PacketHeader _header = new PacketHeader();                  // Header
-
-        private BindingList<CarMotionData> _carMotionData = new BindingList<CarMotionData>();        // Data for all cars on track
-        private object _lock = new object();
+        private CarMotionData[] _carMotionData = new CarMotionData[22];        // Data for all cars on track
 
         // Extra player car ONLY data
         private float[] _suspensionPosition;           // Note: All wheel arrays have the following order:
@@ -40,19 +36,6 @@ namespace SneknetRacing.Models
 
         #region Properties
 
-        public string Info
-        {
-            get
-            {
-                return _info;
-            }
-            set
-            {
-                _info = value;
-                OnPropertyChanged("Info");
-            }
-        }
-
         public PacketHeader Header
         {
             get 
@@ -66,7 +49,7 @@ namespace SneknetRacing.Models
             }
         }
 
-        public BindingList<CarMotionData> CarMotionData
+        public CarMotionData[] CarMotionData
         {
             get
             {
@@ -301,7 +284,7 @@ namespace SneknetRacing.Models
                     BindingList<CarMotionData> temp1 = new BindingList<CarMotionData>();
                     for (int i = 0; i < 22; i++)
                     {
-                        temp1.Add(new CarMotionData
+                        temp.CarMotionData[i] = new CarMotionData()
                         {
                             WorldPositionX = reader.ReadSingle(),
 
@@ -322,9 +305,8 @@ namespace SneknetRacing.Models
                             Yaw = reader.ReadSingle(),
                             Pitch = reader.ReadSingle(),
                             Roll = reader.ReadSingle()
-                        });
+                        };
                     }
-                    CarMotionData = temp1;
 
                     SuspensionPosition = new float[4];
                     SuspensionPosition[0] = reader.ReadSingle();

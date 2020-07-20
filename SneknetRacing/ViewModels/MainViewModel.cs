@@ -450,17 +450,29 @@ namespace SneknetRacing.ViewModels
 
             while (true)
             {
-                Console.Write("Waiting for packets");
-                if (CarStatusDataViewModel.ProcessedPackets.TryPeek(out _) &&
-                        CarTelemetryDataViewModel.ProcessedPackets.TryPeek(out _) &&
-                        MotionDataViewModel.ProcessedPackets.TryPeek(out _) &&
-                        LapDataViewModel.ProcessedPackets.TryPeek(out _))
+                bool foundTelemetry = false;
+                bool foundMotion = false;
+                bool foundLap = false;
+
+                if ( //CarStatusDataViewModel.ProcessedPackets.TryPeek(out _) &&
+                     CarTelemetryDataViewModel.ProcessedPackets.TryPeek(out _) &&
+                     MotionDataViewModel.ProcessedPackets.TryPeek(out _) &&
+                     LapDataViewModel.ProcessedPackets.TryPeek(out _))
                 {
                     // If they exist, dequeue them and assign them to their correspoonding variables
-                    CarStatusDataViewModel.ProcessedPackets.TryDequeue(out carStatusPacket);
-                    CarTelemetryDataViewModel.ProcessedPackets.TryDequeue(out carTelemetryPacket);
-                    MotionDataViewModel.ProcessedPackets.TryDequeue(out motionPacket);
-                    LapDataViewModel.ProcessedPackets.TryDequeue(out lapPacket);
+                    // CarStatusDataViewModel.ProcessedPackets.TryDequeue(out carStatusPacket);
+                    while(!foundTelemetry)
+                    {
+                        foundTelemetry = CarTelemetryDataViewModel.ProcessedPackets.TryDequeue(out carTelemetryPacket);
+                    }
+                    while(!foundMotion)
+                    {
+                        foundMotion = MotionDataViewModel.ProcessedPackets.TryDequeue(out motionPacket);
+                    }
+                    while(!foundLap)
+                    {
+                        foundLap = LapDataViewModel.ProcessedPackets.TryDequeue(out lapPacket);
+                    }                    
 
                     Console.WriteLine("Found, Processing");
                     // Check if car setup packet was ever retrieved
@@ -499,14 +511,6 @@ namespace SneknetRacing.ViewModels
                     // When we have all packets, create NeuralDataModel for each driver and save it
                     for(int i = 0; i < participantsPacket.NumActiveCars; i++)
                     {
-                        /*
-                        NeuralDataModel dataModel = new NeuralDataModel();
-                        dataModel.TelemetryData = carTelemetryPacket.CarTelemetryData[i];
-                        dataModel.MotionData = motionPacket.CarMotionData[i];
-                        dataModel.LapData = lapPacket.LapData[i];
-                        dataModel.SetupData = carSetupPacket.CarSetups[i];
-                        dataModel.StatusData = carStatusPacket.CarStatusData[i];
-                        */
                         Console.WriteLine(participantsPacket.Participants[i].Name);
 
                         if(participantsPacket.Participants[i].Name == "HAMILTON")
@@ -515,6 +519,7 @@ namespace SneknetRacing.ViewModels
                             RacerSample sample = new RacerSample();
 
                             sample.Speed = carTelemetryPacket.CarTelemetryData[i].Speed;
+                            Console.WriteLine("Speed: " + sample.Speed);
                             sample.CurrentGear = carTelemetryPacket.CarTelemetryData[i].Gear;
                             sample.EngineRPM = carTelemetryPacket.CarTelemetryData[i].EngineRPM;
                             sample.SurfaceTypeRL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[0];
@@ -538,7 +543,15 @@ namespace SneknetRacing.ViewModels
                             string path = "C:\\NeuralData\\" + sessionPacket.TrackID + "\\" + participantsPacket.Participants[i].Name + "\\" + DateTime.Now.Ticks + ".json";
 
                             Console.WriteLine(DateTime.Now.Ticks);
-                            Task.Factory.StartNew(() => SaveToJSON(sample, path));
+                            var options = new JsonSerializerOptions
+                            {
+                                WriteIndented = true,
+                            };
+
+                            string jsonString = JsonSerializer.Serialize(sample, options);
+                            //File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
+                            File.WriteAllText(path, jsonString);
+                            //Task.Factory.StartNew(() => SaveToJSON(sample, path));
                         }
                     }
                 }
