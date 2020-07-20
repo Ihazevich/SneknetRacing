@@ -72,7 +72,6 @@ namespace SneknetRacing.ViewModels
         public CarStatusDataViewModel CarStatusDataViewModel { get; }
         public ClassificationDataViewModel ClassificationDataViewModel { get; }
         public LobbyInfoDataViewModel LobbyInfoDataViewModel { get; }
-        public NeuralDataViewModel NeuralDataViewModel { get; }
         public bool NetworkThreadsRunning
         {
             get { return _networkThreadsRunning; }
@@ -160,8 +159,6 @@ namespace SneknetRacing.ViewModels
             }
         }
 
-        public NeuralInputData NeuralInputData { get; set; }
-
         public long ProcessTime
         {
             get
@@ -217,9 +214,6 @@ namespace SneknetRacing.ViewModels
             CarStatusDataViewModel = new CarStatusDataViewModel();
             ClassificationDataViewModel = new ClassificationDataViewModel();
             LobbyInfoDataViewModel = new LobbyInfoDataViewModel();
-
-            NeuralDataViewModel = new NeuralDataViewModel();
-            NeuralInputData = new NeuralInputData();
 
             SelectedViewModel = HeaderViewModel;
 
@@ -293,124 +287,6 @@ namespace SneknetRacing.ViewModels
                             break;
                     }
                 }
-            }
-        }
-
-        public void SerializeNeuralInputs()
-        {
-            PacketCarSetupData carSetupData = null;
-            PacketCarStatusData carStatusData = null;
-            PacketCarTelemetryData carTelemetryData = null;
-            //PacketEventData packetEventData;
-            //PacketFinalClassificationData packetFinalClassificationData;
-            PacketLapData lapData = null;
-            PacketMotionData motionData = null;
-            PacketParticipantsData participantsData = null;
-            PacketSessionData sessionData = null;
-
-            while(true)
-            {
-                // First the 60hz packets
-
-                // Check if all 4 main packets exist
-                if (CarStatusDataViewModel.ProcessedPackets.TryPeek(out carStatusData) &&
-                    CarTelemetryDataViewModel.ProcessedPackets.TryPeek(out carTelemetryData) &&
-                    MotionDataViewModel.ProcessedPackets.TryPeek(out motionData) &&
-                    LapDataViewModel.ProcessedPackets.TryPeek(out lapData))
-                {
-                    // If they exist, dequeue them and assign them to their correspoonding variables
-                    CarStatusDataViewModel.ProcessedPackets.TryDequeue(out carStatusData);
-                    CarTelemetryDataViewModel.ProcessedPackets.TryDequeue(out carTelemetryData);
-                    MotionDataViewModel.ProcessedPackets.TryDequeue(out motionData);
-                    LapDataViewModel.ProcessedPackets.TryDequeue(out lapData);
-
-                    // Check if car status packet was ever retrieved
-                    if (carSetupData != null)
-                    {
-                        // If it was, check if there is a new packet
-                        if (CarSetupsDataViewModel.ProcessedPackets.TryPeek(out PacketCarSetupData temp))
-                        {
-                            // Check if the session time in the new packet is less than the session time in our most recent motion packet
-                            if (temp.Header.SessionTime <= motionData.Header.SessionTime)
-                            {
-                                // If it is, replace car setup packet with the new one
-                                CarSetupsDataViewModel.ProcessedPackets.TryDequeue(out carSetupData);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // If a car status packet was never retrieved, wait until one gets to the queue and retrieve it
-                        while (!CarSetupsDataViewModel.ProcessedPackets.TryDequeue(out carSetupData))
-                        {
-                        };
-                    }
-
-                    // Check if session packet was ever retrieved
-                    if (sessionData != null)
-                    {
-                        // If it was, check if there is a new packet
-                        if (SessionDataViewModel.ProcessedPackets.TryPeek(out PacketSessionData temp))
-                        {
-                            // Check if the session time in the new packet is less than the session time in our most recent motion packet
-                            if (temp.Header.SessionTime <= motionData.Header.SessionTime)
-                            {
-                                // If it is, replace session packet with the new one
-                                SessionDataViewModel.ProcessedPackets.TryDequeue(out sessionData);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // If a session packet was never retrieved, wait until one gets to the queue and retrieve it
-                        while (!SessionDataViewModel.ProcessedPackets.TryDequeue(out sessionData))
-                        {
-                        };
-                    }
-
-                    // Check if participants packet was ever retrieved
-                    if (participantsData != null)
-                    {
-                        // If it was, check if there is a new packet
-                        if (ParticipantsDataViewModel.ProcessedPackets.TryPeek(out PacketParticipantsData temp))
-                        {
-                            // Check if the session time in the new packet is less than the session time in our most recent motion packet
-                            if (temp.Header.SessionTime <= motionData.Header.SessionTime)
-                            {
-                                // If it is, replace session packet with the new one
-                                ParticipantsDataViewModel.ProcessedPackets.TryDequeue(out participantsData);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // If a session packet was never retrieved, wait until one gets to the queue and retrieve it
-                        while (!ParticipantsDataViewModel.ProcessedPackets.TryDequeue(out participantsData))
-                        {
-                        };
-                    }
-
-                    // When we have all packets, assign them to NeuralInputData
-                    NeuralInputData = new NeuralInputData()
-                    {
-                        CarSetupData = carSetupData,
-                        CarStatusData = carStatusData,
-                        CarTelemetryData = carTelemetryData,
-                        MotionData = motionData,
-                        LapData = lapData,
-                        ParticipantsData = participantsData,
-                        SessionData = sessionData
-                    };
-
-                    // Serialize NeuralInputData to a JSON file, using the current timestamp as the file name
-                    var options = new JsonSerializerOptions
-                    {
-                        WriteIndented = true,
-                    };
-                    string jsonString = JsonSerializer.Serialize(NeuralInputData, options);
-                    //File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
-                    File.WriteAllText("D:\\NeuralData\\" + DateTime.Now.Ticks + ".json", jsonString);
-                }               
             }
         }
 
