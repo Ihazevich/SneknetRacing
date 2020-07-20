@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SneknetRacing.AI
+namespace SneknetRacing.AI.Synapses
 {
     public interface ISynapse
     {

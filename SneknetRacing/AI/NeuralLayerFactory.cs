@@ -1,4 +1,7 @@
-﻿using System;
+﻿using SneknetRacing.AI.ActivationFunctions;
+using SneknetRacing.AI.InputFunctions;
+using SneknetRacing.AI.Neurons;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

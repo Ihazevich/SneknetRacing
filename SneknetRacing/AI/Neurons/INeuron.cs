@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SneknetRacing.AI.Synapses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SneknetRacing.AI
+namespace SneknetRacing.AI.Neurons
 {
     public interface INeuron
     {

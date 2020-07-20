@@ -1,9 +1,12 @@
-﻿using System;
+﻿using SneknetRacing.AI.ActivationFunctions;
+using SneknetRacing.AI.InputFunctions;
+using SneknetRacing.AI.Synapses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SneknetRacing.AI
+namespace SneknetRacing.AI.Neurons
 {
     public class Neuron : INeuron
     {

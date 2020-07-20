@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneknetRacing.AI
+namespace SneknetRacing.AI.InputFunctions
 {
     public class WeightedSumFunction : IInputFunction
     {

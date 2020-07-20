@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SneknetRacing.AI.ActivationFunctions;
+using SneknetRacing.AI.InputFunctions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;

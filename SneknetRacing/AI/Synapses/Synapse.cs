@@ -1,9 +1,10 @@
 ﻿using Microsoft.ML.Data;
+using SneknetRacing.AI.Neuron;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SneknetRacing.AI
+namespace SneknetRacing.AI.Synapses
 {
     public class Synapse : ISynapse
     {
