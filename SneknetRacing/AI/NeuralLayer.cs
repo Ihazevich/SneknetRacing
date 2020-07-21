@@ -44,7 +44,7 @@ namespace SneknetRacing.AI
 
         public NeuralLayer(int size, string activation, int inputConnections)
         {
-            _neurons = new List<Neuron>();
+            _neurons = new List<Neuron>(size);
             Parallel.For(0, size, x =>{
                 _neurons.Add(new Neuron(activation, inputConnections));
             });
@@ -56,6 +56,10 @@ namespace SneknetRacing.AI
             {
                 neuron.Fire();
             });
+            foreach(var output in Output)
+            {
+                Console.Write("{0}, ");
+            }
         }
 
         public void PushInputs(List<float> inputs)
@@ -70,7 +74,6 @@ namespace SneknetRacing.AI
         {
             Parallel.ForEach(_neurons, (neuron, state, index) =>
             {
-                Console.Write(index);
                 neuron.SetWeights(random);
             });
             Console.WriteLine("Layer initialization done");

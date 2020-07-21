@@ -95,7 +95,7 @@ namespace SneknetRacing.Commands
 
                 Console.WriteLine("Creating network");
 
-                NeuralNetwork network = new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 50,50,50,50 });
+                NeuralNetwork network = new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 200, 200, 200, 200, 200, 200, 200, 200 });
 
                 List<float> output = network.Process(trainingSamples[0].ToList());
 

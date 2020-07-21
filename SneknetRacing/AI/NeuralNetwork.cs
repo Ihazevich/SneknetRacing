@@ -38,11 +38,15 @@ namespace SneknetRacing.AI
 
         private void Initialize(Random random)
         {
-            Parallel.ForEach(_layers, (layer,status,index) =>
+            foreach (NeuralLayer layer in _layers)
             {
-                Console.WriteLine("Initializing layer {0}", index);
+                // Skip the input layer
+                if (_layers.IndexOf(layer) == 0)
+                {
+                    continue;
+                }
                 layer.Initialize(random);
-            }); 
+            }
         }
 
         private void Connect()
