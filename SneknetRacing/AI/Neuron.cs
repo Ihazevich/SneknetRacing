@@ -28,10 +28,16 @@ namespace SneknetRacing.AI
             _activation = activation;
         }
 
+        public void Connect(List<Neuron> inputs)
+        {
+            _inputConnections = inputs;
+        }
+
         public void Fire()
         {
             if(_activation == "input")
             {
+                //Console.WriteLine(Output);
                 return;
             }
 
@@ -52,6 +58,8 @@ namespace SneknetRacing.AI
                     Output = (float)Math.Tanh(Output);
                     break;
             }
+
+            //Console.WriteLine(Output);
         }
 
         public void SetWeights(Random random)
@@ -60,7 +68,7 @@ namespace SneknetRacing.AI
             {
                 return;
             }
-            Console.WriteLine("Setting weights for {0} connections", _inputWeights.Capacity);
+            //Console.WriteLine("Setting weights for {0} connections", _inputWeights.Capacity);
             Parallel.For(0, _inputWeights.Capacity, index =>
             {
                 _inputWeights.Add((float)random.NextDouble() - (float)random.NextDouble());
@@ -71,6 +79,7 @@ namespace SneknetRacing.AI
         {
             _activation = "input";
         }
+
         public void PushInputValue(float value)
         {
             if(_activation == "input")

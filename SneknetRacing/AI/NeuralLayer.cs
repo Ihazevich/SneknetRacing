@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,30 @@ namespace SneknetRacing.AI
     public class NeuralLayer
     {
         private List<Neuron> _neurons;
+
+        public int Size
+        {
+            get 
+            {
+                return _neurons.Count;
+            }
+        }
+
+        public List<float> Output
+        {
+            get
+            {
+                return _neurons.Select(neuron => neuron.Output).ToList();
+            }
+        }
+
+        public List<Neuron> Neurons
+        {
+            get 
+            {
+                return _neurons;
+            }
+        }
 
         public NeuralLayer(int size)
         {
@@ -56,6 +81,14 @@ namespace SneknetRacing.AI
             Parallel.ForEach(_neurons, neuron =>
             {
                 neuron.SetAsInputNeuron();
+            });
+        }
+
+        public void Connect(List<Neuron> previousLayerNeurons)
+        {
+            Parallel.ForEach(_neurons, neuron =>
+            {
+                neuron.Connect(previousLayerNeurons);
             });
         }
     }

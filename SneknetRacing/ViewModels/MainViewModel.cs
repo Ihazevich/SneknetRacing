@@ -405,8 +405,8 @@ namespace SneknetRacing.ViewModels
 
                             sample.Speed = carTelemetryPacket.CarTelemetryData[i].Speed;
                             Console.WriteLine("Speed: " + sample.Speed);
-                            sample.CurrentGear = carTelemetryPacket.CarTelemetryData[i].Gear / (double)carStatusPacket.CarStatusData[i].MaxGears;
-                            sample.EngineRPM = (double)carTelemetryPacket.CarTelemetryData[i].EngineRPM / (double)carStatusPacket.CarStatusData[i].MaxRPM;
+                            sample.CurrentGear = carTelemetryPacket.CarTelemetryData[i].Gear / (float)carStatusPacket.CarStatusData[i].MaxGears;
+                            sample.EngineRPM = (float)carTelemetryPacket.CarTelemetryData[i].EngineRPM / (float)carStatusPacket.CarStatusData[i].MaxRPM;
                             sample.SurfaceTypeRL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[0];
                             sample.SurfaceTypeRR = carTelemetryPacket.CarTelemetryData[i].SurfaceType[1];
                             sample.SurfaceTypeFL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[2];

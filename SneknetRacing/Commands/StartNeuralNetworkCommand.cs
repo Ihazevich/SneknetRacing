@@ -42,8 +42,8 @@ namespace SneknetRacing.Commands
             {
                 _isNetworkRunning = true;
 
-                List<double[]> trainingSamples = new List<double[]>();
-                List<double[]> expectedValues = new List<double[]>();
+                List<float[]> trainingSamples = new List<float[]>();
+                List<float[]> expectedValues = new List<float[]>();
 
                 string[] files = Directory.GetFiles("D:\\NeuralData\\0\\HAMILTON");
 
@@ -63,8 +63,8 @@ namespace SneknetRacing.Commands
                 {
                     RacerSample sample = JsonSerializer.Deserialize<RacerSample>(s);
 
-                    List<double> inputs = new List<double>();
-                    List<double> outputs = new List<double>();
+                    List<float> inputs = new List<float>();
+                    List<float> outputs = new List<float>();
 
                     inputs.Add(sample.Speed);
                     inputs.Add(sample.CurrentGear);
@@ -95,8 +95,11 @@ namespace SneknetRacing.Commands
 
                 Console.WriteLine("Creating network");
 
-                NeuralNetwork network = new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 50,50 });
-             
+                NeuralNetwork network = new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 50,50,50,50 });
+
+                List<float> output = network.Process(trainingSamples[0].ToList());
+
+                Console.WriteLine("Outputs: {0}, {1}, {2}", output[0], output[1], output[2]);
             }
         }
     }
