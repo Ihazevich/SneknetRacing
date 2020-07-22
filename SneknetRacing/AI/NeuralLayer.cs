@@ -31,25 +31,27 @@ namespace SneknetRacing.AI
         public NeuralLayer(int size)
         {
             _neurons = new List<Neuron>(size);
-            Parallel.For(0, size, x => {
+            for (int i = 0; i < size; i++)
+            {
                 _neurons.Add(new Neuron());
-            });
+            }
         }
 
         public NeuralLayer(int size, string activation, int inputConnections)
         {
             _neurons = new List<Neuron>(size);
-            Parallel.For(0, size, x =>{
+            for(int i = 0; i < size; i++)
+            {
                 _neurons.Add(new Neuron(activation, inputConnections));
-            });
+            }
         }
 
         public void Fire()
         {
-            Parallel.ForEach(_neurons, neuron =>
+            foreach(var neuron in _neurons)
             {
                 neuron.Fire();
-            });
+            }
             Output = _neurons.Select(neuron => neuron.Output).ToList();
             foreach (var output in Output)
             {
@@ -59,32 +61,32 @@ namespace SneknetRacing.AI
 
         public void PushInputs(List<float> inputs)
         {
-            Parallel.ForEach(_neurons, (neuron, state, index) =>
+            for(int i = 0; i < inputs.Count; i++) 
             {
-                neuron.PushInputValue(inputs[(int)index]);
-            });
+                _neurons[i].PushInputValue(inputs[i]);
+            }
         }
 
         public void Initialize(Random random)
         {
-            Parallel.ForEach(_neurons, (neuron, state, index) =>
+            foreach(var neuron in _neurons) 
             {
                 neuron.SetWeights(random);
-            });
+            }
             Console.WriteLine("Layer initialization done");
         }
 
         public void SetAsInputLayer()
         {
-            Parallel.ForEach(_neurons, neuron =>
+            foreach(var neuron in _neurons)
             {
                 neuron.SetAsInputNeuron();
-            });
+            }
         }
 
         public void Connect(List<Neuron> previousLayerNeurons)
         {
-            Parallel.ForEach(_neurons, neuron =>
+            Parallel.ForEach(_neurons, new ParallelOptions { MaxDegreeOfParallelism = 2 }, neuron =>
             {
                 neuron.Connect(previousLayerNeurons);
             });

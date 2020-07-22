@@ -24,12 +24,12 @@ namespace SneknetRacing.AI
             {
                 if(i == 0)
                 {
-                    _layers.Add(new NeuralLayer(hiddenLayers[i], "relu", inputSize));
+                    _layers.Add(new NeuralLayer(hiddenLayers[i], "sigmoid", inputSize));
                     continue;
                 }
-                _layers.Add(new NeuralLayer(hiddenLayers[i], "relu", hiddenLayers[i - 1]));
+                _layers.Add(new NeuralLayer(hiddenLayers[i], "sigmoid", hiddenLayers[i - 1]));
             }
-            _layers.Add(new NeuralLayer(outputSize, "tanh", hiddenLayers.Last()));
+            _layers.Add(new NeuralLayer(outputSize, "sigmoid", hiddenLayers.Last()));
 
             _layers.First().SetAsInputLayer();
             Initialize(new Random(0));

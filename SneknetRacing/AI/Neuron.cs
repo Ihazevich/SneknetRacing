@@ -41,10 +41,10 @@ namespace SneknetRacing.AI
                 return;
             }
 
-            Parallel.ForEach(_inputConnections, neuron =>
+            foreach(var neuron in _inputConnections)
             {
                 Output += neuron.Output * _inputWeights[_inputConnections.IndexOf(neuron)];
-            });
+            }
 
             switch (_activation)
             {
@@ -56,6 +56,9 @@ namespace SneknetRacing.AI
                     break;
                 case "tanh":
                     Output = (float)Math.Tanh(Output);
+                    break;
+                case "sigmoid":
+                    Output =  1.0f / (1.0f + (float)Math.Pow(Math.E, -Output));
                     break;
             }
 
@@ -69,10 +72,10 @@ namespace SneknetRacing.AI
                 return;
             }
             //Console.WriteLine("Setting weights for {0} connections", _inputWeights.Capacity);
-            Parallel.For(0, _inputWeights.Capacity, index =>
+            for(int i = 0; i < _inputWeights.Capacity; i++)
             {
                 _inputWeights.Add((float)random.NextDouble() - (float)random.NextDouble());
-            });
+            }
         }
 
         public void SetAsInputNeuron()
