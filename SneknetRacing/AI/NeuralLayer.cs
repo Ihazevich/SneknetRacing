@@ -18,8 +18,6 @@ namespace SneknetRacing.AI
             }
         }
 
-        public List<float> Output { get; private set; }
-
         public List<Neuron> Neurons
         {
             get 
@@ -46,25 +44,15 @@ namespace SneknetRacing.AI
             }
         }
 
-        public void Fire()
+        public float[] Fire(float[] inputs)
         {
-            foreach(var neuron in _neurons)
+            var output = new float[_neurons.Count];
+            for(int i = 0; i < _neurons.Count; i++)
             {
-                neuron.Fire();
+                output[i] = _neurons[i].Fire(inputs);
             }
-            Output = _neurons.Select(neuron => neuron.Output).ToList();
-            foreach (var output in Output)
-            {
-                Console.Write("{0}, ", output);
-            }
-        }
 
-        public void PushInputs(List<float> inputs)
-        {
-            for(int i = 0; i < inputs.Count; i++) 
-            {
-                _neurons[i].PushInputValue(inputs[i]);
-            }
+            return output;
         }
 
         public void Initialize(Random random)
@@ -73,7 +61,7 @@ namespace SneknetRacing.AI
             {
                 neuron.SetWeights(random);
             }
-            Console.WriteLine("Layer initialization done");
+            //Console.WriteLine("Layer initialization done");
         }
 
         public void SetAsInputLayer()
@@ -82,14 +70,6 @@ namespace SneknetRacing.AI
             {
                 neuron.SetAsInputNeuron();
             }
-        }
-
-        public void Connect(List<Neuron> previousLayerNeurons)
-        {
-            Parallel.ForEach(_neurons, new ParallelOptions { MaxDegreeOfParallelism = 2 }, neuron =>
-            {
-                neuron.Connect(previousLayerNeurons);
-            });
         }
     }
 }

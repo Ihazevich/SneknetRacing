@@ -7,60 +7,52 @@ namespace SneknetRacing.AI
 {
     public class Neuron
     {
-        private List<Neuron> _inputConnections;
-        private List<float> _inputWeights;
+        private float[] _inputWeights;
         private string _activation;
-
-        public float Output { get; private set; }
 
         public Neuron()
         {
-            _inputConnections = new List<Neuron>(0);
-            _inputWeights = new List<float>(0);
+            _inputWeights = new float[0];
             _activation = "";
-            Output = 0.0f;
         }
 
         public Neuron(string activation, int inputConnections) : this()
         {
-            _inputConnections = new List<Neuron>(inputConnections);
-            _inputWeights = new List<float>(inputConnections);
+            _inputWeights = new float[inputConnections];
             _activation = activation;
         }
 
         public void Connect(List<Neuron> inputs)
         {
-            _inputConnections = inputs;
+            //_inputConnections = inputs;
         }
 
-        public void Fire()
+        public float Fire(float[] inputs)
         {
-            if(_activation == "input")
-            {
-                //Console.WriteLine(Output);
-                return;
-            }
+            var output = 0.0f;
 
-            foreach(var neuron in _inputConnections)
+            for(int i = 0; i < inputs.Length; i++)
             {
-                Output += neuron.Output * _inputWeights[_inputConnections.IndexOf(neuron)];
+                output += (inputs[i] * _inputWeights[i]);
             }
 
             switch (_activation)
             {
                 case "relu":
-                    if(Output < 0)
+                    if(output < 0)
                     {
-                        Output *= 0.01f;
+                        output *= 0.01f;
                     }
                     break;
                 case "tanh":
-                    Output = (float)Math.Tanh(Output);
+                    output = (float)Math.Tanh(output);
                     break;
                 case "sigmoid":
-                    Output =  1.0f / (1.0f + (float)Math.Pow(Math.E, -Output));
+                    output =  1.0f / (1.0f + (float)Math.Pow(Math.E, -output));
                     break;
             }
+
+            return output;
 
             //Console.WriteLine(Output);
         }
@@ -72,27 +64,15 @@ namespace SneknetRacing.AI
                 return;
             }
             //Console.WriteLine("Setting weights for {0} connections", _inputWeights.Capacity);
-            for(int i = 0; i < _inputWeights.Capacity; i++)
+            for(int i = 0; i < _inputWeights.Length; i++)
             {
-                _inputWeights.Add((float)random.NextDouble() - (float)random.NextDouble());
+                _inputWeights[i] = (float)random.NextDouble() - (float)random.NextDouble();
             }
         }
 
         public void SetAsInputNeuron()
         {
             _activation = "input";
-        }
-
-        public void PushInputValue(float value)
-        {
-            if(_activation == "input")
-            {
-                Output = value;
-            }
-            else
-            {
-                throw new Exception("Trying to push an input value to a non-input neuron");
-            }
         }
     }
 }

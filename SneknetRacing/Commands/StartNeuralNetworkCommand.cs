@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -97,9 +98,37 @@ namespace SneknetRacing.Commands
 
                 NeuralNetwork network = new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 200, 200, 200, 200, 200, 200, 200, 200 });
 
-                List<float> output = network.Process(trainingSamples[0].ToList());
+                Stopwatch stopwatch1 = Stopwatch.StartNew();
+                Stopwatch stopwatch2 = new Stopwatch();
 
-                Console.WriteLine("Outputs: {0}, {1}, {2}", output[0], output[1], output[2]);
+                float[][] output = new float[trainingSamples.Count][];
+                float totalError = 0;
+                float accuracy = 0;
+
+                for (int i = 0; i < trainingSamples.Count; i++)
+                {
+                    /*Console.Write("Inputs:");
+                    foreach(var input in trainingSamples[i])
+                    {
+                        Console.Write("{0}, ", input);
+                    }
+                    Console.WriteLine();*/
+                    stopwatch2.Restart();
+                    output[i] = network.Process(trainingSamples[i]);
+                    for (int j = 0; j < output[0].Length; j++)
+                    {
+                        float err = output[i][j] - expectedValues[i][j];
+                        totalError += (err * err);
+                    }
+                    stopwatch2.Stop();
+                    //Console.WriteLine("Sample {0} processed in {1}ms. O: {2}, {3}, {4} | E: {5}, {6}, {7}",
+                    //i+1, stopwatch2.ElapsedMilliseconds, output[0], output[1], output[2], expectedValues[i][0], expectedValues[i][1], expectedValues[i][2]);
+                }
+                totalError = totalError / (float)(trainingSamples.Count * trainingSamples[0].Length);
+
+                stopwatch2.Stop();
+                Console.WriteLine("Processed {0} samples in {1}ms. Error: {2}", trainingSamples.Count, stopwatch1.ElapsedMilliseconds, totalError);
+
             }
         }
     }
