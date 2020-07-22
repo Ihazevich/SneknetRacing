@@ -97,7 +97,7 @@ namespace SneknetRacing.Commands
                 Console.WriteLine("Creating network");
 
                 NeuralNetwork network = new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 200, 200, 200, 200, 200, 200, 200, 200 });
-
+                network.Initialize(new Random(0));
                 Stopwatch stopwatch1 = Stopwatch.StartNew();
                 Stopwatch stopwatch2 = new Stopwatch();
 

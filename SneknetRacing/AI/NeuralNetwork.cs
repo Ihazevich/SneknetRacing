@@ -32,10 +32,10 @@ namespace SneknetRacing.AI
             
             _layers.Add(new NeuralLayer(outputSize, "sigmoid", hiddenLayers.Last()));
 
-            Initialize(new Random(0));
+            //Initialize(new Random(0));
         }
 
-        private void Initialize(Random random)
+        public void Initialize(Random random)
         {
             foreach (NeuralLayer layer in _layers)
             {
