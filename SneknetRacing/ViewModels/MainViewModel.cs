@@ -404,7 +404,6 @@ namespace SneknetRacing.ViewModels
                             RacerSample sample = new RacerSample();
 
                             sample.Speed = carTelemetryPacket.CarTelemetryData[i].Speed;
-                            Console.WriteLine("Speed: " + sample.Speed);
                             sample.CurrentGear = carTelemetryPacket.CarTelemetryData[i].Gear / (float)carStatusPacket.CarStatusData[i].MaxGears;
                             sample.EngineRPM = (float)carTelemetryPacket.CarTelemetryData[i].EngineRPM / (float)carStatusPacket.CarStatusData[i].MaxRPM;
                             sample.SurfaceTypeRL = carTelemetryPacket.CarTelemetryData[i].SurfaceType[0];
@@ -428,7 +427,6 @@ namespace SneknetRacing.ViewModels
 
                             string path = "D:\\NeuralData\\" + sessionPacket.TrackID + "\\" + participantsPacket.Participants[i].Name + "\\" + DateTime.Now.Ticks + ".json";
 
-                            Console.WriteLine(DateTime.Now.Ticks);
                             var options = new JsonSerializerOptions
                             {
                                 WriteIndented = true,

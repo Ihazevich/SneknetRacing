@@ -41,9 +41,9 @@ namespace SneknetRacing.AI
                 return;
             }
 
-            Parallel.ForEach(_inputConnections, (neuron, state, index) =>
+            Parallel.ForEach(_inputConnections, neuron =>
             {
-                Output += neuron.Output * _inputWeights[(int)index];
+                Output += neuron.Output * _inputWeights[_inputConnections.IndexOf(neuron)];
             });
 
             switch (_activation)

@@ -18,13 +18,7 @@ namespace SneknetRacing.AI
             }
         }
 
-        public List<float> Output
-        {
-            get
-            {
-                return _neurons.Select(neuron => neuron.Output).ToList();
-            }
-        }
+        public List<float> Output { get; private set; }
 
         public List<Neuron> Neurons
         {
@@ -56,9 +50,10 @@ namespace SneknetRacing.AI
             {
                 neuron.Fire();
             });
-            foreach(var output in Output)
+            Output = _neurons.Select(neuron => neuron.Output).ToList();
+            foreach (var output in Output)
             {
-                Console.Write("{0}, ");
+                Console.Write("{0}, ", output);
             }
         }
 
