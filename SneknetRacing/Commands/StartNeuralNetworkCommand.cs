@@ -6,8 +6,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using SneknetRacing.AI;
@@ -20,6 +22,8 @@ namespace SneknetRacing.Commands
     {
         private bool _isNetworkRunning = false;
         private MainViewModel _viewModel;
+
+        static readonly object _locker = new object();
 
         public StartNeuralNetworkCommand(MainViewModel viewModel)
         {
@@ -96,40 +100,49 @@ namespace SneknetRacing.Commands
 
                 Console.WriteLine("Creating network");
 
-                NeuralNetwork network = new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 200, 200, 200, 200, 200, 200, 200, 200 });
+                List<NeuralNetwork> networks = new List<NeuralNetwork>();
+                List<Thread> networkTasks = new List<Thread>();
 
-                Stopwatch stopwatch1 = Stopwatch.StartNew();
-                Stopwatch stopwatch2 = new Stopwatch();
+                ConcurrentStack<NeuralNetwork> bestNetworks = new ConcurrentStack<NeuralNetwork>();
+                float bestAccuracy = 0.0f;
+                int threads = 13;
 
-                float[][] output = new float[trainingSamples.Count][];
-                float totalError = 0;
-                float accuracy = 0;
-
-                for (int i = 0; i < trainingSamples.Count; i++)
+                for(int i = 0; i < threads; i++)
                 {
-                    /*Console.Write("Inputs:");
-                    foreach(var input in trainingSamples[i])
-                    {
-                        Console.Write("{0}, ", input);
-                    }
-                    Console.WriteLine();*/
-                    stopwatch2.Restart();
-                    output[i] = network.Process(trainingSamples[i]);
-                    for (int j = 0; j < output[0].Length; j++)
-                    {
-                        float err = output[i][j] - expectedValues[i][j];
-                        totalError += (err * err);
-                    }
-                    stopwatch2.Stop();
-                    //Console.WriteLine("Sample {0} processed in {1}ms. O: {2}, {3}, {4} | E: {5}, {6}, {7}",
-                    //i+1, stopwatch2.ElapsedMilliseconds, output[0], output[1], output[2], expectedValues[i][0], expectedValues[i][1], expectedValues[i][2]);
+                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 200, 200, 200, 200, 200, 200, 200, 200 }));
                 }
-                totalError = totalError / (float)(trainingSamples.Count * trainingSamples[0].Length);
 
-                stopwatch2.Stop();
-                Console.WriteLine("Processed {0} samples in {1}ms. Error: {2}", trainingSamples.Count, stopwatch1.ElapsedMilliseconds, totalError);
+                Parallel.ForEach(networks, network =>
+                {
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        NeuralNetwork temp;
+                        if(bestNetworks.TryPeek(out temp))
+                        {
+                            network = temp;
+                            network.Mutate((float)new Random().NextDouble());
+                        }
+                        else
+                        {
+                            network.Initialize(new Random());
+                        }
+                        var accuracy = network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
+                        lock (_locker)
+                        {
+                            if (accuracy > bestAccuracy)
+                            {
+                                bestAccuracy = accuracy;
+                                bestNetworks.Push(network);
+                                Console.WriteLine("==================POG BEST SO FAR==================");
+                                Console.WriteLine("{0:##.#####}%",accuracy*100);
+                                Console.WriteLine("===================================================");
+                            }
+                        }
+                    }
+                });
 
             }
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,14 @@ namespace SneknetRacing.AI
     {
         private float[] _inputWeights;
         private string _activation;
+
+        public List<float> Weights
+        {
+            get
+            {
+                return _inputWeights.ToList();
+            }
+        }
 
         public Neuron()
         {
@@ -31,7 +40,7 @@ namespace SneknetRacing.AI
         {
             var output = 0.0f;
 
-            for(int i = 0; i < inputs.Length; i++)
+            for (int i = 0; i < inputs.Length; i++)
             {
                 output += (inputs[i] * _inputWeights[i]);
             }
@@ -39,7 +48,7 @@ namespace SneknetRacing.AI
             switch (_activation)
             {
                 case "relu":
-                    if(output < 0)
+                    if (output < 0)
                     {
                         output *= 0.01f;
                     }
@@ -48,7 +57,7 @@ namespace SneknetRacing.AI
                     output = (float)Math.Tanh(output);
                     break;
                 case "sigmoid":
-                    output =  1.0f / (1.0f + (float)Math.Pow(Math.E, -output));
+                    output = 1.0f / (1.0f + (float)Math.Pow(Math.E, -output));
                     break;
             }
 
@@ -59,20 +68,23 @@ namespace SneknetRacing.AI
 
         public void SetWeights(Random random)
         {
-            if(_activation == "input")
-            {
-                return;
-            }
             //Console.WriteLine("Setting weights for {0} connections", _inputWeights.Capacity);
-            for(int i = 0; i < _inputWeights.Length; i++)
+            for (int i = 0; i < _inputWeights.Length; i++)
             {
                 _inputWeights[i] = (float)random.NextDouble() - (float)random.NextDouble();
             }
         }
 
-        public void SetAsInputNeuron()
+        public void Mutate(float mutationChance)
         {
-            _activation = "input";
+            Random rand = new Random();
+            for (int i = 0; i < _inputWeights.Length; i++)
+            {
+                if(mutationChance > rand.NextDouble())
+                {
+                    _inputWeights[i] = (float)rand.NextDouble() - (float)rand.NextDouble();
+                }
+            }
         }
     }
 }

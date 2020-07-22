@@ -63,13 +63,5 @@ namespace SneknetRacing.AI
             }
             //Console.WriteLine("Layer initialization done");
         }
-
-        public void SetAsInputLayer()
-        {
-            foreach(var neuron in _neurons)
-            {
-                neuron.SetAsInputNeuron();
-            }
-        }
     }
 }
