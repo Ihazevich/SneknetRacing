@@ -17,13 +17,13 @@ namespace SneknetRacing.AI
         public float WorldPosX { get; set; }
         public float WorldPosZ { get; set; }
         /*
-        public double WorldForwardDirX { get; set; }
-        public double WorldForwardDirZ { get; set; }
-        public double WorldRightDirX { get; set; }
-        public double WorldRightDirZ { get; set; }
-        public double Yaw { get; set; }
-        public double Pitch { get; set; }
-        public double Roll { get; set; }
+        public float WorldForwardDirX { get; set; }
+        public float WorldForwardDirZ { get; set; }
+        public float WorldRightDirX { get; set; }
+        public float WorldRightDirZ { get; set; }
+        public float Yaw { get; set; }
+        public float Pitch { get; set; }
+        public float Roll { get; set; }
         */
         public float Throttle { get; set; }
         public float Steer { get; set; }
