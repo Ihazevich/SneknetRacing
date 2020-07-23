@@ -11,11 +11,11 @@ namespace SneknetRacing.AI
         private double[] _inputWeights;
         private string _activation;
 
-        public List<double> Weights
+        public double[] Weights
         {
             get
             {
-                return _inputWeights.ToList();
+                return _inputWeights;
             }
         }
 

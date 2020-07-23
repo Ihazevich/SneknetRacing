@@ -105,12 +105,12 @@ namespace SneknetRacing.Commands
                 List<Thread> networkTasks = new List<Thread>();
 
                 NeuralNetwork bestNetwork = null;
-                double bestFitness = 0.0;
-                int concurrentNetworks = 5;
+                double bestFitness = 1.0;
+                int concurrentNetworks = 15;
 
                 for(int i = 0; i < concurrentNetworks; i++)
                 {
-                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 2000, 400 }));
+                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 500, 500, 500, 500 }));
                 }
 
                 Stopwatch totalTime = Stopwatch.StartNew();
@@ -118,7 +118,8 @@ namespace SneknetRacing.Commands
 
                 Parallel.ForEach(networks, network =>
                 {
-                    for (int i = 0; i < 1000; i++)
+                    int eppoch = 1;
+                    while(true)
                     {
                         var best = false;
                         lock (_locker)
@@ -131,22 +132,35 @@ namespace SneknetRacing.Commands
                             }
                             else
                             {
+                                /*string[] files = Directory.GetFiles("D:\\NeuralData\\0\\HAMILTON");
+                                double[][][] networkWeights;
+                                if (files.Length > 0)
+                                {
+                                    Console.WriteLine("Loading Network " + files[0]);
+                                    string jsonString = File.ReadAllText(files[0]);
+                                    networkWeights = JsonSerializer.Deserialize<double[][][]>(jsonString);
+                                    network = new NeuralNetwork(networkWeights, trainingSamples[0].Length);
+                                }
+                                else
+                                {
+
+                                }*/
                                 network.Initialize(new Random());
                             }
                         }
                         var fitness = network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
                         lock (_locker)
                         {
-                            Console.WriteLine("Thread: {0} | Eppoch: {1} | Fitness: {2} | Total time: {3}",
-                                networks.IndexOf(network) + 1, i + 1, fitness, totalTime.Elapsed.ToString());
-                            if (fitness > bestFitness)
+                            Console.WriteLine("Thread: {0} | Eppoch: {1} | Error: {2} | Total time: {3}",
+                                networks.IndexOf(network) + 1, eppoch + 1, fitness, totalTime.Elapsed.ToString());
+                            if (fitness < bestFitness)
                             {
                                 stopwatch.Stop();
                                 best = true;
                                 bestFitness = fitness;
                                 bestNetwork = new NeuralNetwork(network.GetWeights(), trainingSamples[0].Length);
                                 Console.WriteLine("==================POG BEST SO FAR==================");
-                                Console.WriteLine("Fitness: {0} | Time since last best: {1}", fitness, stopwatch.Elapsed.ToString());
+                                Console.WriteLine("Error: {0} | Time since last best: {1}", fitness, stopwatch.Elapsed.ToString());
                                 Console.WriteLine("===================================================");
                                 stopwatch.Restart();
                             }
@@ -164,7 +178,7 @@ namespace SneknetRacing.Commands
                             string jsonString = JsonSerializer.Serialize(network.GetWeights(), options);
                             File.WriteAllText(path, jsonString);
                         }
-                        
+                        eppoch++;
 
                     }
                 });

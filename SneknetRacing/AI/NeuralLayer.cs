@@ -64,12 +64,22 @@ namespace SneknetRacing.AI
             //Console.WriteLine("Layer initialization done");
         }
 
-        public void Load(List<List<double>> weights)
+        public void Load(double[][] weights)
         {
             for(int i = 0; i < _neurons.Count; i++)
             {
-                _neurons[i].LoadWeights(weights[i].ToArray());
+                _neurons[i].LoadWeights(weights[i]);
             }    
+        }
+
+        public double[][] GetWeights()
+        {
+            double[][] weights = new double[Neurons.Count][];
+            for(int i = 0; i < Neurons.Count; i++)
+            {
+                weights[i] = Neurons[i].Weights;
+            }
+            return weights;
         }
     }
 }

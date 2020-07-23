@@ -13,19 +13,19 @@ namespace SneknetRacing.AI
     {
         private List<NeuralLayer> _layers;
 
-        public NeuralNetwork(List<List<List<double>>> networkWeights, int inputSize)
+        public NeuralNetwork(double[][][] networkWeights, int inputSize)
         {
             _layers = new List<NeuralLayer>();
-            for(int layerIndex = 0; layerIndex < networkWeights.Count; layerIndex++)
+            for(int layerIndex = 0; layerIndex < networkWeights.Length; layerIndex++)
             {
                 NeuralLayer layer;
                 if(layerIndex == 0)
                 {
-                    layer = new NeuralLayer(networkWeights[layerIndex].Count, "sigmoid", inputSize);
+                    layer = new NeuralLayer(networkWeights[layerIndex].Length, "sigmoid", inputSize);
                 }
                 else
                 {
-                    layer = new NeuralLayer(networkWeights[layerIndex].Count, "sigmoid", networkWeights[layerIndex - 1].Count);
+                    layer = new NeuralLayer(networkWeights[layerIndex].Length, "sigmoid", networkWeights[layerIndex - 1].Length);
                 }
                 layer.Load(networkWeights[layerIndex]);
                 _layers.Add(layer);
@@ -92,7 +92,7 @@ namespace SneknetRacing.AI
                 {
                     double err = output[i][j] - targets[i][j];
                     totalError += (err * err);
-                    accuracy = (output[i][j] > targets[i][j]) ? (targets[i][j] / output[i][j]) : (output[i][j] / targets[i][j]);
+                    accuracy = (Math.Abs(output[i][j]) > Math.Abs(targets[i][j])) ? (Math.Abs(targets[i][j]) / Math.Abs(output[i][j])) : (Math.Abs(output[i][j] / targets[i][j]));
                 }
                 stopwatch2.Stop();
                 //Console.WriteLine("Sample {0} processed in {1}ms. O: {2}, {3}, {4} | E: {5}, {6}, {7}",
@@ -104,30 +104,16 @@ namespace SneknetRacing.AI
             stopwatch2.Stop();
             //Console.WriteLine("Processed {0} samples in {1}ms. Error: {2} | Accuracy: {3:##.####}%", samples.Length, stopwatch1.ElapsedMilliseconds, totalError, accuracy * 100);
 
-            return ( 1 - totalError) * accuracy;
+            return totalError;
         }
 
-        public List<List<List<double>>> GetWeights()
+        public double[][][] GetWeights()
         {
-            var networkWeights = new List<List<List<double>>>();
+            var networkWeights = new double[_layers.Count][][];
 
-            foreach(var layer in _layers)
+            for(int i = 0; i < _layers.Count; i++)
             {
-                var layerWeights = new List<List<double>>();
-
-                foreach (var neuron in layer.Neurons)
-                {
-                    var neuronWeights = new List<double>();
-
-                    foreach(var weight in neuron.Weights)
-                    {
-                        neuronWeights.Add(weight);
-                    }
-
-                    layerWeights.Add(neuronWeights);
-                }
-
-                networkWeights.Add(layerWeights);
+                networkWeights[i] = _layers[i].GetWeights();
             }
 
             return networkWeights;
