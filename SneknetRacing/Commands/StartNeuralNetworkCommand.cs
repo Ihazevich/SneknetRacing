@@ -145,7 +145,7 @@ namespace SneknetRacing.Commands
                                 {
 
                                 }*/
-                                network.Initialize(new Random());
+                                network.Initialize();
                             }
                         }
                         network.Test(trainingSamples.ToArray(), expectedValues.ToArray());

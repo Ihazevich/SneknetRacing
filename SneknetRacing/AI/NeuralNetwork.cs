@@ -11,6 +11,7 @@ namespace SneknetRacing.AI
 {
     public class NeuralNetwork
     {
+        private Random _random = new Random();
         private List<NeuralLayer> _layers;
 
         public double MeanSquareError { get; set; }
@@ -56,11 +57,11 @@ namespace SneknetRacing.AI
             _layers.Add(new NeuralLayer(outputSize, "sigmoid", hiddenLayers.Last()));
         }
 
-        public void Initialize(Random random)
+        public void Initialize()
         {
             foreach (NeuralLayer layer in _layers)
             {
-                layer.Initialize(random);
+                layer.Initialize(_random);
             }
         }
 
@@ -129,7 +130,6 @@ namespace SneknetRacing.AI
 
         public void Mutate(double mutationChance)
         {
-            Random rand = new Random();
             List<Task> temp = new List<Task>();
 
             foreach(var layer in _layers)
