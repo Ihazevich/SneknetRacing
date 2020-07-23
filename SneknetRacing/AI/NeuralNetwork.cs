@@ -161,15 +161,15 @@ namespace SneknetRacing.AI
 
         public void Mutate(double bestFitness)
         {
-            double mutationSeverity = 1.0 - (Fitness/bestFitness);
-            Console.WriteLine("Mutation Severity: {0} | Fitness: {1} | Best: {2}", mutationSeverity, Fitness, bestFitness);
+            double mutationSeverity = 1.0 - (1.0/Fitness);
+            //Console.WriteLine("Mutation Severity: {0} | Fitness: {1} | Best: {2}", mutationSeverity, Fitness, bestFitness);
 
             mutationSeverity *= _random.NextDouble();
 
             double minNodes = 0.01;
             double maxNodes = 1;
 
-            Console.WriteLine("Mutation Severity after random: {0}", mutationSeverity);
+            //Console.WriteLine("Mutation Severity after random: {0}", mutationSeverity);
 
             foreach (var layer in _layers)
             {
