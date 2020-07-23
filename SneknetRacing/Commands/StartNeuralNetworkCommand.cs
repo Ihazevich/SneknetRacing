@@ -6,10 +6,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MathNet.Numerics;
 using SneknetRacing.AI;
 using SneknetRacing.ViewModels;
 
@@ -20,6 +23,8 @@ namespace SneknetRacing.Commands
     {
         private bool _isNetworkRunning = false;
         private MainViewModel _viewModel;
+
+        static readonly object _locker = new object();
 
         public StartNeuralNetworkCommand(MainViewModel viewModel)
         {
@@ -43,8 +48,8 @@ namespace SneknetRacing.Commands
             {
                 _isNetworkRunning = true;
 
-                List<float[]> trainingSamples = new List<float[]>();
-                List<float[]> expectedValues = new List<float[]>();
+                List<double[]> trainingSamples = new List<double[]>();
+                List<double[]> expectedValues = new List<double[]>();
 
                 string[] files = Directory.GetFiles("D:\\NeuralData\\0\\HAMILTON");
 
@@ -64,8 +69,8 @@ namespace SneknetRacing.Commands
                 {
                     RacerSample sample = JsonSerializer.Deserialize<RacerSample>(s);
 
-                    List<float> inputs = new List<float>();
-                    List<float> outputs = new List<float>();
+                    List<double> inputs = new List<double>();
+                    List<double> outputs = new List<double>();
 
                     inputs.Add(sample.Speed);
                     inputs.Add(sample.CurrentGear);
@@ -96,40 +101,90 @@ namespace SneknetRacing.Commands
 
                 Console.WriteLine("Creating network");
 
-                NeuralNetwork network = new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 200, 200, 200, 200, 200, 200, 200, 200 });
-                network.Initialize(new Random(0));
-                Stopwatch stopwatch1 = Stopwatch.StartNew();
-                Stopwatch stopwatch2 = new Stopwatch();
+                List<NeuralNetwork> networks = new List<NeuralNetwork>();
+                List<Thread> networkTasks = new List<Thread>();
 
-                float[][] output = new float[trainingSamples.Count][];
-                float totalError = 0;
-                float accuracy = 0;
+                NeuralNetwork bestNetwork = null;
+                double bestFitness = 1.0;
+                int concurrentNetworks = 15;
 
-                for (int i = 0; i < trainingSamples.Count; i++)
+                for(int i = 0; i < concurrentNetworks; i++)
                 {
-                    /*Console.Write("Inputs:");
-                    foreach(var input in trainingSamples[i])
-                    {
-                        Console.Write("{0}, ", input);
-                    }
-                    Console.WriteLine();*/
-                    stopwatch2.Restart();
-                    output[i] = network.Process(trainingSamples[i]);
-                    for (int j = 0; j < output[0].Length; j++)
-                    {
-                        float err = output[i][j] - expectedValues[i][j];
-                        totalError += (err * err);
-                    }
-                    stopwatch2.Stop();
-                    //Console.WriteLine("Sample {0} processed in {1}ms. O: {2}, {3}, {4} | E: {5}, {6}, {7}",
-                    //i+1, stopwatch2.ElapsedMilliseconds, output[0], output[1], output[2], expectedValues[i][0], expectedValues[i][1], expectedValues[i][2]);
+                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 500, 500, 500, 500 }));
                 }
-                totalError = totalError / (float)(trainingSamples.Count * trainingSamples[0].Length);
 
-                stopwatch2.Stop();
-                Console.WriteLine("Processed {0} samples in {1}ms. Error: {2}", trainingSamples.Count, stopwatch1.ElapsedMilliseconds, totalError);
+                Stopwatch totalTime = Stopwatch.StartNew();
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+                Parallel.ForEach(networks, network =>
+                {
+                    int eppoch = 1;
+                    while(true)
+                    {
+                        var best = false;
+                        lock (_locker)
+                        {
+                            if (bestNetwork != null)
+                            {
+                                network = new NeuralNetwork(bestNetwork.GetWeights(), trainingSamples[0].Length);
+                                //Console.WriteLine("mutatooooo");
+                                network.Mutate((float)new Random().NextDouble());
+                            }
+                            else
+                            {
+                                /*string[] files = Directory.GetFiles("D:\\NeuralData\\0\\HAMILTON");
+                                double[][][] networkWeights;
+                                if (files.Length > 0)
+                                {
+                                    Console.WriteLine("Loading Network " + files[0]);
+                                    string jsonString = File.ReadAllText(files[0]);
+                                    networkWeights = JsonSerializer.Deserialize<double[][][]>(jsonString);
+                                    network = new NeuralNetwork(networkWeights, trainingSamples[0].Length);
+                                }
+                                else
+                                {
+
+                                }*/
+                                network.Initialize(new Random());
+                            }
+                        }
+                        var fitness = network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
+                        lock (_locker)
+                        {
+                            Console.WriteLine("Thread: {0} | Eppoch: {1} | Error: {2} | Total time: {3}",
+                                networks.IndexOf(network) + 1, eppoch + 1, fitness, totalTime.Elapsed.ToString());
+                            if (fitness < bestFitness)
+                            {
+                                stopwatch.Stop();
+                                best = true;
+                                bestFitness = fitness;
+                                bestNetwork = new NeuralNetwork(network.GetWeights(), trainingSamples[0].Length);
+                                Console.WriteLine("==================POG BEST SO FAR==================");
+                                Console.WriteLine("Error: {0} | Time since last best: {1}", fitness, stopwatch.Elapsed.ToString());
+                                Console.WriteLine("===================================================");
+                                stopwatch.Restart();
+                            }
+                        }
+                        if(best)
+                        {
+                            Directory.CreateDirectory("D:\\NeuralData\\0\\HAMILTON\\Networks\\");
+                            string path = "D:\\NeuralData\\0\\HAMILTON\\Networks\\" + fitness + ".json";
+                            Console.WriteLine(path);
+                            var options = new JsonSerializerOptions
+                            {
+                                WriteIndented = true,
+                            };
+
+                            string jsonString = JsonSerializer.Serialize(network.GetWeights(), options);
+                            File.WriteAllText(path, jsonString);
+                        }
+                        eppoch++;
+
+                    }
+                });
 
             }
+
         }
     }
 }
