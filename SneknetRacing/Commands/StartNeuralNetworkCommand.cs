@@ -113,6 +113,7 @@ namespace SneknetRacing.Commands
                     networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 2000, 400 }));
                 }
 
+                Stopwatch totalTime = Stopwatch.StartNew();
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 Parallel.ForEach(networks, network =>
@@ -136,6 +137,8 @@ namespace SneknetRacing.Commands
                         var fitness = network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
                         lock (_locker)
                         {
+                            Console.WriteLine("Thread: {0} | Eppoch: {1} | Fitness: {2} | Total time: {3}",
+                                networks.IndexOf(network) + 1, i + 1, fitness, totalTime.Elapsed.ToString());
                             if (fitness > bestFitness)
                             {
                                 stopwatch.Stop();

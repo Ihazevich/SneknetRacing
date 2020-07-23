@@ -58,6 +58,8 @@ namespace SneknetRacing.AI
                     break;
                 case "sigmoid":
                     output = 1.0 / (1.0 + Math.Pow(Math.E, -output));
+                    output *= 2;
+                    output--;
                     break;
             }
 
