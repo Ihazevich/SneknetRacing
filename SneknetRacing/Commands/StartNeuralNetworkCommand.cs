@@ -128,7 +128,7 @@ namespace SneknetRacing.Commands
                             {
                                 network = new NeuralNetwork(bestNetwork.GetWeights(), trainingSamples[0].Length);
                                 //Console.WriteLine("mutatooooo");
-                                network.Mutate((float)new Random().NextDouble());
+                                network.Mutate();
                             }
                             else
                             {

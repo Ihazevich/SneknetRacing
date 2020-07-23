@@ -1,4 +1,5 @@
-﻿using SneknetRacing.Commands;
+﻿using MathNet.Numerics;
+using SneknetRacing.Commands;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +15,7 @@ namespace SneknetRacing.AI
         private Random _random = new Random();
         private List<NeuralLayer> _layers;
 
-        public double MeanSquareError { get; set; }
+        public double Fitness { get; set; }
 
         public NeuralNetwork(double[][][] networkWeights, int inputSize)
         {
@@ -84,7 +85,7 @@ namespace SneknetRacing.AI
             Stopwatch stopwatch2 = new Stopwatch();
 
             double[][] output = new double[targets.Length][];
-            double mse = 0;
+            double squaredErrorSum = 0;
             double accuracy = 0;
 
             for (int i = 0; i < samples.Length; i++)
@@ -100,20 +101,20 @@ namespace SneknetRacing.AI
                 for (int j = 0; j < output[0].Length; j++)
                 {
                     double err = output[i][j] - targets[i][j];
-                    mse += (err * err);
+                    squaredErrorSum += (err * err);
                     accuracy = (Math.Abs(output[i][j]) > Math.Abs(targets[i][j])) ? (Math.Abs(targets[i][j]) / Math.Abs(output[i][j])) : (Math.Abs(output[i][j] / targets[i][j]));
                 }
                 stopwatch2.Stop();
                 //Console.WriteLine("Sample {0} processed in {1}ms. O: {2}, {3}, {4} | E: {5}, {6}, {7}",
                 //i+1, stopwatch2.ElapsedMilliseconds, output[0], output[1], output[2], expectedValues[i][0], expectedValues[i][1], expectedValues[i][2]);
             }
-            mse /= (double)(samples.Length * samples[0].Length);
+            //squaredErrorSum /= (double)(samples.Length * samples[0].Length);
             accuracy /= (double)(samples.Length * samples[0].Length);
 
             stopwatch2.Stop();
             //Console.WriteLine("Processed {0} samples in {1}ms. Error: {2} | Accuracy: {3:##.####}%", samples.Length, stopwatch1.ElapsedMilliseconds, totalError, accuracy * 100);
 
-            MeanSquareError = mse;
+            Fitness = squaredErrorSum;
         }
 
         public double[][][] GetWeights()
@@ -128,26 +129,19 @@ namespace SneknetRacing.AI
             return networkWeights;
         }
 
-        public void Mutate(double mutationChance)
+        public void Mutate(double bestFitness)
         {
-            List<Task> temp = new List<Task>();
+            double mutationSeverity = 1.0 - (Fitness/bestFitness);
+
+            mutationSeverity *= _random.NextDouble();
 
             foreach(var layer in _layers)
             {
                 foreach(var neuron in layer.Neurons)
                 {
-                    temp.Add(new Task(() => neuron.Mutate(mutationChance)));
+                    neuron.Mutate(mutationSeverity, _random);
                 }
             }
-
-            Task[] tasks = temp.ToArray();
-
-            foreach(var task in tasks)
-            {
-                task.Start();
-            }
-
-            Task.WaitAll(tasks);
         }
     }
 }

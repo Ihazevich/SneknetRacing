@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MathNet.Numerics;
+using MathNet.Numerics.Random;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,41 +10,46 @@ namespace SneknetRacing.AI
 {
     public class Neuron
     {
-        private double[] _inputWeights;
+        private double[] _weights;
+        private bool[] _nodesStatus;
         private string _activation;
 
         public double[] Weights
         {
             get
             {
-                return _inputWeights;
+                return _weights;
             }
         }
 
         public Neuron()
         {
-            _inputWeights = new double[0];
+            _weights = Array.Empty<double>();
             _activation = "";
         }
 
         public Neuron(string activation, int inputConnections) : this()
         {
-            _inputWeights = new double[inputConnections];
+            _weights = new double[inputConnections];
+            _nodesStatus = new double[inputConnections];
             _activation = activation;
-        }
-
-        public void Connect(List<Neuron> inputs)
-        {
-            //_inputConnections = inputs;
         }
 
         public double Fire(double[] inputs)
         {
+            if(inputs == null)
+            {
+                throw new ArgumentNullException(nameof(inputs));
+            }
+
             var output = 0.0;
 
             for (int i = 0; i < inputs.Length; i++)
             {
-                output += (inputs[i] * _inputWeights[i]);
+                if(_nodesStatus[i])
+                {
+                    output += (inputs[i] * _weights[i]);
+                }
             }
 
             switch (_activation)
@@ -76,27 +83,43 @@ namespace SneknetRacing.AI
             }
 
             //Console.WriteLine("Setting weights for {0} connections", _inputWeights.Capacity);
-            for (int i = 0; i < _inputWeights.Length; i++)
+            for (int i = 0; i < _weights.Length; i++)
             {
-                _inputWeights[i] = (random.NextDouble() * 2.0) - 1.0;
+                _weights[i] = (random.NextDouble() * 2.0) - 1.0;
+                _nodesStatus[i] = true;
             }
         }
 
-        public void Mutate(double mutationChance)
+        public void Mutate(double mutationSeverity, Random random)
         {
-            Random rand = new Random();
-            for (int i = 0; i < _inputWeights.Length; i++)
+            if (random == null)
             {
-                if(mutationChance > rand.NextDouble())
-                {
-                    _inputWeights[i] = rand.NextDouble() - rand.NextDouble();
-                }
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            var mutations = random.NextDoubles(_weights.Length);
+
+            for (int i = 0; i < _weights.Length; i++)
+            {
+                _weights[i] -= (mutations[i] * (mutationSeverity * 2.0)) - mutationSeverity;
+            }
+
+            double minNodes = 0.2;
+            double maxNodes = 1;
+
+            var nodeMutation = minNodes + ((mutationSeverity * random.NextDouble()) * (maxNodes - minNodes));
+
+            mutations = random.NextDoubles(_weights.Length);
+
+            for (int i = 0; i < _nodesStatus.Length; i++)
+            {
+                _nodesStatus[i] = (mutations[i] > nodeMutation);
             }
         }
 
         public void LoadWeights(double[] weights)
         {
-            _inputWeights = weights;
+            _weights = weights;
         }
     }
 }
