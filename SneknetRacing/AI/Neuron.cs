@@ -11,16 +11,17 @@ namespace SneknetRacing.AI
     public class Neuron
     {
         private double[] _weights;
-        private bool[] _nodesStatus;
         private string _activation;
 
-        public double[] Weights
+        public List<double> Weights
         {
             get
             {
-                return _weights;
+                return _weights.ToList();
             }
         }
+
+        public bool isActive { get; set; }  
 
         public Neuron()
         {
@@ -31,7 +32,7 @@ namespace SneknetRacing.AI
         public Neuron(string activation, int inputConnections) : this()
         {
             _weights = new double[inputConnections];
-            _nodesStatus = new bool[inputConnections];
+            isActive = true;
             _activation = activation;
         }
 
@@ -43,33 +44,31 @@ namespace SneknetRacing.AI
             }
 
             var output = 0.0;
-
-            for (int i = 0; i < inputs.Length; i++)
+            if (isActive)
             {
-                if(_nodesStatus[i])
+                for (int i = 0; i < inputs.Length; i++)
                 {
                     output += (inputs[i] * _weights[i]);
                 }
-            }
 
-            switch (_activation)
-            {
-                case "relu":
-                    if (output < 0)
-                    {
-                        output *= 0.01;
-                    }
-                    break;
-                case "tanh":
-                    output = Math.Tanh(output);
-                    break;
-                case "sigmoid":
-                    output = 1.0 / (1.0 + Math.Pow(Math.E, -output));
-                    output *= 2;
-                    output--;
-                    break;
+                switch (_activation)
+                {
+                    case "relu":
+                        if (output < 0)
+                        {
+                            output *= 0.01;
+                        }
+                        break;
+                    case "tanh":
+                        output = Math.Tanh(output);
+                        break;
+                    case "sigmoid":
+                        output = 1.0 / (1.0 + Math.Pow(Math.E, -output));
+                        output *= 2;
+                        output--;
+                        break;
+                }
             }
-
             return output;
 
             //Console.WriteLine(Output);
@@ -86,7 +85,6 @@ namespace SneknetRacing.AI
             for (int i = 0; i < _weights.Length; i++)
             {
                 _weights[i] = (random.NextDouble() * 2.0) - 1.0;
-                _nodesStatus[i] = true;
             }
         }
 
@@ -98,28 +96,21 @@ namespace SneknetRacing.AI
             }
 
             var mutations = random.NextDoubles(_weights.Length);
+            var speed = 0.00001;
 
             for (int i = 0; i < _weights.Length; i++)
             {
-                _weights[i] -= (mutations[i] * (mutationSeverity * 2.0)) - mutationSeverity;
-            }
-
-            double minNodes = 0.2;
-            double maxNodes = 1;
-
-            var nodeMutation = minNodes + ((mutationSeverity * random.NextDouble()) * (maxNodes - minNodes));
-
-            mutations = random.NextDoubles(_weights.Length);
-
-            for (int i = 0; i < _nodesStatus.Length; i++)
-            {
-                _nodesStatus[i] = (mutations[i] > nodeMutation);
+                var change = ((mutations[i] * (mutationSeverity * 2.0)) - mutationSeverity) * speed;
+                //Console.WriteLine("W: {0} | Mutation: {1}", _weights[i], change);
+                _weights[i] -= change;
+                //Console.WriteLine("W: {0}", _weights[i]);
             }
         }
 
-        public void LoadWeights(double[] weights)
+        public void LoadWeights(double[] weights, bool nodeActive)
         {
             _weights = weights;
+            isActive = nodeActive;
         }
     }
 }

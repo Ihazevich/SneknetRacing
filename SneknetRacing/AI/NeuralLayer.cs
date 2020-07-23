@@ -64,11 +64,21 @@ namespace SneknetRacing.AI
             //Console.WriteLine("Layer initialization done");
         }
 
-        public void Load(double[][] weights)
+        public void Load(double[][] weights, bool[] nodesStatus)
         {
+            if(weights == null)
+            {
+                throw new ArgumentNullException(nameof(weights));
+            }
+
+            if(nodesStatus == null)
+            {
+                throw new ArgumentNullException(nameof(nodesStatus));
+            }
+
             for(int i = 0; i < _neurons.Count; i++)
             {
-                _neurons[i].LoadWeights(weights[i]);
+                _neurons[i].LoadWeights(weights[i], nodesStatus[i]);
             }    
         }
 
@@ -77,9 +87,21 @@ namespace SneknetRacing.AI
             double[][] weights = new double[Neurons.Count][];
             for(int i = 0; i < Neurons.Count; i++)
             {
-                weights[i] = Neurons[i].Weights;
+                weights[i] = Neurons[i].Weights.ToArray();
             }
             return weights;
+        }
+
+        public bool[] GetNodesStatus()
+        {
+            bool[] nodesStatus = new bool[Neurons.Count];
+
+            for (int i = 0; i < Neurons.Count; i++)
+            {
+                nodesStatus[i] = Neurons[i].isActive;
+            }
+
+            return nodesStatus;
         }
     }
 }

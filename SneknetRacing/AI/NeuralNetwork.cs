@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics;
+using MathNet.Numerics.Random;
 using SneknetRacing.Commands;
 using System;
 using System.Collections.Generic;
@@ -15,30 +16,12 @@ namespace SneknetRacing.AI
         private Random _random = new Random();
         private List<NeuralLayer> _layers;
 
-        public double Fitness { get; set; }
-
-        public NeuralNetwork(double[][][] networkWeights, int inputSize)
-        {
-            _layers = new List<NeuralLayer>();
-            for(int layerIndex = 0; layerIndex < networkWeights.Length; layerIndex++)
-            {
-                NeuralLayer layer;
-                if(layerIndex == 0)
-                {
-                    layer = new NeuralLayer(networkWeights[layerIndex].Length, "sigmoid", inputSize);
-                }
-                else
-                {
-                    layer = new NeuralLayer(networkWeights[layerIndex].Length, "sigmoid", networkWeights[layerIndex - 1].Length);
-                }
-                layer.Load(networkWeights[layerIndex]);
-                _layers.Add(layer);
-            }
-        }
+        public double Fitness { get; set; } = 9999999.0;
+        public List<NeuralLayer> Layers { get { return _layers; } }
 
         public NeuralNetwork(int inputSize, int outputSize, int[] hiddenLayers)
         {
-            if(hiddenLayers == null)
+            if (hiddenLayers == null)
             {
                 throw new ArgumentNullException(nameof(hiddenLayers));
             }
@@ -49,13 +32,48 @@ namespace SneknetRacing.AI
             {
                 if (i == 0)
                 {
-                    _layers.Add(new NeuralLayer(hiddenLayers[i], "sigmoid", inputSize));
+                    _layers.Add(new NeuralLayer(hiddenLayers[i], "relu", inputSize));
                     continue;
                 }
-                _layers.Add(new NeuralLayer(hiddenLayers[i], "sigmoid", hiddenLayers[i - 1]));
+                _layers.Add(new NeuralLayer(hiddenLayers[i], "relu", hiddenLayers[i - 1]));
             }
 
             _layers.Add(new NeuralLayer(outputSize, "sigmoid", hiddenLayers.Last()));
+        }
+
+        public NeuralNetwork(double[][][] networkWeights, bool[][] networkNodesStatus, int inputSize, double fitness)
+        {
+            if(networkWeights == null)
+            {
+                throw new ArgumentNullException(nameof(networkWeights));
+            }
+
+            if(networkNodesStatus == null)
+            {
+                throw new ArgumentNullException(nameof(networkNodesStatus));
+            }
+
+            _layers = new List<NeuralLayer>();
+            for(int layerIndex = 0; layerIndex < networkWeights.Length; layerIndex++)
+            {
+                NeuralLayer layer;
+                if (layerIndex == 0)
+                {
+                    layer = new NeuralLayer(networkWeights[layerIndex].Length, "relu", inputSize);
+                }
+                else if (layerIndex == networkWeights.Length - 1)
+                {
+                    layer = new NeuralLayer(networkWeights[layerIndex].Length, "sigmoid", networkWeights[layerIndex - 1].Length);
+                }
+                else
+                {
+                    layer = new NeuralLayer(networkWeights[layerIndex].Length, "relu", networkWeights[layerIndex - 1].Length);
+                }
+                layer.Load(networkWeights[layerIndex], networkNodesStatus[layerIndex]);
+                _layers.Add(layer);
+            }
+
+            Fitness = fitness;
         }
 
         public void Initialize()
@@ -129,17 +147,40 @@ namespace SneknetRacing.AI
             return networkWeights;
         }
 
+        public bool[][] GetNodesStatus()
+        {
+            var nodesStatus = new bool[_layers.Count][];
+
+            for (int i = 0; i < _layers.Count; i++)
+            {
+                nodesStatus[i] = _layers[i].GetNodesStatus();
+            }
+
+            return nodesStatus;
+        }
+
         public void Mutate(double bestFitness)
         {
             double mutationSeverity = 1.0 - (Fitness/bestFitness);
+            Console.WriteLine("Mutation Severity: {0} | Fitness: {1} | Best: {2}", mutationSeverity, Fitness, bestFitness);
 
             mutationSeverity *= _random.NextDouble();
 
-            foreach(var layer in _layers)
+            double minNodes = 0.01;
+            double maxNodes = 1;
+
+            Console.WriteLine("Mutation Severity after random: {0}", mutationSeverity);
+
+            foreach (var layer in _layers)
             {
-                foreach(var neuron in layer.Neurons)
+                var nodeMutationChance = minNodes + ((mutationSeverity * _random.NextDouble()) * (maxNodes - minNodes));
+                var mutations = _random.NextDoubles(layer.Neurons.Count);
+                int index = 0;
+                foreach (var neuron in layer.Neurons)
                 {
                     neuron.Mutate(mutationSeverity, _random);
+                    neuron.isActive = (mutations[index] > nodeMutationChance);
+                    index++;
                 }
             }
         }

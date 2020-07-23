@@ -105,12 +105,12 @@ namespace SneknetRacing.Commands
                 List<Thread> networkTasks = new List<Thread>();
 
                 NeuralNetwork bestNetwork = null;
-                double bestFitness = 1.0;
-                int concurrentNetworks = 15;
+                double bestFitness = 9999999.0;
+                int concurrentNetworks = 1;
 
                 for(int i = 0; i < concurrentNetworks; i++)
                 {
-                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 500, 500, 500, 500 }));
+                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 3000 }));
                 }
 
                 Stopwatch totalTime = Stopwatch.StartNew();
@@ -126,7 +126,7 @@ namespace SneknetRacing.Commands
                         {
                             if (bestNetwork != null)
                             {
-                                network = new NeuralNetwork(bestNetwork.GetWeights(), trainingSamples[0].Length);
+                                network = new NeuralNetwork(bestNetwork.GetWeights(), bestNetwork.GetNodesStatus(), trainingSamples[0].Length, bestNetwork.Fitness);
                                 //Console.WriteLine("mutatooooo");
                                 network.Mutate(bestFitness);
                             }
@@ -161,7 +161,7 @@ namespace SneknetRacing.Commands
                                 stopwatch.Stop();
                                 best = true;
                                 bestFitness = fitness;
-                                bestNetwork = new NeuralNetwork(network.GetWeights(), trainingSamples[0].Length);
+                                bestNetwork = new NeuralNetwork(network.GetWeights(), network.GetNodesStatus(), trainingSamples[0].Length, network.Fitness);
                                 Console.WriteLine("==================POG BEST SO FAR==================");
                                 Console.WriteLine("Error: {0} | Time since last best: {1}", fitness, stopwatch.Elapsed.ToString());
                                 Console.WriteLine("===================================================");
