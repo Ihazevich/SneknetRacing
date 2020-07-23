@@ -70,10 +70,15 @@ namespace SneknetRacing.AI
 
         public void SetWeights(Random random)
         {
+            if(random == null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
             //Console.WriteLine("Setting weights for {0} connections", _inputWeights.Capacity);
             for (int i = 0; i < _inputWeights.Length; i++)
             {
-                _inputWeights[i] = random.NextDouble() - random.NextDouble();
+                _inputWeights[i] = (random.NextDouble() * 2.0) - 1.0;
             }
         }
 
