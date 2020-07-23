@@ -34,7 +34,13 @@ namespace SneknetRacing.AI
 
         public NeuralNetwork(int inputSize, int outputSize, int[] hiddenLayers)
         {
+            if(hiddenLayers == null)
+            {
+                throw new ArgumentNullException(nameof(hiddenLayers));
+            }
+
             _layers = new List<NeuralLayer>();
+
             for (int i = 0; i < hiddenLayers.Length; i++)
             {
                 if (i == 0)
