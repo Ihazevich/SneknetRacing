@@ -13,6 +13,8 @@ namespace SneknetRacing.AI
     {
         private List<NeuralLayer> _layers;
 
+        public double MeanSquareError { get; set; }
+
         public NeuralNetwork(double[][][] networkWeights, int inputSize)
         {
             _layers = new List<NeuralLayer>();
@@ -73,7 +75,7 @@ namespace SneknetRacing.AI
             return inputs;
         }
 
-        public double Test(double[][] samples, double[][] targets)
+        public void Test(double[][] samples, double[][] targets)
         {
             //Console.WriteLine("Network training started");
 
@@ -81,7 +83,7 @@ namespace SneknetRacing.AI
             Stopwatch stopwatch2 = new Stopwatch();
 
             double[][] output = new double[targets.Length][];
-            double totalError = 0;
+            double mse = 0;
             double accuracy = 0;
 
             for (int i = 0; i < samples.Length; i++)
@@ -97,20 +99,20 @@ namespace SneknetRacing.AI
                 for (int j = 0; j < output[0].Length; j++)
                 {
                     double err = output[i][j] - targets[i][j];
-                    totalError += (err * err);
+                    mse += (err * err);
                     accuracy = (Math.Abs(output[i][j]) > Math.Abs(targets[i][j])) ? (Math.Abs(targets[i][j]) / Math.Abs(output[i][j])) : (Math.Abs(output[i][j] / targets[i][j]));
                 }
                 stopwatch2.Stop();
                 //Console.WriteLine("Sample {0} processed in {1}ms. O: {2}, {3}, {4} | E: {5}, {6}, {7}",
                 //i+1, stopwatch2.ElapsedMilliseconds, output[0], output[1], output[2], expectedValues[i][0], expectedValues[i][1], expectedValues[i][2]);
             }
-            totalError /= (double)(samples.Length * samples[0].Length);
+            mse /= (double)(samples.Length * samples[0].Length);
             accuracy /= (double)(samples.Length * samples[0].Length);
 
             stopwatch2.Stop();
             //Console.WriteLine("Processed {0} samples in {1}ms. Error: {2} | Accuracy: {3:##.####}%", samples.Length, stopwatch1.ElapsedMilliseconds, totalError, accuracy * 100);
 
-            return totalError;
+            MeanSquareError = mse;
         }
 
         public double[][][] GetWeights()

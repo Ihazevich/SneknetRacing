@@ -148,7 +148,10 @@ namespace SneknetRacing.Commands
                                 network.Initialize(new Random());
                             }
                         }
-                        var fitness = network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
+                        network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
+
+                        var fitness = network.MeanSquareError;
+                        
                         lock (_locker)
                         {
                             Console.WriteLine("Thread: {0} | Eppoch: {1} | Error: {2} | Total time: {3}",
