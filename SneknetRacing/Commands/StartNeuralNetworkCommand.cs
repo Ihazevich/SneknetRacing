@@ -12,6 +12,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MathNet.Numerics;
 using SneknetRacing.AI;
 using SneknetRacing.ViewModels;
 
@@ -47,8 +48,8 @@ namespace SneknetRacing.Commands
             {
                 _isNetworkRunning = true;
 
-                List<float[]> trainingSamples = new List<float[]>();
-                List<float[]> expectedValues = new List<float[]>();
+                List<double[]> trainingSamples = new List<double[]>();
+                List<double[]> expectedValues = new List<double[]>();
 
                 string[] files = Directory.GetFiles("D:\\NeuralData\\0\\HAMILTON");
 
@@ -68,8 +69,8 @@ namespace SneknetRacing.Commands
                 {
                     RacerSample sample = JsonSerializer.Deserialize<RacerSample>(s);
 
-                    List<float> inputs = new List<float>();
-                    List<float> outputs = new List<float>();
+                    List<double> inputs = new List<double>();
+                    List<double> outputs = new List<double>();
 
                     inputs.Add(sample.Speed);
                     inputs.Add(sample.CurrentGear);
@@ -103,41 +104,65 @@ namespace SneknetRacing.Commands
                 List<NeuralNetwork> networks = new List<NeuralNetwork>();
                 List<Thread> networkTasks = new List<Thread>();
 
-                ConcurrentStack<NeuralNetwork> bestNetworks = new ConcurrentStack<NeuralNetwork>();
-                float bestAccuracy = 0.0f;
-                int threads = 13;
+                NeuralNetwork bestNetwork = null;
+                double bestFitness = 0.0;
+                int concurrentNetworks = 5;
 
-                for(int i = 0; i < threads; i++)
+                for(int i = 0; i < concurrentNetworks; i++)
                 {
-                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 200, 200, 200, 200, 200, 200, 200, 200 }));
+                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 2000, 400 }));
                 }
+
+                Stopwatch stopwatch = Stopwatch.StartNew();
 
                 Parallel.ForEach(networks, network =>
                 {
                     for (int i = 0; i < 1000; i++)
                     {
-                        NeuralNetwork temp;
-                        if(bestNetworks.TryPeek(out temp))
-                        {
-                            network = temp;
-                            network.Mutate((float)new Random().NextDouble());
-                        }
-                        else
-                        {
-                            network.Initialize(new Random());
-                        }
-                        var accuracy = network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
+                        var best = false;
                         lock (_locker)
                         {
-                            if (accuracy > bestAccuracy)
+                            if (bestNetwork != null)
                             {
-                                bestAccuracy = accuracy;
-                                bestNetworks.Push(network);
-                                Console.WriteLine("==================POG BEST SO FAR==================");
-                                Console.WriteLine("{0:##.#####}%",accuracy*100);
-                                Console.WriteLine("===================================================");
+                                network = new NeuralNetwork(bestNetwork.GetWeights(), trainingSamples[0].Length);
+                                //Console.WriteLine("mutatooooo");
+                                network.Mutate((float)new Random().NextDouble());
+                            }
+                            else
+                            {
+                                network.Initialize(new Random());
                             }
                         }
+                        var fitness = network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
+                        lock (_locker)
+                        {
+                            if (fitness > bestFitness)
+                            {
+                                stopwatch.Stop();
+                                best = true;
+                                bestFitness = fitness;
+                                bestNetwork = new NeuralNetwork(network.GetWeights(), trainingSamples[0].Length);
+                                Console.WriteLine("==================POG BEST SO FAR==================");
+                                Console.WriteLine("Fitness: {0} | Time since last best: {1}", fitness, stopwatch.Elapsed.ToString());
+                                Console.WriteLine("===================================================");
+                                stopwatch.Restart();
+                            }
+                        }
+                        if(best)
+                        {
+                            Directory.CreateDirectory("D:\\NeuralData\\0\\HAMILTON\\Networks\\");
+                            string path = "D:\\NeuralData\\0\\HAMILTON\\Networks\\" + fitness + ".json";
+                            Console.WriteLine(path);
+                            var options = new JsonSerializerOptions
+                            {
+                                WriteIndented = true,
+                            };
+
+                            string jsonString = JsonSerializer.Serialize(network.GetWeights(), options);
+                            File.WriteAllText(path, jsonString);
+                        }
+                        
+
                     }
                 });
 

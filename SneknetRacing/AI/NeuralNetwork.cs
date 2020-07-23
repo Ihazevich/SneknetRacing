@@ -13,14 +13,28 @@ namespace SneknetRacing.AI
     {
         private List<NeuralLayer> _layers;
 
-        public NeuralNetwork()
+        public NeuralNetwork(List<List<List<double>>> networkWeights, int inputSize)
         {
             _layers = new List<NeuralLayer>();
+            for(int layerIndex = 0; layerIndex < networkWeights.Count; layerIndex++)
+            {
+                NeuralLayer layer;
+                if(layerIndex == 0)
+                {
+                    layer = new NeuralLayer(networkWeights[layerIndex].Count, "sigmoid", inputSize);
+                }
+                else
+                {
+                    layer = new NeuralLayer(networkWeights[layerIndex].Count, "sigmoid", networkWeights[layerIndex - 1].Count);
+                }
+                layer.Load(networkWeights[layerIndex]);
+                _layers.Add(layer);
+            }
         }
 
-        public NeuralNetwork(int inputSize, int outputSize, int[] hiddenLayers) : this()
+        public NeuralNetwork(int inputSize, int outputSize, int[] hiddenLayers)
         {
-
+            _layers = new List<NeuralLayer>();
             for (int i = 0; i < hiddenLayers.Length; i++)
             {
                 if (i == 0)
@@ -42,7 +56,7 @@ namespace SneknetRacing.AI
             }
         }
 
-        public float[] Process(float[] inputs)
+        public double[] Process(double[] inputs)
         {
             // Console.WriteLine("Processing input...");
             for (int i = 0; i < _layers.Count; i++)
@@ -53,16 +67,16 @@ namespace SneknetRacing.AI
             return inputs;
         }
 
-        public float Test(float[][] samples, float[][] targets)
+        public double Test(double[][] samples, double[][] targets)
         {
-            Console.WriteLine("Network training started");
+            //Console.WriteLine("Network training started");
 
             Stopwatch stopwatch1 = Stopwatch.StartNew();
             Stopwatch stopwatch2 = new Stopwatch();
 
-            float[][] output = new float[targets.Length][];
-            float totalError = 0;
-            float accuracy = 0;
+            double[][] output = new double[targets.Length][];
+            double totalError = 0;
+            double accuracy = 0;
 
             for (int i = 0; i < samples.Length; i++)
             {
@@ -76,7 +90,7 @@ namespace SneknetRacing.AI
                 output[i] = Process(samples[i]);
                 for (int j = 0; j < output[0].Length; j++)
                 {
-                    float err = output[i][j] - targets[i][j];
+                    double err = output[i][j] - targets[i][j];
                     totalError += (err * err);
                     accuracy = (output[i][j] > targets[i][j]) ? (targets[i][j] / output[i][j]) : (output[i][j] / targets[i][j]);
                 }
@@ -84,26 +98,26 @@ namespace SneknetRacing.AI
                 //Console.WriteLine("Sample {0} processed in {1}ms. O: {2}, {3}, {4} | E: {5}, {6}, {7}",
                 //i+1, stopwatch2.ElapsedMilliseconds, output[0], output[1], output[2], expectedValues[i][0], expectedValues[i][1], expectedValues[i][2]);
             }
-            totalError /= (float)(samples.Length * samples[0].Length);
-            accuracy /= (float)(samples.Length * samples[0].Length);
+            totalError /= (double)(samples.Length * samples[0].Length);
+            accuracy /= (double)(samples.Length * samples[0].Length);
 
             stopwatch2.Stop();
-            Console.WriteLine("Processed {0} samples in {1}ms. Error: {2} | Accuracy: {3:##.####}%", samples.Length, stopwatch1.ElapsedMilliseconds, totalError, accuracy * 100);
+            //Console.WriteLine("Processed {0} samples in {1}ms. Error: {2} | Accuracy: {3:##.####}%", samples.Length, stopwatch1.ElapsedMilliseconds, totalError, accuracy * 100);
 
-            return accuracy;
+            return ( 1 - totalError) * accuracy;
         }
 
-        public List<List<List<float>>> GetWeights()
+        public List<List<List<double>>> GetWeights()
         {
-            var networkWeights = new List<List<List<float>>>();
+            var networkWeights = new List<List<List<double>>>();
 
             foreach(var layer in _layers)
             {
-                var layerWeights = new List<List<float>>();
+                var layerWeights = new List<List<double>>();
 
                 foreach (var neuron in layer.Neurons)
                 {
-                    var neuronWeights = new List<float>();
+                    var neuronWeights = new List<double>();
 
                     foreach(var weight in neuron.Weights)
                     {
@@ -119,7 +133,7 @@ namespace SneknetRacing.AI
             return networkWeights;
         }
 
-        public void Mutate(float mutationChance)
+        public void Mutate(double mutationChance)
         {
             Random rand = new Random();
             List<Task> temp = new List<Task>();

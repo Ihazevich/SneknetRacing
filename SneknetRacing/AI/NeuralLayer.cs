@@ -44,9 +44,9 @@ namespace SneknetRacing.AI
             }
         }
 
-        public float[] Fire(float[] inputs)
+        public double[] Fire(double[] inputs)
         {
-            var output = new float[_neurons.Count];
+            var output = new double[_neurons.Count];
             for(int i = 0; i < _neurons.Count; i++)
             {
                 output[i] = _neurons[i].Fire(inputs);
@@ -62,6 +62,14 @@ namespace SneknetRacing.AI
                 neuron.SetWeights(random);
             }
             //Console.WriteLine("Layer initialization done");
+        }
+
+        public void Load(List<List<double>> weights)
+        {
+            for(int i = 0; i < _neurons.Count; i++)
+            {
+                _neurons[i].LoadWeights(weights[i].ToArray());
+            }    
         }
     }
 }
