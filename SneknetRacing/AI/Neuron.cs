@@ -31,7 +31,7 @@ namespace SneknetRacing.AI
         public Neuron(string activation, int inputConnections) : this()
         {
             _weights = new double[inputConnections];
-            _nodesStatus = new double[inputConnections];
+            _nodesStatus = new bool[inputConnections];
             _activation = activation;
         }
 

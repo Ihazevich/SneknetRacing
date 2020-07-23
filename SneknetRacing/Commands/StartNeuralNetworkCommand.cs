@@ -128,7 +128,7 @@ namespace SneknetRacing.Commands
                             {
                                 network = new NeuralNetwork(bestNetwork.GetWeights(), trainingSamples[0].Length);
                                 //Console.WriteLine("mutatooooo");
-                                network.Mutate();
+                                network.Mutate(bestFitness);
                             }
                             else
                             {
@@ -150,7 +150,7 @@ namespace SneknetRacing.Commands
                         }
                         network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
 
-                        var fitness = network.MeanSquareError;
+                        var fitness = network.Fitness;
                         
                         lock (_locker)
                         {
