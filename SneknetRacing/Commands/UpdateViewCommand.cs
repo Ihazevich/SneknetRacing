@@ -68,6 +68,10 @@ namespace SneknetRacing.Commands
             {
                 return false;
             }
+            if (parameter.ToString() == "Console" && _viewModel.SelectedViewModel.GetType() == _viewModel.ConsoleViewModel.GetType())
+            {
+                return false;
+            }
             else
             {
                 return true;

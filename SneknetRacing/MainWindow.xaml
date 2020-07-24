@@ -36,6 +36,7 @@
                 <MenuItem Header="Start network model generation" Command="{Binding Path=StartNeuralNetworkCommand}" CommandParameter="Train"/>
                 <MenuItem Header="Load network model from file"/>
             </MenuItem>
+            <MenuItem Header="Console" Command="{Binding Path=UpdateViewCommand}" CommandParameter="Console"/>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem VerticalAlignment="Center" Width="120">

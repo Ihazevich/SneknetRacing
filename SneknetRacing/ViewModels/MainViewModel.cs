@@ -2,12 +2,14 @@
 using Nefarius.ViGEm.Client.Targets;
 using SneknetRacing.AI;
 using SneknetRacing.Commands;
+using SneknetRacing.Log;
 using SneknetRacing.Models;
 using SneknetRacing.Network;
 using SneknetRacing.Views;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -18,7 +20,9 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace SneknetRacing.ViewModels
 {
@@ -27,6 +31,8 @@ namespace SneknetRacing.ViewModels
         #region Fields
         private BaseViewModel _selectedViewModel;
         private ConcurrentQueue<byte[]> _receivedRawPackets = new ConcurrentQueue<byte[]>();
+
+        static readonly object _locker = new object();
 
         private bool _networkThreadsRunning;
         private string _networkButtonContent;
@@ -74,6 +80,7 @@ namespace SneknetRacing.ViewModels
         public CarStatusDataViewModel CarStatusDataViewModel { get; }
         public ClassificationDataViewModel ClassificationDataViewModel { get; }
         public LobbyInfoDataViewModel LobbyInfoDataViewModel { get; }
+        public ConsoleViewModel ConsoleViewModel { get; }
 
         public bool NetworkThreadsRunning
         {
@@ -193,6 +200,7 @@ namespace SneknetRacing.ViewModels
         public UpdateMotionViewCommand UpdateMotionViewCommand { get; set; }
         public StartNeuralNetworkCommand StartNeuralNetworkCommand { get; set; }
 
+        public Logger Logger { get; set; }
 
         public ViGEmClient Client { get; }
         public IXbox360Controller Controller { get; }
@@ -209,6 +217,8 @@ namespace SneknetRacing.ViewModels
             NetworkThreadsRunning = false;
             GamepadConnected = false;
 
+            Logger = new Logger();
+
             Client = new ViGEmClient();
             Controller = Client.CreateXbox360Controller();
 
@@ -224,7 +234,9 @@ namespace SneknetRacing.ViewModels
             ClassificationDataViewModel = new ClassificationDataViewModel();
             LobbyInfoDataViewModel = new LobbyInfoDataViewModel();
 
-            SelectedViewModel = HeaderViewModel;
+            ConsoleViewModel = new ConsoleViewModel(Logger);
+
+            SelectedViewModel = ConsoleViewModel;
 
             ProcessTime = 0;
 
@@ -235,6 +247,8 @@ namespace SneknetRacing.ViewModels
             DesserializationThread = new Task(() => Desserialize());
             //SerializerThread = new Task(() => SerializeNeuralInputs());
             SerializerThread = new Task(() => GenerateNeuralDataModel());
+
+            BindingOperations.EnableCollectionSynchronization(Logger.LogEntries, _locker);
         }
 
         public void SubscribeToServerEvent(Server server)
@@ -483,6 +497,143 @@ namespace SneknetRacing.ViewModels
             }
         }
 
+        public void GenerateNetworks()
+        {
+            List<double[]> trainingSamples = new List<double[]>();
+            List<double[]> expectedValues = new List<double[]>();
 
+            string[] files = Directory.GetFiles("D:\\NeuralData\\0\\HAMILTON");
+
+            List<Task> tasks = new List<Task>();
+            ConcurrentQueue<string> readedSamples = new ConcurrentQueue<string>();
+
+            Logger.Log(String.Format("Found {0} files, loading them to memory...", files.Length));
+            foreach (string s in files)
+            {
+                tasks.Add(Task.Factory.StartNew(() => readedSamples.Enqueue(File.ReadAllText(s)),CancellationToken.None,TaskCreationOptions.PreferFairness,TaskScheduler.Default));
+            }
+
+            Task.WaitAll(tasks.ToArray());
+
+            Logger.Log(String.Format("Deserializing {0} samples....", readedSamples.Count));
+            foreach (string s in readedSamples)
+            {
+                RacerSample sample = JsonSerializer.Deserialize<RacerSample>(s);
+
+                List<double> inputs = new List<double>();
+                List<double> outputs = new List<double>();
+
+                inputs.Add(sample.Speed);
+                inputs.Add(sample.CurrentGear);
+                inputs.Add(sample.EngineRPM);
+                inputs.Add(sample.SurfaceTypeRL);
+                inputs.Add(sample.SurfaceTypeRR);
+                inputs.Add(sample.SurfaceTypeFL);
+                inputs.Add(sample.SurfaceTypeFR);
+                inputs.Add(sample.LapDistance);
+                inputs.Add(sample.WorldPosX);
+                inputs.Add(sample.WorldPosZ);
+                /*
+                inputs.Add(sample.WorldForwardDirX);
+                inputs.Add(sample.WorldForwardDirZ);
+                inputs.Add(sample.WorldRightDirX);
+                inputs.Add(sample.WorldRightDirZ);
+                inputs.Add(sample.Yaw);
+                inputs.Add(sample.Pitch);
+                inputs.Add(sample.Roll);
+                */
+                outputs.Add(sample.Throttle);
+                outputs.Add(sample.Steer);
+                outputs.Add(sample.CurrentGear);
+
+                trainingSamples.Add(inputs.ToArray());
+                expectedValues.Add(outputs.ToArray());
+            }
+
+            Console.WriteLine("Creating network");
+            Logger.Log("Creating network");
+            List<NeuralNetwork> networks = new List<NeuralNetwork>();
+
+            NeuralNetwork bestNetwork = null;
+            double bestFitness = 9999999.0;
+            int concurrentNetworks = 10;
+
+            for (int i = 0; i < concurrentNetworks; i++)
+            {
+                networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 500 }));
+            }
+
+            Stopwatch totalTime = Stopwatch.StartNew();
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            Parallel.ForEach(networks, network =>
+            {
+                int eppoch = 1;
+                while (true)
+                {
+                    var best = false;
+                    lock (_locker)
+                    {
+                        if (bestNetwork != null)
+                        {
+                            network = new NeuralNetwork(bestNetwork.GetWeights(), bestNetwork.GetNodesStatus(), trainingSamples[0].Length, bestNetwork.Fitness);
+                            //Console.WriteLine("mutatooooo");
+                            network.Mutate(bestFitness);
+                        }
+                        else
+                        {
+                            /*string[] files = Directory.GetFiles("D:\\NeuralData\\0\\HAMILTON");
+                            double[][][] networkWeights;
+                            if (files.Length > 0)
+                            {
+                                Console.WriteLine("Loading Network " + files[0]);
+                                string jsonString = File.ReadAllText(files[0]);
+                                networkWeights = JsonSerializer.Deserialize<double[][][]>(jsonString);
+                                network = new NeuralNetwork(networkWeights, trainingSamples[0].Length);
+                            }
+                            else
+                            {
+
+                            }*/
+                            network.Initialize();
+                        }
+                    }
+                    network.Test(trainingSamples.ToArray(), expectedValues.ToArray());
+
+                    var fitness = network.Fitness;
+
+                    lock (_locker)
+                    {
+                        Logger.Log(String.Format("Thread: {0} | Eppoch: {1} | Error: {2} | Total time: {3}",networks.IndexOf(network) + 1, eppoch + 1, fitness, totalTime.Elapsed.ToString()));
+                        if (fitness < bestFitness)
+                        {
+                            stopwatch.Stop();
+                            best = true;
+                            bestFitness = fitness;
+                            bestNetwork = new NeuralNetwork(network.GetWeights(), network.GetNodesStatus(), trainingSamples[0].Length, network.Fitness);
+                            //Console.WriteLine("==================POG BEST SO FAR==================");
+                            Logger.Log(String.Format("NEW BEST! Error: {0} | Time since last best: {1}", fitness, stopwatch.Elapsed.ToString()));
+                            //Console.WriteLine("===================================================");
+                            stopwatch.Restart();
+                        }
+                    }
+                    if (best)
+                    {
+                        Directory.CreateDirectory("D:\\NeuralData\\0\\HAMILTON\\Networks\\");
+                        string path = "D:\\NeuralData\\0\\HAMILTON\\Networks\\" + fitness + ".json";
+                        Console.WriteLine(path);
+                        var options = new JsonSerializerOptions
+                        {
+                            WriteIndented = true,
+                        };
+
+                        string jsonString = JsonSerializer.Serialize(network.GetWeights(), options);
+                        File.WriteAllText(path, jsonString);
+                    }
+                    eppoch++;
+
+                }
+            });
+        }
     }
 }
