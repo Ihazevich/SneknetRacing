@@ -88,7 +88,7 @@ namespace SneknetRacing.AI
                 double u2 = 1.0 - random.NextDouble();
                 double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
 
-                _weights[i] = randStdNormal;
+                _weights[i] = (randStdNormal * 2.0) - 1.0;
             }
         }
 
@@ -105,6 +105,11 @@ namespace SneknetRacing.AI
             for (int i = 0; i < _weights.Length; i++)
             {
                 var change = ((mutations[i] * (mutationSeverity * 2.0)) - mutationSeverity) * speed;
+
+                double u1 = 1.0 - random.NextDouble(); //uniform(0,1] random doubles
+                double u2 = 1.0 - random.NextDouble();
+                double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
+
                 //Console.WriteLine("W: {0} | Mutation: {1}", _weights[i], change);
                 _weights[i] -= change;
                 //Console.WriteLine("W: {0}", _weights[i]);
