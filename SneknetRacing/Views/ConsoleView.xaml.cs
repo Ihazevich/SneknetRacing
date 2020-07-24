@@ -22,5 +22,17 @@ namespace SneknetRacing.Views
         {
             InitializeComponent();
         }
+
+        private void ConsoleListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+            Console.WriteLine("UPDATEEROO");
+            if (ConsoleListView != null)
+            {
+                var border = (Border)VisualTreeHelper.GetChild(ConsoleListView, 0);
+                var scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+                scrollViewer.ScrollToBottom();
+            }
+        }
     }
 }

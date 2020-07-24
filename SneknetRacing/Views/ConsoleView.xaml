@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListView x:Name="ConsoleListBox" Style="{StaticResource MaterialDesignListBox}" ItemsSource="{Binding Path=Logger.LogEntries , UpdateSourceTrigger=PropertyChanged}">
+        <ListView x:Name="ConsoleListView" Style="{StaticResource MaterialDesignListBox}" ItemsSource="{Binding Path=Logger.LogEntries , UpdateSourceTrigger=PropertyChanged}" MouseDoubleClick="ConsoleListView_MouseDoubleClick">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <WrapPanel>
@@ -16,7 +16,7 @@
                         <TextBlock Text="{Binding Content}"/>
                     </WrapPanel>
                 </DataTemplate>
-            </ListView.ItemTemplate>            
+            </ListView.ItemTemplate>
         </ListView>
     </Grid>
 </UserControl>
