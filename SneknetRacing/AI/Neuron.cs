@@ -84,7 +84,11 @@ namespace SneknetRacing.AI
             //Console.WriteLine("Setting weights for {0} connections", _inputWeights.Capacity);
             for (int i = 0; i < _weights.Length; i++)
             {
-                _weights[i] = (random.NextDouble() * 2.0) - 1.0;
+                double u1 = 1.0 - random.NextDouble(); //uniform(0,1] random doubles
+                double u2 = 1.0 - random.NextDouble();
+                double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
+
+                _weights[i] = randStdNormal;
             }
         }
 
@@ -96,7 +100,7 @@ namespace SneknetRacing.AI
             }
 
             var mutations = random.NextDoubles(_weights.Length);
-            var speed = 0.00001;
+            var speed = 0.0000001;
 
             for (int i = 0; i < _weights.Length; i++)
             {

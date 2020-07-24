@@ -106,11 +106,11 @@ namespace SneknetRacing.Commands
 
                 NeuralNetwork bestNetwork = null;
                 double bestFitness = 9999999.0;
-                int concurrentNetworks = 1;
+                int concurrentNetworks = 10;
 
                 for(int i = 0; i < concurrentNetworks; i++)
                 {
-                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 3000 }));
+                    networks.Add(new NeuralNetwork(trainingSamples[0].Length, expectedValues[0].Length, new int[] { 2000 }));
                 }
 
                 Stopwatch totalTime = Stopwatch.StartNew();
