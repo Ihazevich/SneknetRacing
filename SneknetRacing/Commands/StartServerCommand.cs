@@ -17,6 +17,11 @@ namespace SneknetRacing.Commands
 
         public event EventHandler CanExecuteChanged;
 
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, new EventArgs());
+        }
+
         public bool CanExecute(object parameter)
         {
             return !_viewModel.NetworkThreadsRunning;

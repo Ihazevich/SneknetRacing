@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SneknetRacing.AI
 {
+    [Serializable]
     public class NeuralNetwork
     {
         private Random _random = new Random();

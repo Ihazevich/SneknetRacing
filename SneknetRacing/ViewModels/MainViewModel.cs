@@ -17,6 +17,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SneknetRacing.ViewModels
@@ -28,14 +29,15 @@ namespace SneknetRacing.ViewModels
         private ConcurrentQueue<byte[]> _receivedRawPackets = new ConcurrentQueue<byte[]>();
 
         private bool _networkThreadsRunning;
-        private string _networkButtonStatus;
-        private string _networkButtonColor;
+        private string _networkButtonContent;
+        private Visibility _networkThreadsVisibility = Visibility.Hidden;
 
         private bool _gamepadConnected;
-        private string _gamepadButtonStatus;
-        private string _gamepadButtonColor;
+        private string _gamepadButtonContent;
+        private Visibility _gamepadVisibility = Visibility.Hidden;
 
         private long _processTime;
+
         #endregion
 
         #region Properties
@@ -72,6 +74,7 @@ namespace SneknetRacing.ViewModels
         public CarStatusDataViewModel CarStatusDataViewModel { get; }
         public ClassificationDataViewModel ClassificationDataViewModel { get; }
         public LobbyInfoDataViewModel LobbyInfoDataViewModel { get; }
+
         public bool NetworkThreadsRunning
         {
             get { return _networkThreadsRunning; }
@@ -81,40 +84,44 @@ namespace SneknetRacing.ViewModels
                 OnPropertyChanged("NetworkThreadsRunning");
                 if (value)
                 {
-                    NetworkButtonStatus = "UDP Socket listening";
-                    NetworkButtonColor = "Green";
+                    NetworkButtonContent = "Stop UDP Listener";
+                    NetworkThreadsVisibility = Visibility.Visible;
                 }
                 else
                 {
-                    NetworkButtonStatus = "Start listening";
-                    NetworkButtonColor = "Red";
+                    NetworkButtonContent = "Start UDP Listener";
+                    NetworkThreadsVisibility = Visibility.Hidden;
                 }
+                StartServerCommand.RaiseCanExecuteChanged();
             }
         }
-        public string NetworkButtonStatus
+
+        public string NetworkButtonContent
         {
             get
             {
-                return _networkButtonStatus;
+                return _networkButtonContent;
             }
             set
             {
-                _networkButtonStatus = value;
+                _networkButtonContent = value;
                 OnPropertyChanged("NetworkButtonStatus");
             }
         }
-        public string NetworkButtonColor
+
+        public Visibility NetworkThreadsVisibility
         {
             get
             {
-                return _networkButtonColor;
+                return _networkThreadsVisibility;
             }
             set
             {
-                _networkButtonColor = value;
-                OnPropertyChanged("NetworkButtonColor");
+                _networkThreadsVisibility = value;
+                OnPropertyChanged(nameof(NetworkThreadsVisibility));
             }
         }
+
         public bool GamepadConnected
         {
             get { return _gamepadConnected; }
@@ -124,38 +131,40 @@ namespace SneknetRacing.ViewModels
                 OnPropertyChanged("GamepadConnected");
                 if (value)
                 {
-                    GamepadButtonStatus = "Gamepad Connected";
-                    GamepadButtonColor = "Green";
+                    GamepadButtonContent = "Gamepad Connected";
+                    GamepadVisibility = Visibility.Visible;
                 }
                 else
                 {
-                    GamepadButtonStatus = "Connect Gamepad";
-                    GamepadButtonColor = "Red";
+                    GamepadButtonContent = "Connect Gamepad";
+                    GamepadVisibility = Visibility.Hidden;
                 }
             }
         }
-        public string GamepadButtonStatus
+
+        public string GamepadButtonContent
         {
             get
             {
-                return _gamepadButtonStatus;
+                return _gamepadButtonContent;
             }
             set
             {
-                _gamepadButtonStatus = value;
+                _gamepadButtonContent = value;
                 OnPropertyChanged("GamepadButtonStatus");
             }
         }
-        public string GamepadButtonColor
+
+        public Visibility GamepadVisibility
         {
             get
             {
-                return _gamepadButtonColor;
+                return _gamepadVisibility;
             }
             set
             {
-                _gamepadButtonColor = value;
-                OnPropertyChanged("GamepadButtonColor");
+                _gamepadVisibility = value;
+                OnPropertyChanged(nameof(GamepadVisibility));
             }
         }
 
@@ -456,33 +465,6 @@ namespace SneknetRacing.ViewModels
             File.WriteAllText(path, jsonString);
         }
 
-        /*
-        public void SaveToCSV(RacerSample sample, string path)
-        {
-            string data = "";
-
-            data += sample.Speed + ",";
-            data += sample.EngineRPM + ",";
-            data += sample.SurfaceTypeRL + ",";
-            data += sample.SurfaceTypeRR + ",";
-            data += sample.SurfaceTypeFL + ",";
-            data += sample.SurfaceTypeFR + ",";
-            data += sample.LapDistance + ",";
-            data += sample.WorldPosX + ",";
-            data += sample.WorldPosZ + ",";
-            data += sample.WorldForwardDirX + ",";
-            data += sample.WorldForwardDirZ + ",";
-            data += sample.WorldRightDirX + ",";
-            data += sample.WorldRightDirZ + ",";
-            data += sample.Yaw + ",";
-            data += sample.Pitch + ",";
-            data += sample.Roll + ",";
-
-            data += sample.CurrentGear + ",";
-
-            File.AppendAllText(path, data);
-        }
-        */
         public bool AddPacketToDesserializationQueue(byte[] data)
         {
             try
@@ -500,5 +482,7 @@ namespace SneknetRacing.ViewModels
             {
             }
         }
+
+
     }
 }
